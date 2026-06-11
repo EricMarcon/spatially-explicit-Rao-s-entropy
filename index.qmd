@@ -1,5 +1,5 @@
 ---
-title: "Unifying spatially-explicit Rao’s entropy, spatial concentration, and accumulation curves: the different aspects of local biodiversity"
+title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different aspects of local biodiversity"
 # Output formats
 format:
   stylisharticle-pdf:
@@ -12,34 +12,46 @@ format:
     css: colors.css
 # Authors (https://quarto.org/docs/journals/authors.html#author-schema)
 author:
-  - name: John Doe
+  - name: Eric Marcon
+    orcid: 0000-0002-5249-321X
     affiliations:
-      - name: Dummy Organization
-        department: Scientific Department
-        address: Somewhere
-        city: City
-        country: Country
-        postal-code: 9999
-    orcid: 0000-0000-0000-0000
-    email: JD@example.org
-    url: https://example.org/
-  - name: His Friend
-  - name: Athird One
-    corresponding: true
-    email: at1@x.com
-    url: https://www.x.com
+      - name: AgroParisTech
+        id: 1
+        city: Montpellier
+        state: France
+      - name: AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
+        id: 2
+        city: Montpellier
+        state: France
+    email: eric.marcon@agroparistech.fr
+    attributes:
+      corresponding: true
+    url: https://ericmarcon.github.io/
+  - name: Elodie Allié
+    orcid: 0000-0001-8807-7982
+  - name: Florence Puech
+    orcid: 0000-0002-5279-6878
     affiliations:
-      - name: Third Affiliation
+      - name: Université Paris-Saclay, INRAE, AgroParisTech, Paris-Saclay Applied Economics
+        id: 3
+        city: Palaiseau
+        state: France
+  - name: Raphaël Pélissier
+    orcid: 0000-0003-4845-5090
+    affiliations:
+      - name: AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
+        id: 2
+        city: Montpellier
+        state: France
 # Abstract and Keywords
 abstract: |
-  This document is only a demo explaining how to use the Stylish Article template.
+  To be written.
 keywords: [template, demo]
 # Bibliography
 reference-section-title: References
 bibliography: references.bib
 # Language
 lang: en-GB
-otherlangs: [fr-FR, it]
 # Code options 
 # https://quarto.org/docs/computations/execution-options.html#output-options
 execute:
@@ -54,7 +66,7 @@ execute:
   # Cache code results
   cache: false
 # Template specific
-journalinfo: "Publication reference"
+journalinfo: "Preprint"
 archive: "DOI: xxx/xx"
 keywordlabel: Keywords
 corrauthorlabel: Corresponding Author
@@ -150,14 +162,28 @@ The framework of spatial point pattern analysis, as introduced by @Ripley1977, r
 Its classical unbiased estimator for a point pattern located within a finite sampling window is
 
 $$\hat{K}(r) = 
-  \frac{1}{\hat{\lambda}N} 
+  \frac{1}{\hat{\lambda}n} 
   \sum_{i=1}^{n}{\sum_{j=1}^{n}{
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,,r\right)
   }}$$ {#eq-Khat}
 
-where $N$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity generally estimated as $N/A$, with $A$ the sampling window area. The indicator function  $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points $i$ and $j$ are less than $r$ apart, 0 else. $c\left(i, j,,r\right)$ is correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window. When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbor whith no bias.
+where $n$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity generally estimated as $n/A$, with $A$ the sampling window area.
+The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points $i$ and $j$ are less than $r$ apart, 0 else.
+$c\left(i, j,,r\right)$ is correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
+When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbors whith no bias.
 
 A common extension of this univariate function is the intertype (or bivariate) K12-function proposed by @Lotwick1982.
+Its estimator is:
+
+$$\hat{K_{1,2}}(r) =
+  \frac{1}{\hat{\lambda_2}n_1}
+  \sum_{i=1}^{n_1}{\sum_{j=1}^{n_2}{
+    \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,,r\right)
+  }}$$ {#eq-K12hat}
+
+While $K(r)$ is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window, $K_{12}(r)$ allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses, but in particular against the random labelling hypothesis, which means that, conditionally to the point locations, types 1 and 2 are randomly distributed among points of the pattern, or against the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type 1 points is independent from population of type 2 points [@Goreaud2003].
+
+
 
 # Application
 
