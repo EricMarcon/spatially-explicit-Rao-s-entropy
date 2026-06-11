@@ -1,0 +1,168 @@
+---
+title: "Unifying spatially-explicit Rao’s entropy, spatial concentration, and accumulation curves: the different aspects of local biodiversity"
+# Output formats
+format:
+  stylisharticle-pdf:
+    keep-tex: true
+    # Color example, see "Text color"
+    header-includes:
+      \definecolor{grey}{RGB}{191, 191, 191}
+  stylisharticle-html:
+    # Color example, see "Text color"
+    css: colors.css
+# Authors (https://quarto.org/docs/journals/authors.html#author-schema)
+author:
+  - name: John Doe
+    affiliations:
+      - name: Dummy Organization
+        department: Scientific Department
+        address: Somewhere
+        city: City
+        country: Country
+        postal-code: 9999
+    orcid: 0000-0000-0000-0000
+    email: JD@example.org
+    url: https://example.org/
+  - name: His Friend
+  - name: Athird One
+    corresponding: true
+    email: at1@x.com
+    url: https://www.x.com
+    affiliations:
+      - name: Third Affiliation
+# Abstract and Keywords
+abstract: |
+  This document is only a demo explaining how to use the Stylish Article template.
+keywords: [template, demo]
+# Bibliography
+reference-section-title: References
+bibliography: references.bib
+# Language
+lang: en-GB
+otherlangs: [fr-FR, it]
+# Code options 
+# https://quarto.org/docs/computations/execution-options.html#output-options
+execute:
+  # show code chunk output
+  include: true
+  # Show the code in the output
+  echo: false
+  # Show messages
+  message: false
+  # Show warnings
+  warning: false
+  # Cache code results
+  cache: false
+# Template specific
+journalinfo: "Publication reference"
+archive: "DOI: xxx/xx"
+keywordlabel: Keywords
+corrauthorlabel: Corresponding Author
+---
+
+```{r}
+#| label: DoNotModify
+### Utilities for R. 
+# Do not modify unless you don't use R: then, delete this chunk.
+# Installation of R packages if necessary
+install_packages <- function(packages) {
+  invisible(
+    sapply(
+      packages, 
+      FUN = function(package) {
+        if (!package %in% installed.packages()[, 1]) {
+          install.packages(
+            package, 
+            repos = "https://cran.rstudio.com/", 
+            quiet = TRUE
+          )
+        }
+      }
+    )
+  )
+}
+
+# Basic packages
+install_packages(c("knitR", "formatR", "kableExtra"))
+
+# Chunk font size hook: allows size='small' or any valid Latex font size in chunk options
+def.chunk.hook <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(
+  chunk = function(x, options) {
+    x <- def.chunk.hook(x, options)
+    ifelse(
+      options$size == "normalsize", 
+      yes = x,
+      no = paste0("\n \\", options$size, "\n\n", x, "\n\n \\normalsize")
+    )
+  }
+)
+```
+
+```{r}
+#| label: Options
+### Customized R options for this document
+# Delete this chunk if you don't use R
+
+# Add necessary packages here
+packages <- c(
+  "ads",
+  "divent",
+  "tidyverse"
+)
+# Install them
+install_packages(packages)
+
+# knitr options (https://yihui.org/knitr/options/)
+knitr::opts_chunk$set(
+  # Code chunk automatic format if tidy is TRUE
+  tidy = TRUE, 
+  # Tidy code options: remove blank lines and cut lines after 50 characters
+  tidy.opts = list(blank = FALSE, width.cutoff = 50),
+  # Font size in PDF output
+  size = "scriptsize", 
+  # Select PDF figures in PDF output if PDF file exists beside PNG file
+  knitr.graphics.auto_pdf = TRUE
+)
+# Text width of R functions output
+options(width = 50)
+
+# ggplot style
+library("tidyverse")
+theme_set(theme_bw())
+theme_update(
+  panel.background = element_rect(fill = "transparent", colour = NA),
+  plot.background = element_rect(fill = "transparent", colour = NA)
+)
+knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
+
+# Random seed
+set.seed(973)
+```
+
+# Introduction
+
+# Methods
+
+## Ripley's K
+
+The framework of spatial point pattern analysis, as introduced by @Ripley1977, relies on the K-function, defined so that $\lambda K(r)$ is the expected number of neighbours located within a distance $r$ of an arbitrary point of the pattern with intensity $\lambda$.
+Its classical unbiased estimator for a point pattern located within a finite sampling window is
+
+$$\hat{K}(r) = 
+  \frac{1}{\hat{\lambda}N} 
+  \sum_{i=1}^{n}{\sum_{j=1}^{n}{
+    \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,,r\right)
+  }}$$ {#eq-Khat}
+
+where $N$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity generally estimated as $N/A$, with $A$ the sampling window area. The indicator function  $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points $i$ and $j$ are less than $r$ apart, 0 else. $c\left(i, j,,r\right)$ is correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window. When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbor whith no bias.
+
+A common extension of this univariate function is the intertype (or bivariate) K12-function proposed by @Lotwick1982.
+
+# Application
+
+## Simulated data
+
+## Paracou
+
+# Conclusion
