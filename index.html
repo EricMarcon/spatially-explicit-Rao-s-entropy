@@ -106,7 +106,12 @@ window.Quarto = {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods"><span class="header-section-number">2</span> Methods</a>
   <ul class="collapse">
-  <li><a href="#ripleys-k" id="toc-ripleys-k" class="nav-link" data-scroll-target="#ripleys-k"><span class="header-section-number">2.1</span> Ripley’s K</a></li>
+  <li><a href="#biodiversity-measurement-based-on-information-theory" id="toc-biodiversity-measurement-based-on-information-theory" class="nav-link" data-scroll-target="#biodiversity-measurement-based-on-information-theory"><span class="header-section-number">2.1</span> Biodiversity measurement based on information theory</a></li>
+  <li><a href="#diversity-accumulation-curves" id="toc-diversity-accumulation-curves" class="nav-link" data-scroll-target="#diversity-accumulation-curves"><span class="header-section-number">2.2</span> Diversity accumulation curves</a></li>
+  <li><a href="#ripleys-k" id="toc-ripleys-k" class="nav-link" data-scroll-target="#ripleys-k"><span class="header-section-number">2.3</span> Ripley’s K</a></li>
+  <li><a href="#a-distance-dependent-simpsons-entropy" id="toc-a-distance-dependent-simpsons-entropy" class="nav-link" data-scroll-target="#a-distance-dependent-simpsons-entropy"><span class="header-section-number">2.4</span> A distance-dependent Simpson’s entropy</a></li>
+  <li><a href="#a-generalization-to-raos-entropy" id="toc-a-generalization-to-raos-entropy" class="nav-link" data-scroll-target="#a-generalization-to-raos-entropy"><span class="header-section-number">2.5</span> A generalization to Rao’s entropy</a></li>
+  <li><a href="#multitype-correlation-and-beta-diversity" id="toc-multitype-correlation-and-beta-diversity" class="nav-link" data-scroll-target="#multitype-correlation-and-beta-diversity"><span class="header-section-number">2.6</span> Multitype correlation and <span class="math inline">\(\beta\)</span> diversity</a></li>
   </ul></li>
   <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application"><span class="header-section-number">3</span> Application</a>
   <ul class="collapse">
@@ -190,11 +195,22 @@ window.Quarto = {
 
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities. In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e.&nbsp;intra- and inter-specific) competition/facilitation and habitat preferences <span class="citation" data-cites="Dale1999">(<a href="#ref-Dale1999" role="doc-biblioref">Dale 1999</a>)</span>. While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity <span class="citation" data-cites="Clark2010 Cadotte2012">(<a href="#ref-Clark2010" role="doc-biblioref">Clark et al. 2010</a>; <a href="#ref-Cadotte2012" role="doc-biblioref">Cadotte et al. 2012</a>)</span>. As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology <span class="citation" data-cites="Mouquet2012">(<a href="#ref-Mouquet2012" role="doc-biblioref">Mouquet et al. 2012</a>)</span>, in order to account for the key components of species interactions with their biotic and abiotic environments.</p>
+<p>Towards this goal, a number of novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed <span class="citation" data-cites="Pavoine2011">(<a href="#ref-Pavoine2011" role="doc-biblioref">Pavoine and Bonsall 2011</a>)</span>. Among these methods some are specifically designed to explicitly account for space <span class="citation" data-cites="Pavoine2011a">(e.g. <a href="#ref-Pavoine2011a" role="doc-biblioref"><span class="nocase">Pavoine et al.</span> 2011</a>)</span>. However those studies generally consider spatially discontinuous community samples, i.e.&nbsp;the <span class="math inline">\(\beta\)</span>-diversity component of <span class="citation" data-cites="Whittaker1960">Whittaker (<a href="#ref-Whittaker1960" role="doc-biblioref">1960</a>)</span>, so that the underlying spatial framework can basically be related to the graph theory <span class="citation" data-cites="Dale2002">(<a href="#ref-Dale2002" role="doc-biblioref">Dale et al. 2002</a>)</span>. When mapped data are concerned, such as for instance those on tropical trees provided by large permanent forest plots <span class="citation" data-cites="Losos2004">(<a href="#ref-Losos2004" role="doc-biblioref">Losos and Leigh 2004</a>)</span>, the well-developed framework of the spatial point pattern analysis <span class="citation" data-cites="Ripley1976a Ripley1977">(<a href="#ref-Ripley1976a" role="doc-biblioref">Ripley 1976</a>, <a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span> offers an efficient means of studying the continuous spatial variation in species diversity <span class="citation" data-cites="Condit2000 Shimatani2001 Rajala2012">(<a href="#ref-Condit2000" role="doc-biblioref">Condit et al. 2000</a>; <a href="#ref-Shimatani2001" role="doc-biblioref">Shimatani 2001a</a>; <a href="#ref-Rajala2012" role="doc-biblioref">Rajala and Illian 2012</a>)</span>. A synthesis of the opportunities brought by this approach can be found in <span class="citation" data-cites="Wiegand2017">Wiegand et al. (<a href="#ref-Wiegand2017" role="doc-biblioref">2017</a>)</span>.</p>
+<!--# TODO: developments of spatially explicit diversity indepent from point processes: neighborhood diversity. -->
+<p><span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> and <span class="citation" data-cites="Pelissier2015">Pélissier and Goreaud (<a href="#ref-Pelissier2015" role="doc-biblioref">2015</a>)</span> concomitantly introduced within the framework of the spatial point pattern analysis a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences. If both contributions independently arrived to very similar functions, we believe that to help ecologists to well-understand and to take full advantage of novel approach, further clarifications are needed, especially regarding how it is related to well-known functions of spatial point pattern analysis, namely Ripley’s K-function <span class="citation" data-cites="Ripley1977">(<a href="#ref-Ripley1977" role="doc-biblioref">Ripley 1977</a>)</span> and its intertype extension, the <span class="math inline">\(K_{1,2}\)</span>-function <span class="citation" data-cites="Lotwick1982">(<a href="#ref-Lotwick1982" role="doc-biblioref">Lotwick and Silverman 1982</a>)</span> on the one hand, and Rao’s quadratic entropy on the other hand <span class="citation" data-cites="Rao1982">(<a href="#ref-Rao1982" role="doc-biblioref">Rao 1982</a>)</span>.</p>
+<p>The aim of this chapter is thus to introduce the rationale behind the functions of multivariate point pattern analysis that integrate between-species differences in a distance–dependent measure of diversity. It can basically be seen as an extension of the work of <span class="citation" data-cites="Shimatani2001">Shimatani (<a href="#ref-Shimatani2001" role="doc-biblioref">2001a</a>)</span> based on Simpson’s entropy to Rao’s entropy, one of the most powerful and flexible measure of species diversity <span class="citation" data-cites="Pavoine2012">(<a href="#ref-Pavoine2012" role="doc-biblioref">Pavoine 2012</a>)</span>. It is also a particular implementation of the measurement of neighborhood diversity which possesses some specific features due to the quadratic form of Rao’s entropy. The methods section hereafter makes the synthesis between these originally independent developments and outlines the central role of Rao’s entropy to reconcile them. We finally provide worked examples based on simulated data and on a real dataset from an experimental tropical forest plot in French Guiana.</p>
 </section>
 <section id="methods" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Methods</h1>
-<section id="ripleys-k" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="ripleys-k"><span class="header-section-number">2.1</span> Ripley’s K</h2>
+<section id="biodiversity-measurement-based-on-information-theory" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="biodiversity-measurement-based-on-information-theory"><span class="header-section-number">2.1</span> Biodiversity measurement based on information theory</h2>
+</section>
+<section id="diversity-accumulation-curves" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="diversity-accumulation-curves"><span class="header-section-number">2.2</span> Diversity accumulation curves</h2>
+</section>
+<section id="ripleys-k" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="ripleys-k"><span class="header-section-number">2.3</span> Ripley’s K</h2>
 <p>The framework of spatial point pattern analysis, as introduced by <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span>, relies on the K-function, defined so that <span class="math inline">\(\lambda K(r)\)</span> is the expected number of neighbours located within a distance <span class="math inline">\(r\)</span> of an arbitrary point of the pattern with intensity <span class="math inline">\(\lambda\)</span>. Its classical unbiased estimator for a point pattern located within a finite sampling window is</p>
 <p><span id="eq-Khat"><span class="math display">\[\hat{K}(r) =
   \frac{1}{\hat{\lambda}n}
@@ -203,12 +219,50 @@ window.Quarto = {
   }} \tag{1}\]</span></span></p>
 <p>where <span class="math inline">\(n\)</span> is the number of points of the pattern, <span class="math inline">\(\hat{\lambda}\)</span> is the pattern intensity generally estimated as <span class="math inline">\(n/A\)</span>, with <span class="math inline">\(A\)</span> the sampling window area. The indicator function <span class="math inline">\(\mathbf{1}( \|x_i - x_j\| \leq r)\)</span> equals 1 when points <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are less than <span class="math inline">\(r\)</span> apart, 0 else. <span class="math inline">\(c\left(i, j,,r\right)\)</span> is correction of edge effects equal to 1 when the circle of radius <span class="math inline">\(r\)</span> fits into the sampling window. When it does not, the isotropic correction proposed by <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span> applies to windows of any shape thanks to appropriate geometrical considerations <span class="citation" data-cites="Goreaud1999">(<a href="#ref-Goreaud1999" role="doc-biblioref">Goreaud and Pélissier 1999</a>)</span> to estimate the number of neighbors whith no bias.</p>
 <p>A common extension of this univariate function is the intertype (or bivariate) K12-function proposed by <span class="citation" data-cites="Lotwick1982">Lotwick and Silverman (<a href="#ref-Lotwick1982" role="doc-biblioref">1982</a>)</span>. Its estimator is:</p>
-<p><span id="eq-K12hat"><span class="math display">\[\hat{K_{1,2}}(r) =
+<p><span id="eq-K12hat"><span class="math display">\[\hat{K}_{1,2}(r) =
   \frac{1}{\hat{\lambda_2}n_1}
   \sum_{i=1}^{n_1}{\sum_{j=1}^{n_2}{
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,,r\right)
   }} \tag{2}\]</span></span></p>
-<p>While <span class="math inline">\(K(r)\)</span> is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window, <span class="math inline">\(K_{12}(r)\)</span> allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses, but in particular against the random labelling hypothesis, which means that, conditionally to the point locations, types 1 and 2 are randomly distributed among points of the pattern, or against the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type 1 points is independent from population of type 2 points <span class="citation" data-cites="Goreaud2003">(<a href="#ref-Goreaud2003" role="doc-biblioref">Goreaud and Pélissier 2003</a>)</span>.</p>
+<p><span class="math inline">\(K(r)\)</span> is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window. In contrast, <span class="math inline">\(K_{12}(r)\)</span> allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses. The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types 1 and 2 are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type 1 points is independent from population of type 2 points <span class="citation" data-cites="Goreaud2003">(<a href="#ref-Goreaud2003" role="doc-biblioref">Goreaud and Pélissier 2003</a>)</span>.</p>
+</section>
+<section id="a-distance-dependent-simpsons-entropy" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="a-distance-dependent-simpsons-entropy"><span class="header-section-number">2.4</span> A distance-dependent Simpson’s entropy</h2>
+<p>Simpson’s index of species diversity <span class="citation" data-cites="Simpson1949">(<a href="#ref-Simpson1949" role="doc-biblioref">Simpson 1949</a>)</span> gives the probability that a randomly selected pair of individuals in a sample is comprised of two different species. It is more than an index: it is a measure of entropy <span class="citation" data-cites="Jost2006">(<a href="#ref-Jost2006" role="doc-biblioref">Jost 2006</a>)</span> and thus should be named Simpson’s entropy. It is estimated with no bias by:</p>
+<p><span id="eq-Simpson"><span class="math display">\[\hat{D} = 1 - \sum_{s =1}^S{\frac{n_s \left(n_s - 1 \right)}{n \left(n - 1 \right)}} \tag{3}\]</span></span></p>
+<p>where <span class="math inline">\(n\)</span> and <span class="math inline">\(S\)</span> are the total numbers of individuals and species in the sample, respectively, and <span class="math inline">\(n_p\)</span> the number of individuals of species <span class="math inline">\(s\)</span>.</p>
+<p>From this entropy, <span class="citation" data-cites="Shimatani2001">Shimatani (<a href="#ref-Shimatani2001" role="doc-biblioref">2001a</a>)</span> proposed a distance-dependent version based on Ripley’s K-function, from which we can write a version standardized by <span class="math inline">\(\hat{D}\)</span> as</p>
+<p><span id="eq-Ks"><span class="math display">\[\hat{K}_S(r) = \left[ 1 -
+  \sum_{s =1}^S{\frac{\hat{\lambda}_s^2 \hat{K}_s(r)}{\hat{\lambda}^2 \hat{K}(r)}}
+  \right] / \hat{D}
+   \tag{4}\]</span></span></p>
+<p>where <span class="math inline">\(\hat{K}(r)\)</span> and <span class="math inline">\(\hat{K}_s(r)\)</span> are Ripley’s K-functions for all points of the pattern (no distinction of species) and for points of species s, respectively, with <span class="math inline">\(\hat{\lambda}\)</span> and <span class="math inline">\(\hat{\lambda}_s\)</span> the corresponding intensity estimators.</p>
+<p>The numerator of the above equation corresponds to function <span class="math inline">\(\hat{\alpha}(r)\)</span> of <span class="citation" data-cites="Shimatani2001">Shimatani (<a href="#ref-Shimatani2001" role="doc-biblioref">2001a</a>)</span>, that we may name Simpson’s neighbourhood entropy. Neighbourhood entropy (or diversity) is the entropy (or diversity) considered within a circle of radius <span class="math inline">\(r\)</span> around each point. The interest of considering local diversity rather than at the scale of the whole window has emerged in the literature since <span class="citation" data-cites="Batty1974">Batty (<a href="#ref-Batty1974" role="doc-biblioref">1974</a>)</span>. A review can be found in <span class="citation" data-cites="Altieri2021">Altieri et al. (<a href="#ref-Altieri2021" role="doc-biblioref">2021</a>)</span>, with diverse approaches. It is not discussed that the functioning of a community is influenced by its biodiversity, but it is straightforward to consider that each individual is concerned by the diversity of its neighbourhood rather that of the whole community <span class="citation" data-cites="Hubbell2001a">(e.g., <a href="#ref-Hubbell2001a" role="doc-biblioref">Hubbell et al. 2001</a> showed that tree mortality increased with neighbourhood species richness in a tropical evergreen forest)</span>.</p>
+<p><span class="math inline">\(\alpha(r)\)</span> tends to <span class="math inline">\(D\)</span> when <span class="math inline">\(r\)</span> increases so <span class="math inline">\(K(r) \to 1\)</span>. It is noticeable that <span class="math inline">\(\hat{K}_S(r)\)</span> has an expectation of 1 for all <span class="math inline">\(r\)</span> under the random labelling hypothesis, i.e.&nbsp;a random distribution of the species names conditionally to the overall spatial pattern <span class="citation" data-cites="Eckel2008">(<a href="#ref-Eckel2008" role="doc-biblioref">Eckel et al. 2008</a>)</span>.</p>
+<p>Using the unbiased estimator of <span class="math inline">\(\hat{K}(r)\)</span> introduced in <a href="#eq-Khat" class="quarto-xref">Equation&nbsp;1</a>, allows correcting for edge effects for sampling windows of any shape.</p>
+<p>We can notice for the following that <span class="math inline">\(\hat{K}_S(r)\)</span> can also be estimated by considering the pairs of heterospecifics <span class="citation" data-cites="Shimatani2001">(<a href="#ref-Shimatani2001" role="doc-biblioref">Shimatani 2001a</a>, eq. 9)</span>:</p>
+<p><span id="eq-Ks12"><span class="math display">\[\hat{K}_S(r) = \left[
+  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{s,t}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \right] / \hat{D}
+   \tag{5}\]</span></span></p>
+<p>with <span class="math inline">\(\hat{K}_{s,t}(r)\)</span> a generalization of <span class="math inline">\(K_{12}(r)\)</span> estimator introduced earlier, to any couple of different species <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>.</p>
+</section>
+<section id="a-generalization-to-raos-entropy" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="a-generalization-to-raos-entropy"><span class="header-section-number">2.5</span> A generalization to Rao’s entropy</h2>
+<p>Simpson’s entropy is a special case of Rao’s entropy, that is the expected divergence between individuals of a randomly selected pair in a sample <span class="citation" data-cites="Rao1982">(<a href="#ref-Rao1982" role="doc-biblioref">Rao 1982</a>)</span>. An unbiased estimator <span class="citation" data-cites="Shimatani2001a">(<a href="#ref-Shimatani2001a" role="doc-biblioref">Shimatani 2001b</a>)</span> is:</p>
+<p><span class="math display">\[\hat{H}_D = \sum_{s =1}^S{\frac{n_s n_t}{n \left(n - 1 \right)}d_{s,t}}\]</span></p>
+<p>where and <span class="math inline">\(d_{s,t}\)</span> is a measure of the pairwise divergence between species <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> (with <span class="math inline">\(d_{s,t}\)</span> = <span class="math inline">\(d_{t,s}\)</span> and <span class="math inline">\(d_{s,s} = 0\)</span>, but the triangular inequality <span class="math inline">\(d_{s,t} + d_{s,u} \geq d_{s,u}\)</span> that defines a distance is not required). <span class="math inline">\(H_D\)</span> is a measure of diversity commonly used in ecology to take into account non-uniform distances between species, such as phylogenetic or functional distances <span class="citation" data-cites="Pavoine2011">(<a href="#ref-Pavoine2011" role="doc-biblioref">Pavoine and Bonsall 2011</a>)</span>. Taking <span class="math inline">\(d_{s,t} = 1\)</span> for all <span class="math inline">\(s \neq t\)</span> and 0 otherwise, <span class="math inline">\(H_D\)</span> reduces to Simpson’s <span class="math inline">\(D\)</span> above. We therefore straightforwardly propose to generalize <span class="math inline">\(K_S(r)\)</span> introduced above to a normalized, distance-dependent Rao’s quadratic entropy <span class="math inline">\(K_S(r)\)</span> that integrates Ripley’s correction of edge effects estimated by:</p>
+<p><span class="math display">\[\hat{K}_R(r) = \left[
+  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{s,t}(r) d_{s,t}}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \right] / \hat{H}_D
+  \]</span></p>
+<p>This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao’s sample diversity (i.e., <span class="math inline">\(H_D\)</span>) in a disc of radius r centred on an arbitrary point of the pattern. <span class="math inline">\(\hat{K}_R(r)\)</span> reduces to <span class="math inline">\(\hat{K}_S(r)\)</span> when <span class="math inline">\(d_{s,t} = 1\)</span> for all species <span class="math inline">\(s \neq t\)</span>.</p>
+</section>
+<section id="multitype-correlation-and-beta-diversity" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="multitype-correlation-and-beta-diversity"><span class="header-section-number">2.6</span> Multitype correlation and <span class="math inline">\(\beta\)</span> diversity</h2>
+<p>Our <span class="math inline">\(K_R\)</span>- and <span class="math inline">\(K_S\)</span>-functions are cumulative functions as is the original K-function of <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span>. This means that they are estimated for a series of concentric neighbourhood discs of increasing radii, for instance by a regular distance interval <span class="math inline">\(dr\)</span>. Some authors however prefer to refer to the framework of the pair-correlation function, <span class="math inline">\(g(r)\)</span> <span class="citation" data-cites="Stoyan1987 Wiegand2004">(<a href="#ref-Stoyan1987" role="doc-biblioref">Stoyan et al. 1987</a>; <a href="#ref-Wiegand2004" role="doc-biblioref">Wiegand and Moloney 2004</a>)</span>, that can be seen as the derivative of <span class="math inline">\(K(r)\)</span>, giving the probably to encounter neighbouring points in concentric annuli between <span class="math inline">\(r\)</span> and <span class="math inline">\(r - dr\)</span>. <span class="math inline">\(K_d(r)\)</span> of <span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> is such a function, very close to <span class="math inline">\(g_R(r)\)</span>, the derivative of our <span class="math inline">\(K_R(r)\)</span> above <span class="citation" data-cites="Pelissier2015">(<a href="#ref-Pelissier2015" role="doc-biblioref">Pélissier and Goreaud 2015</a>)</span>. <span class="math inline">\(K_d(r)\)</span> is therefore an awkward appellation for Shen’s et al.&nbsp;function, which would have been better named as <span class="math inline">\(g_d(r)\)</span> as to remain consistent with the classical notation used in point pattern analysis.</p>
+<p>The same reasoning can be built from the so-called Simpson’s <span class="math inline">\(\beta\)</span> diversity index to <span class="math inline">\(g_R(r)\)</span>. <span class="citation" data-cites="Chave2002">Chave and Leigh (<a href="#ref-Chave2002" role="doc-biblioref">2002</a>)</span> defined the <span class="math inline">\(F(r)\)</span> function as the probability for two individuals located <span class="math inline">\(r\)</span> apart to belong to the same species. <span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> named <span class="math inline">\(1 - F(r)\)</span> the “spatially explicit Simpson’s index of diversity”, denoted <span class="math inline">\(\beta(r)\)</span> by <span class="citation" data-cites="Shimatani2001">Shimatani (<a href="#ref-Shimatani2001" role="doc-biblioref">2001a</a>)</span>, that is the probability for two individuals located <span class="math inline">\(r\)</span> apart to belong different species. We will rather write <span class="math inline">\(\beta_S(r)\)</span> for consistency with our notation system. It can be straightforwardly be generalized to <span class="math inline">\(\beta_R(r)\)</span>, the average divergence between to individuals taken at distance <span class="math inline">\(r\)</span>, thus a spatially explicit Rao’s index of diversity. These measures are actually <span class="math inline">\(\beta\)</span> differentiation diversity measures sensu <span class="citation" data-cites="Jurasinski2009">Jurasinski et al. (<a href="#ref-Jurasinski2009" role="doc-biblioref">2009</a>)</span>: they characterize how different spatial units <span class="math inline">\(r\)</span> apart are.</p>
+<p>We can thus define <span class="math inline">\(g_S(r)\)</span>, a normalized version of <span class="math inline">\(\beta_S(r)\)</span> and <span class="math inline">\(g_R(r)\)</span>, its generalization to Rao’s entropy.</p>
 </section>
 </section>
 <section id="application" class="level1" data-number="3">
@@ -229,17 +283,104 @@ window.Quarto = {
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Altieri2021" class="csl-entry" role="listitem">
+Altieri, Linda, Daniela Cocchi, and Giulia Roli. 2021. <span>‘Spatial Entropy for Biodiversity and Environmental Data: <span class="nocase">The R-package SpatEntropy</span>’</span>. <em>Environmental Modelling &amp; Software</em> 144 (October): 105149. <a href="https://doi.org/10.1016/j.envsoft.2021.105149">https://doi.org/10.1016/j.envsoft.2021.105149</a>.
+</div>
+<div id="ref-Batty1974" class="csl-entry" role="listitem">
+Batty, Michael. 1974. <span>‘Spatial <span>Entropy</span>’</span>. <em>Geographical Analysis</em> 6 (1): 1–31. <a href="https://doi.org/10.1111/j.1538-4632.1974.tb01014.x">https://doi.org/10.1111/j.1538-4632.1974.tb01014.x</a>.
+</div>
+<div id="ref-Cadotte2012" class="csl-entry" role="listitem">
+Cadotte, Marc W., Russel Dinnage, and David Tilman. 2012. <span>‘Phylogenetic Diversity Promotes Ecosystem Stability’</span>. <em>Ecology</em> 93 (8): S223–33. <a href="https://doi.org/10.1890/11-0426.1">https://doi.org/10.1890/11-0426.1</a>.
+</div>
+<div id="ref-Chave2002" class="csl-entry" role="listitem">
+Chave, Jérôme, and Egbert G. Leigh. 2002. <span>‘A Spatially Explicit Neutral Model of <span><span class="math inline">\(\beta\)</span></span>-<span>Diversity</span> in Tropical Forests’</span>. <em>Theoretical Population Biology</em> 62 (2): 153–68. <a href="https://doi.org/10.1006/tpbi.2002.1597">https://doi.org/10.1006/tpbi.2002.1597</a>.
+</div>
+<div id="ref-Clark2010" class="csl-entry" role="listitem">
+Clark, James S., David Bell, Chengjin Chu, et al. 2010. <span>‘High-Dimensional Coexistence Based on Individual Variation: A Synthesis of Evidence’</span>. <em>Ecological Monographs</em> 80 (4): 569–608. <a href="https://doi.org/10.1890/09-1541.1">https://doi.org/10.1890/09-1541.1</a>.
+</div>
+<div id="ref-Condit2000" class="csl-entry" role="listitem">
+Condit, Richard, Peter S. Ashton, Patrick Baker, et al. 2000. <span>‘Spatial Patterns in the Distribution of Tropical Tree Species’</span>. <em>Science</em> 288 (5470): 1414–18. <a href="https://doi.org/10.1126/science.288.5470.1414">https://doi.org/10.1126/science.288.5470.1414</a>.
+</div>
+<div id="ref-Dale1999" class="csl-entry" role="listitem">
+Dale, Mark R. T. 1999. <em>Spatial Pattern Analysis in Plant Ecology</em>. Cambridge Studies in Ecology. Cambridge Univ. Press.
+</div>
+<div id="ref-Dale2002" class="csl-entry" role="listitem">
+Dale, Mark R. T., Philip M. Dixon, Marie-Josée Fortin, Pierre Legendre, Donald E. Myers, and Michael S. Rosenberg. 2002. <span>‘Conceptual and Mathematical Relationships Among Methods for Spatial Analysis’</span>. <em>Ecography</em> 25 (5): 558–77. <a href="https://doi.org/10.1034/j.1600-0587.2002.250506.x">https://doi.org/10.1034/j.1600-0587.2002.250506.x</a>.
+</div>
+<div id="ref-Eckel2008" class="csl-entry" role="listitem">
+Eckel, S., F. Fleischer, P. Grabarnik, and V. Schmidt. 2008. <span>‘An Investigation of the Spatial Correlations for Relative Purchasing Power in <span>Baden-Wurttemberg</span>’</span>. <em>Asta-Advances in Statistical Analysis</em> 92 (2): 135–52. <a href="https://doi.org/10.1007/s10182-008-0066-1">https://doi.org/10.1007/s10182-008-0066-1</a>.
+</div>
 <div id="ref-Goreaud1999" class="csl-entry" role="listitem">
 Goreaud, François, and Raphaël Pélissier. 1999. <span>‘On Explicit Formulas of Edge-Effect Correction for <span>Ripley</span>’s <span class="nocase">K-function</span>’</span>. <em>Journal of Vegetation Science</em> 10 (3): 433–38.
 </div>
 <div id="ref-Goreaud2003" class="csl-entry" role="listitem">
 Goreaud, François, and Raphaël Pélissier. 2003. <span>‘Avoiding Misinterpretation of Biotic Interactions with the Intertype <span>K12</span> Function: Population Independence Vs Random Labelling Hypotheses’</span>. <em>Journal of Vegetation Science</em> 14 (5): 681–92. <a href="https://doi.org/10.1111/j.1654-1103.2003.tb02200.x">https://doi.org/10.1111/j.1654-1103.2003.tb02200.x</a>.
 </div>
+<div id="ref-Hubbell2001a" class="csl-entry" role="listitem">
+Hubbell, Stephen P., Jorge A. Ahumada, Richard Condit, and Robin B. Foster. 2001. <span>‘Local Neighborhood Effects on Long-Term Survival of Individual Trees in a Neotropical Forest’</span>. <em>Ecological Research</em> 16: 859–75. <a href="https://doi.org/10.1046/j.1440-1703.2001.00445.x">https://doi.org/10.1046/j.1440-1703.2001.00445.x</a>.
+</div>
+<div id="ref-Jost2006" class="csl-entry" role="listitem">
+Jost, Lou. 2006. <span>‘Entropy and Diversity’</span>. <em>Oikos</em> 113 (2): 363–75. <a href="https://doi.org/10.1111/j.2006.0030-1299.14714.x">https://doi.org/10.1111/j.2006.0030-1299.14714.x</a>.
+</div>
+<div id="ref-Jurasinski2009" class="csl-entry" role="listitem">
+Jurasinski, Gerald, Vroni Retzer, and Carl Beierkuhnlein. 2009. <span>‘Inventory, Differentiation, and Proportional Diversity: A Consistent Terminology for Quantifying Species Diversity’</span>. <em>Oecologia</em> 159 (1): 15–26. <a href="https://doi.org/10.1007/s00442-008-1190-z">https://doi.org/10.1007/s00442-008-1190-z</a>.
+</div>
+<div id="ref-Losos2004" class="csl-entry" role="listitem">
+Losos, Elizabeth C., and Egbert Giles Leigh. 2004. <em>Tropical Forest Diversity and Dynamism: Findings from a Large-Scale Plot Network</em>. University of Chicago press.
+</div>
 <div id="ref-Lotwick1982" class="csl-entry" role="listitem">
 Lotwick, H. W., and B. W. Silverman. 1982. <span>‘Methods for Analysing Spatial Processes of Several Types of Points’</span>. <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 44 (3): 406–13. <a href="https://www.jstor.org/stable/2345499">https://www.jstor.org/stable/2345499</a>.
 </div>
+<div id="ref-Mouquet2012" class="csl-entry" role="listitem">
+Mouquet, Nicolas, Vincent Devictor, Christine N. Meynard, et al. 2012. <span>‘Ecophylogenetics: Advances and Perspectives’</span>. <em>Biological Reviews</em> 87 (4): 769–85. <a href="https://doi.org/10.1111/j.1469-185X.2012.00224.x">https://doi.org/10.1111/j.1469-185X.2012.00224.x</a>.
+</div>
+<div id="ref-Pavoine2012" class="csl-entry" role="listitem">
+Pavoine, Sandrine. 2012. <span>‘Clarifying and Developing Analyses of Biodiversity: Towards a Generalisation of Current Approaches’</span>. <em>Methods in Ecology and Evolution</em> 3 (3): 509–18. <a href="https://doi.org/10.1111/j.2041-210X.2011.00181.x">https://doi.org/10.1111/j.2041-210X.2011.00181.x</a>.
+</div>
+<div id="ref-Pavoine2011" class="csl-entry" role="listitem">
+Pavoine, Sandrine, and Michael B. Bonsall. 2011. <span>‘Measuring Biodiversity to Explain Community Assembly: A Unified Approach’</span>. <em>Biological Reviews</em> 86 (4): 792–812. <a href="https://doi.org/10.1111/j.1469-185X.2010.00171.x">https://doi.org/10.1111/j.1469-185X.2010.00171.x</a>.
+</div>
+<div id="ref-Pavoine2011a" class="csl-entry" role="listitem">
+<span class="nocase">Pavoine, Sandrine, Errol Vela, Sophie Gachet, Gérard de Belair, and Michael B. Bonsall</span>. 2011. <span>‘Linking Patterns in Phylogeny, Traits, Abiotic Variables and Space: A Novel Approach to Linking Environmental Filtering and Plant Community Assembly’</span>. <em>Journal of Ecology</em> 99 (1): 165–75. <a href="https://doi.org/10.1111/j.1365-2745.2010.01743.x">https://doi.org/10.1111/j.1365-2745.2010.01743.x</a>.
+</div>
+<div id="ref-Pelissier2015" class="csl-entry" role="listitem">
+Pélissier, Raphaël, and François Goreaud. 2015. <span>‘Ads <span>Package</span> for <span>R</span>: <span>A Fast Unbiased Implementation</span> of the <span>K</span> -Function <span>Family</span> for <span>Studying Spatial Point Patterns</span> in <span>Irregular-Shaped Sampling Windows</span>’</span>. <em>Journal of Statistical Software</em> 63 (6). <a href="https://doi.org/10.18637/jss.v063.i06">https://doi.org/10.18637/jss.v063.i06</a>.
+</div>
+<div id="ref-Rajala2012" class="csl-entry" role="listitem">
+Rajala, T., and J. Illian. 2012. <span>‘A Family of Spatial Biodiversity Measures Based on Graphs’</span>. <em>Environmental and Ecological Statistics</em> 19 (4): 545–72. <a href="https://doi.org/10.1007/s10651-012-0200-9">https://doi.org/10.1007/s10651-012-0200-9</a>.
+</div>
+<div id="ref-Rao1982" class="csl-entry" role="listitem">
+Rao, C. Radhakrishna. 1982. <span>‘Diversity and Dissimilarity Coefficients: A Unified Approach’</span>. <em>Theoretical Population Biology</em> 21: 24–43. <a href="https://doi.org/10.1016/0040-5809(82)90004-1">https://doi.org/10.1016/0040-5809(82)90004-1</a>.
+</div>
+<div id="ref-Ripley1976a" class="csl-entry" role="listitem">
+Ripley, Brian D. 1976. <span>‘The Second-Order Analysis of Stationary Point Processes’</span>. <em>Journal of Applied Probability</em> 13 (2): 255–66. <a href="https://doi.org/10.2307/3212829">https://doi.org/10.2307/3212829</a>.
+</div>
 <div id="ref-Ripley1977" class="csl-entry" role="listitem">
 Ripley, Brian D. 1977. <span>‘Modelling Spatial Patterns’</span>. <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 39 (2): 172–212. <a href="https://doi.org/10.1111/j.2517-6161.1977.tb01615.x">https://doi.org/10.1111/j.2517-6161.1977.tb01615.x</a>.
+</div>
+<div id="ref-Shen2013" class="csl-entry" role="listitem">
+Shen, Guochun, Thorsten Wiegand, Xiangcheng Mi, and Fangliang He. 2013. <span>‘Quantifying Spatial Phylogenetic Structures of Fully Stem-Mapped Plant Communities’</span>. <em>Methods in Ecology and Evolution</em> 4 (12): 1132–41. <a href="https://doi.org/10.1111/2041-210X.12119">https://doi.org/10.1111/2041-210X.12119</a>.
+</div>
+<div id="ref-Shimatani2001" class="csl-entry" role="listitem">
+Shimatani, Kenichiro. 2001a. <span>‘Multivariate Point Processes and Spatial Variation of Species Diversity’</span>. <em>Forest Ecology and Management</em> 142 (1-3): 215–29. <a href="https://doi.org/10.1016/s0378-1127(00)00352-2">https://doi.org/10.1016/s0378-1127(00)00352-2</a>.
+</div>
+<div id="ref-Shimatani2001a" class="csl-entry" role="listitem">
+Shimatani, Kenichiro. 2001b. <span>‘On the Measurement of Species Diversity Incorporating Species Differences’</span>. <em>Oikos</em> 93 (1): 135–47. <a href="https://doi.org/10.1034/j.1600-0706.2001.930115.x">https://doi.org/10.1034/j.1600-0706.2001.930115.x</a>.
+</div>
+<div id="ref-Simpson1949" class="csl-entry" role="listitem">
+Simpson, E. H. 1949. <span>‘Measurement of Diversity’</span>. <em>Nature</em> 163 (4148): 688. <a href="https://doi.org/10.1038/163688a0">https://doi.org/10.1038/163688a0</a>.
+</div>
+<div id="ref-Stoyan1987" class="csl-entry" role="listitem">
+Stoyan, Dietrich, W. S. Kendall, and Joseph Mecke. 1987. <span>‘Stochastic Geometry and Its Applications’</span>. In <em>Wiley <span>Series</span> in Probability and Mathematical Statistics</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-Whittaker1960" class="csl-entry" role="listitem">
+Whittaker, R. H. 1960. <span>‘Vegetation of the <span>Siskiyou</span> Mountains, <span>Oregon</span> and <span>California</span>’</span>. <em>Ecological Monographs</em> 30 (3): 279–338. <a href="https://doi.org/10.2307/1943563">https://doi.org/10.2307/1943563</a>.
+</div>
+<div id="ref-Wiegand2004" class="csl-entry" role="listitem">
+Wiegand, Thorsten, and Kirk A. Moloney. 2004. <span>‘Rings, Circles, and Null-Models for Point Pattern Analysis in Ecology’</span>. <em>Oikos</em> 104 (2): 209–29.
+</div>
+<div id="ref-Wiegand2017" class="csl-entry" role="listitem">
+Wiegand, Thorsten, María Uriarte, Nathan J. B. Kraft, Guochun Shen, Xugao Wang, and Fangliang He. 2017. <span>‘Spatially Explicit Metrics of Species Diversity, Functional Diversity, and Phylogenetic Diversity: <span>Insights</span> into Plant Community Assembly Processes’</span>. <em>Annual Review of Ecology, Evolution, and Systematics</em> 48 (1): 329–51. <a href="https://doi.org/10.1146/annurev-ecolsys-110316-022936">https://doi.org/10.1146/annurev-ecolsys-110316-022936</a>.
 </div>
 </div></section></div></main>
 <!-- /main column -->
