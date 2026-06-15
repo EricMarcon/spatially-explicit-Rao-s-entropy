@@ -154,6 +154,8 @@ set.seed(973)
 
 # Introduction
 
+
+
 # Methods
 
 ## Ripley's K
@@ -175,14 +177,93 @@ When it does not, the isotropic correction proposed by @Ripley1977 applies to wi
 A common extension of this univariate function is the intertype (or bivariate) K12-function proposed by @Lotwick1982.
 Its estimator is:
 
-$$\hat{K_{1,2}}(r) =
+$$\hat{K}_{1,2}(r) =
   \frac{1}{\hat{\lambda_2}n_1}
   \sum_{i=1}^{n_1}{\sum_{j=1}^{n_2}{
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,,r\right)
   }}$$ {#eq-K12hat}
 
-While $K(r)$ is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window, $K_{12}(r)$ allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses, but in particular against the random labelling hypothesis, which means that, conditionally to the point locations, types 1 and 2 are randomly distributed among points of the pattern, or against the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type 1 points is independent from population of type 2 points [@Goreaud2003].
+$K(r)$ is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window.
+In contrast, $K_{12}(r)$ allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses.
+The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types 1 and 2 are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type 1 points is independent from population of type 2 points [@Goreaud2003].
 
+## A distance-dependent Simpson's entropy
+
+Simpson's index of species diversity [@Simpson1949] gives the probability that a randomly selected pair of individuals in a sample is comprised of two different species.
+It is more than an index: it is a measure of entropy [@Jost2006] and thus should be named Simpson's entropy.
+It is estimated with no bias by:
+
+$$\hat{D} = 1 - \sum_{s =1}^S{\frac{n_s \left(n_s - 1 \right)}{n \left(n - 1 \right)}}$$ {#eq-Simpson}
+
+where $n$ and $S$ are the total numbers of individuals and species in the sample, respectively, and $n_p$ the number of individuals of species $s$.
+
+From this entropy, @Shimatani2001 proposed a distance-dependent version based on Ripley's K-function, from which we can write a version standardized by $\hat{D}$ as
+
+$$\hat{K}_S(r) = \left[ 1 - 
+  \sum_{s =1}^S{\frac{\hat{\lambda}_s^2 \hat{K}_s(r)}{\hat{\lambda}^2 \hat{K}(r)}}
+  \right] / \hat{D}
+  $$ {#eq-Ks}
+
+where $\hat{K}(r)$ and $\hat{K}_s(r)$ are Ripley's K-functions for all points of the pattern (no distinction of species) and for points of species s, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_s$ the corresponding intensity estimators.
+
+The numerator of the above equation corresponds to function $\hat{\alpha}(r)$ of @Shimatani2001, that we may name Simpson's neighbourhood entropy.
+Neighbourhood entropy (or diversity) is the entropy (or diversity) considered within a circle of radius $r$ around each point.
+The interest of considering local diversity rather than at the scale of the whole window has emerged in the literature since @Batty1974.
+A review can be found in @Altieri2021, with diverse approaches.
+It is not discussed that the functioning of a community is influenced by its biodiversity, but it is straightforward to consider that each individual is concerned by the diversity of its neighbourhood rather that of the whole community [e.g., @Hubbell2001a showed that tree mortality increased with neighbourhood species richness in a tropical evergreen forest].
+
+$\alpha(r)$ tends to $D$ when $r$ increases so $K(r) \to 1$.
+It is noticeable that $\hat{K}_S(r)$ has an expectation of 1 for all $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
+
+Using the unbiased estimator of $\hat{K}(r)$ introduced in @eq-Khat, allows correcting for edge effects for sampling windows of any shape.
+
+We can notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics [@Shimatani2001, eq. 9]:
+
+$$\hat{K}_S(r) = \left[
+  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{s,t}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \right] / \hat{D}
+  $$ {#eq-Ks12}
+
+with $\hat{K}_{s,t}(r)$ a generalization of $K_{12}(r)$ estimator introduced earlier, to any couple of different species $s$ and $t$.
+
+## A generalization to Rao's entropy
+
+Simpson's entropy is a special case of Rao's entropy, that is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
+An unbiased estimator [@Shimatani2001a] is: 
+
+$$\hat{H}_D = \sum_{s =1}^S{\frac{n_s n_t}{n \left(n - 1 \right)}d_{s,t}}$$ {#eq-Simpson}
+
+where and $d_{s,t}$ is a measure of the pairwise divergence between species $s$ and $t$ (with $d_{s,t}$ = $d_{t,s}$ and $d_{s,s} = 0$, but the triangular inequality $d_{s,t} + d_{s,u} \geq d_{s,u}$ that defines a distance is not required).
+$H_D$ is a measure of diversity commonly used in ecology to take into account non-uniform distances between species, such as phylogenetic or functional distances [@Pavoine2011]. 
+Taking $d_{s,t} = 1$ for all $s \neq t$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above. 
+We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_S(r)$ that integrates Ripley's correction of edge effects estimated by:
+
+$$\hat{K}_R(r) = \left[
+  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{s,t}(r) d_{s,t}}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \right] / \hat{H}_D
+  $$ {#eq-Ks12}
+
+ 
+
+This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity (i.e., $H_D$) in a disc of radius r centred on an arbitrary point of the pattern.
+$\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{s,t} = 1$ for all species $s \neq t$.
+
+## Multitype correlation and $\beta$ diversity
+
+Our $K_R$- and $K_S$-functions are cumulative functions as is the original K-function of @Ripley1977. 
+This means that they are estimated for a series of concentric neighbourhood discs of increasing radii, for instance by a regular distance interval $dr$.
+Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987;@Wiegand2004], that can be seen as the derivative of $K(r)$, giving the probably to encounter neighbouring points in concentric annuli between $r$ and $r - dr$.
+$K_d(r)$ of @Shen2013 is such a function, very close to $g_R(r)$, the derivative of our $K_R(r)$ above [@Pelissier2015]. 
+$K_d(r)$ is therefore an awkward appellation for Shen's et al. function, which would have been better named as $g_d(r)$ as to remain consistent with the classical notation used in point pattern analysis.
+
+The same reasoning can be built from the so-called Simpson's $\beta$ diversity index to $g_R(r)$.
+@Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species. 
+@Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's \beta index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species. 
+We will rather write $\beta_S(r)$ for consistency with our notation system.
+It can be straightforwardly be generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$, thus a spatially explicit Rao's \beta index of diversity.
+These measures are actually $\beta$ differentiation diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
+
+We can thus define $g_S(r)$, a normalized version of $\beta_S(r)$ and $g_R(r)$, its generalization to Rao's entropy.
 
 
 # Application
