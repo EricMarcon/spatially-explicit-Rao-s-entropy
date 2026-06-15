@@ -154,9 +154,33 @@ set.seed(973)
 
 # Introduction
 
+Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities.
+In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e. intra- and inter-specific) competition/facilitation and habitat preferences [@Dale1999].
+While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity [@Clark2010; @Cadotte2012].
+As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology [@Mouquet2012], in order to account for the key components of species interactions with their biotic and abiotic environments.
 
+Towards this goal, a number of novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed [@Pavoine2011].
+Among these methods some are specifically designed to explicitly account for space [e.g. @Pavoine2011a].
+However those studies generally consider spatially discontinuous community samples, i.e. the $\beta$-diversity component of @Whittaker1960, so that the underlying spatial framework can basically be related to the graph theory [@Dale2002].
+When mapped data are concerned, such as for instance those on tropical trees provided by large permanent forest plots [@Losos2004], the well-developed framework of the spatial point pattern analysis [@Ripley1976a; @Ripley1977] offers an efficient means of studying the continuous spatial variation in species diversity [@Condit2000; @Shimatani2001; @Rajala2012].
+A synthesis of the opportunities brought by this approach can be found in @Wiegand2017.
+
+<!--# TODO: developments of spatially explicit diversity indepent from point processes: neighborhood diversity. -->
+
+@Shen2013 and @Pelissier2015 concomitantly introduced within the framework of the spatial point pattern analysis a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences.
+If both contributions independently arrived to very similar functions, we believe that to help ecologists to well-understand and to take full advantage of novel approach, further clarifications are needed, especially regarding how it is related to well-known functions of spatial point pattern analysis, namely Ripley's K-function [@Ripley1977] and its intertype extension, the $K_{1,2}$-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
+
+The aim of this chapter is thus to introduce the rationale behind the functions of multivariate point pattern analysis that integrate between-species differences in a distance–dependent measure of diversity.
+It can basically be seen as an extension of the work of @Shimatani2001 based on Simpson's entropy to Rao's entropy, one of the most powerful and flexible measure of species diversity [@Pavoine2012].
+It is also a particular implementation of the measurement of neighborhood diversity which possesses some specific features due to the quadratic form of Rao's entropy.
+The methods section hereafter makes the synthesis between these originally independent developments and outlines the central role of Rao's entropy to reconcile them.
+We finally provide worked examples based on simulated data and on a real dataset from an experimental tropical forest plot in French Guiana.
 
 # Methods
+
+## Biodiversity measurement based on information theory
+
+## Diversity accumulation curves
 
 ## Ripley's K
 
@@ -229,42 +253,39 @@ with $\hat{K}_{s,t}(r)$ a generalization of $K_{12}(r)$ estimator introduced ear
 ## A generalization to Rao's entropy
 
 Simpson's entropy is a special case of Rao's entropy, that is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
-An unbiased estimator [@Shimatani2001a] is: 
+An unbiased estimator [@Shimatani2001a] is:
 
-$$\hat{H}_D = \sum_{s =1}^S{\frac{n_s n_t}{n \left(n - 1 \right)}d_{s,t}}$$ {#eq-Simpson}
+$$\hat{H}_D = \sum_{s =1}^S{\frac{n_s n_t}{n \left(n - 1 \right)}d_{s,t}}$$
 
 where and $d_{s,t}$ is a measure of the pairwise divergence between species $s$ and $t$ (with $d_{s,t}$ = $d_{t,s}$ and $d_{s,s} = 0$, but the triangular inequality $d_{s,t} + d_{s,u} \geq d_{s,u}$ that defines a distance is not required).
-$H_D$ is a measure of diversity commonly used in ecology to take into account non-uniform distances between species, such as phylogenetic or functional distances [@Pavoine2011]. 
-Taking $d_{s,t} = 1$ for all $s \neq t$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above. 
+$H_D$ is a measure of diversity commonly used in ecology to take into account non-uniform distances between species, such as phylogenetic or functional distances [@Pavoine2011].
+Taking $d_{s,t} = 1$ for all $s \neq t$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
 We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_S(r)$ that integrates Ripley's correction of edge effects estimated by:
 
 $$\hat{K}_R(r) = \left[
   \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{s,t}(r) d_{s,t}}{\hat{\lambda}^2 \hat{K}(r)}}}
   \right] / \hat{H}_D
-  $$ {#eq-Ks12}
-
- 
+  $$
 
 This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity (i.e., $H_D$) in a disc of radius r centred on an arbitrary point of the pattern.
 $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{s,t} = 1$ for all species $s \neq t$.
 
 ## Multitype correlation and $\beta$ diversity
 
-Our $K_R$- and $K_S$-functions are cumulative functions as is the original K-function of @Ripley1977. 
+Our $K_R$- and $K_S$-functions are cumulative functions as is the original K-function of @Ripley1977.
 This means that they are estimated for a series of concentric neighbourhood discs of increasing radii, for instance by a regular distance interval $dr$.
-Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987;@Wiegand2004], that can be seen as the derivative of $K(r)$, giving the probably to encounter neighbouring points in concentric annuli between $r$ and $r - dr$.
-$K_d(r)$ of @Shen2013 is such a function, very close to $g_R(r)$, the derivative of our $K_R(r)$ above [@Pelissier2015]. 
+Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987; @Wiegand2004], that can be seen as the derivative of $K(r)$, giving the probably to encounter neighbouring points in concentric annuli between $r$ and $r - dr$.
+$K_d(r)$ of @Shen2013 is such a function, very close to $g_R(r)$, the derivative of our $K_R(r)$ above [@Pelissier2015].
 $K_d(r)$ is therefore an awkward appellation for Shen's et al. function, which would have been better named as $g_d(r)$ as to remain consistent with the classical notation used in point pattern analysis.
 
 The same reasoning can be built from the so-called Simpson's $\beta$ diversity index to $g_R(r)$.
-@Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species. 
-@Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's \beta index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species. 
+@Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species.
+@Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's \beta index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species.
 We will rather write $\beta_S(r)$ for consistency with our notation system.
 It can be straightforwardly be generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$, thus a spatially explicit Rao's \beta index of diversity.
 These measures are actually $\beta$ differentiation diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
 
 We can thus define $g_S(r)$, a normalized version of $\beta_S(r)$ and $g_R(r)$, its generalization to Rao's entropy.
-
 
 # Application
 
