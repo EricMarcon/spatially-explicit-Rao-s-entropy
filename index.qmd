@@ -562,15 +562,14 @@ plot(
 
 ```{r}
 #simulating limiting similarity (Fig2)
-marks1 <- hrand.spp$marks
-freq <- table(marks1)
+freq <- table(hrand.spp$marks)
 freq <- as.vector(freq / sum(freq))
 mod <- list(
   cif = "straussm", 
   par = list(
     beta = freq, 
     gamma = as.matrix(clust.dist),
-    radii = matrix(5, nlevels(marks1), nlevels(marks1))
+    radii = matrix(5, nlevels(hrand.spp$marks), nlevels(hrand.spp$marks))
   ), 
   w = c(0, 100, 0, 100)
 )
@@ -580,7 +579,12 @@ compet <- rmh(
   control = list(p = 1, ptypes = freq)
 )
 levels(compet$marks) <- letters[1:16]
-compet.spp <- spp(compet$x, compet$y, window = c(0, 0, 100, 100), marks = compet$marks)
+compet.spp <- spp(
+  compet$x, 
+  compet$y, 
+  window = c(0, 0, 100, 100), 
+  marks = compet$marks
+)
 plot(
   compet.spp, 
   cols = rep("black", nlevels(compet.spp$marks)), 
