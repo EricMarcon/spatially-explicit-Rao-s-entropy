@@ -27,22 +27,26 @@ author:
     attributes:
       corresponding: true
     url: https://ericmarcon.github.io/
+  - name: Christopher Baraloto
+    orcid: 0000-0001-7322-8581
+    affiliations:
+      - name: Florida International University
+        id: 3
+        city: Miami
+        state: Florida
   - name: Elodie Allié
     orcid: 0000-0001-8807-7982
   - name: Florence Puech
     orcid: 0000-0002-5279-6878
     affiliations:
       - name: Université Paris-Saclay, INRAE, AgroParisTech, Paris-Saclay Applied Economics
-        id: 3
+        id: 4
         city: Palaiseau
         state: France
   - name: Raphaël Pélissier
     orcid: 0000-0003-4845-5090
     affiliations:
-      - name: AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
-        id: 2
-        city: Montpellier
-        state: France
+      - id: 2
 # Abstract and Keywords
 abstract: |
   To be written.
