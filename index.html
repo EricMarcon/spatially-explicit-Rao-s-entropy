@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Eric Marcon">
+<meta name="author" content="Christopher Baraloto">
 <meta name="author" content="Elodie Allié">
 <meta name="author" content="Florence Puech">
 <meta name="author" content="Raphaël Pélissier">
@@ -128,15 +129,23 @@ window.Quarto = {
   </ul></li>
   <li><a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application"><span class="header-section-number">3</span> Application</a>
   <ul class="collapse">
-  <li><a href="#simulated-data" id="toc-simulated-data" class="nav-link" data-scroll-target="#simulated-data"><span class="header-section-number">3.1</span> Simulated data</a></li>
-  <li><a href="#paracou" id="toc-paracou" class="nav-link" data-scroll-target="#paracou"><span class="header-section-number">3.2</span> Paracou</a></li>
+  <li><a href="#simulated-data" id="toc-simulated-data" class="nav-link" data-scroll-target="#simulated-data"><span class="header-section-number">3.1</span> Simulated data</a>
+  <ul class="collapse">
+  <li><a href="#habitat-preference" id="toc-habitat-preference" class="nav-link" data-scroll-target="#habitat-preference">Habitat preference</a></li>
+  <li><a href="#limited-similarity" id="toc-limited-similarity" class="nav-link" data-scroll-target="#limited-similarity">Limited similarity</a></li>
+  </ul></li>
+  <li><a href="#paracou-a-tropical-forest-plot-in-french-guiana" id="toc-paracou-a-tropical-forest-plot-in-french-guiana" class="nav-link" data-scroll-target="#paracou-a-tropical-forest-plot-in-french-guiana"><span class="header-section-number">3.2</span> Paracou: a tropical forest plot in French Guiana</a>
+  <ul class="collapse">
+  <li><a href="#study-site-and-data" id="toc-study-site-and-data" class="nav-link" data-scroll-target="#study-site-and-data">Study site and data</a></li>
+  <li><a href="#analysis-of-species-diversity-spatial-pattern" id="toc-analysis-of-species-diversity-spatial-pattern" class="nav-link" data-scroll-target="#analysis-of-species-diversity-spatial-pattern">Analysis of species diversity spatial pattern</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">4</span> Conclusion</a></li>
   <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF (stylisharticle)</a></li></ul></div></nav>
 </div>
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -157,6 +166,14 @@ window.Quarto = {
           </p>
         <p class="affiliation">
             AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Christopher Baraloto <a href="https://orcid.org/0000-0001-7322-8581" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Florida International University
           </p>
       </div>
     <div class="quarto-title-meta-contents">
@@ -209,9 +226,9 @@ window.Quarto = {
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities. In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e.&nbsp;intra- and inter-specific) competition/facilitation and habitat preferences <span class="citation" data-cites="Dale1999">(<a href="#ref-Dale1999" role="doc-biblioref">Dale 1999</a>)</span>. While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity <span class="citation" data-cites="Clark2010 Cadotte2012">(<a href="#ref-Clark2010" role="doc-biblioref">Clark et al. 2010</a>; <a href="#ref-Cadotte2012" role="doc-biblioref">Cadotte et al. 2012</a>)</span>. As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology <span class="citation" data-cites="Mouquet2012">(<a href="#ref-Mouquet2012" role="doc-biblioref">Mouquet et al. 2012</a>)</span>, in order to account for the key components of species interactions with their biotic and abiotic environments.</p>
-<!--# TODO: introduce ecological questions addressed in appliucation section -->
+<!--# TODO: introduce ecological questions addressed in application section -->
 <p>Towards this goal, a number of novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed <span class="citation" data-cites="Pavoine2011">(<a href="#ref-Pavoine2011" role="doc-biblioref">Pavoine and Bonsall 2011</a>)</span>. Among these methods some are specifically designed to explicitly account for space <span class="citation" data-cites="Pavoine2011a">(e.g. <a href="#ref-Pavoine2011a" role="doc-biblioref"><span class="nocase">Pavoine et al.</span> 2011</a>)</span>. However those studies generally consider spatially discontinuous community samples, i.e.&nbsp;the <span class="math inline">\(\beta\)</span>-diversity component of <span class="citation" data-cites="Whittaker1960">Whittaker (<a href="#ref-Whittaker1960" role="doc-biblioref">1960</a>)</span>, so that the underlying spatial framework can basically be related to the graph theory <span class="citation" data-cites="Dale2002">(<a href="#ref-Dale2002" role="doc-biblioref">Dale et al. 2002</a>)</span>. When mapped data are concerned, such as for instance those on tropical trees provided by large permanent forest plots <span class="citation" data-cites="Losos2004">(<a href="#ref-Losos2004" role="doc-biblioref">Losos and Leigh 2004</a>)</span>, the well-developed framework of the spatial point pattern analysis <span class="citation" data-cites="Ripley1976a Ripley1977">(<a href="#ref-Ripley1976a" role="doc-biblioref">Ripley 1976</a>, <a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span> offers an efficient means of studying the continuous spatial variation in species diversity <span class="citation" data-cites="Condit2000 Shimatani2001 Rajala2012">(<a href="#ref-Condit2000" role="doc-biblioref">Condit et al. 2000</a>; <a href="#ref-Shimatani2001" role="doc-biblioref">Shimatani 2001a</a>; <a href="#ref-Rajala2012" role="doc-biblioref">Rajala and Illian 2012</a>)</span>. A synthesis of the opportunities brought by this approach can be found in <span class="citation" data-cites="Wiegand2017">Wiegand et al. (<a href="#ref-Wiegand2017" role="doc-biblioref">2017</a>)</span>.</p>
-<!--# TODO: developments of spatially explicit diversity indepent from point processes: neighbourhood diversity. -->
+<!--# TODO: developments of spatially explicit diversity independent from point processes: neighbourhood diversity. -->
 <p><span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> and <span class="citation" data-cites="Pelissier2015">Pélissier and Goreaud (<a href="#ref-Pelissier2015" role="doc-biblioref">2015</a>)</span> concomitantly introduced within the framework of the spatial point pattern analysis a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences. If both contributions independently arrived to very similar functions, we believe that to help ecologists to well-understand and to take full advantage of novel approach, further clarifications are needed, especially regarding how it is related to well-known functions of spatial point pattern analysis, namely Ripley’s K-function <span class="citation" data-cites="Ripley1977">(<a href="#ref-Ripley1977" role="doc-biblioref">Ripley 1977</a>)</span> and its intertype extension, the <span class="math inline">\(K_{1,2}\)</span>-function <span class="citation" data-cites="Lotwick1982">(<a href="#ref-Lotwick1982" role="doc-biblioref">Lotwick and Silverman 1982</a>)</span> on the one hand, and Rao’s quadratic entropy on the other hand <span class="citation" data-cites="Rao1982">(<a href="#ref-Rao1982" role="doc-biblioref">Rao 1982</a>)</span>.</p>
 <p>The aim of this chapter is thus to introduce the rationale behind the functions of multivariate point pattern analysis that integrate between-species differences in a distance–dependent measure of diversity. It can basically be seen as an extension of the work of <span class="citation" data-cites="Shimatani2001">Shimatani (<a href="#ref-Shimatani2001" role="doc-biblioref">2001a</a>)</span> based on Simpson’s entropy to Rao’s entropy, one of the most powerful and flexible measure of species diversity <span class="citation" data-cites="Pavoine2012">(<a href="#ref-Pavoine2012" role="doc-biblioref">Pavoine 2012</a>)</span>. It is also a particular implementation of the measurement of neighbourhood diversity which possesses some specific features due to the quadratic form of Rao’s entropy. The methods section hereafter makes the synthesis between these originally independent developments and outlines the central role of Rao’s entropy to reconcile them. We finally provide worked examples based on simulated data and on a real dataset from an experimental tropical forest plot in French Guiana.</p>
 </section>
@@ -282,7 +299,7 @@ window.Quarto = {
 <section id="multitype-correlation-and-beta-diversity" class="level3">
 <h3 class="anchored" data-anchor-id="multitype-correlation-and-beta-diversity">Multitype correlation and <span class="math inline">\(\beta\)</span> diversity</h3>
 <p>Our <span class="math inline">\(K_R\)</span>- and <span class="math inline">\(K_S\)</span>-functions are cumulative functions as is the original K-function of <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span>. This means that they are estimated for a series of concentric neighbourhood discs of increasing radii, for instance by a regular distance interval <span class="math inline">\(dr\)</span>. Some authors however prefer to refer to the framework of the pair-correlation function, <span class="math inline">\(g(r)\)</span> <span class="citation" data-cites="Stoyan1987 Wiegand2004">(<a href="#ref-Stoyan1987" role="doc-biblioref">Stoyan et al. 1987</a>; <a href="#ref-Wiegand2004" role="doc-biblioref">Wiegand and Moloney 2004</a>)</span>, that can be seen as the derivative of <span class="math inline">\(K(r)\)</span>, giving the probably to encounter neighbouring points in concentric annuli between <span class="math inline">\(r\)</span> and <span class="math inline">\(r - dr\)</span>. <span class="math inline">\(K_d(r)\)</span> of <span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> is such a function, very close to <span class="math inline">\(g_R(r)\)</span>, the derivative of our <span class="math inline">\(K_R(r)\)</span> above <span class="citation" data-cites="Pelissier2015">(<a href="#ref-Pelissier2015" role="doc-biblioref">Pélissier and Goreaud 2015</a>)</span>. <span class="math inline">\(K_d(r)\)</span> is therefore an awkward appellation for Shen’s et al.&nbsp;function, which would have been better named as <span class="math inline">\(g_d(r)\)</span> as to remain consistent with the classical notation used in point pattern analysis.</p>
-<p>The same reasoning can be built from the so-called Simpson’s <span class="math inline">\(\beta\)</span> diversity index to <span class="math inline">\(g_R(r)\)</span>. <span class="citation" data-cites="Chave2002">Chave and Leigh (<a href="#ref-Chave2002" role="doc-biblioref">2002</a>)</span> defined the <span class="math inline">\(F(r)\)</span> function as the probability for two individuals located <span class="math inline">\(r\)</span> apart to belong to the same species. <span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> named <span class="math inline">\(1 - F(r)\)</span> the “spatially explicit Simpson’s index of diversity”, denoted <span class="math inline">\(\beta(r)\)</span> by <span class="citation" data-cites="Shimatani2001">Shimatani (<a href="#ref-Shimatani2001" role="doc-biblioref">2001a</a>)</span>, that is the probability for two individuals located <span class="math inline">\(r\)</span> apart to belong different species. We will rather write <span class="math inline">\(\beta_S(r)\)</span> for consistency with our notation system. It can be straightforwardly be generalized to <span class="math inline">\(\beta_R(r)\)</span>, the average divergence between to individuals taken at distance <span class="math inline">\(r\)</span>, thus a spatially explicit Rao’s index of diversity. These measures are actually <span class="math inline">\(\beta\)</span> differentiation diversity measures sensu <span class="citation" data-cites="Jurasinski2009">Jurasinski et al. (<a href="#ref-Jurasinski2009" role="doc-biblioref">2009</a>)</span>: they characterize how different spatial units <span class="math inline">\(r\)</span> apart are.</p>
+<p>The same reasoning can be built from the so-called Simpson’s <span class="math inline">\(\beta\)</span> diversity index to <span class="math inline">\(g_R(r)\)</span>. <span class="citation" data-cites="Chave2002">Jérôme Chave and Leigh (<a href="#ref-Chave2002" role="doc-biblioref">2002</a>)</span> defined the <span class="math inline">\(F(r)\)</span> function as the probability for two individuals located <span class="math inline">\(r\)</span> apart to belong to the same species. <span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> named <span class="math inline">\(1 - F(r)\)</span> the “spatially explicit Simpson’s index of diversity”, denoted <span class="math inline">\(\beta(r)\)</span> by <span class="citation" data-cites="Shimatani2001">Shimatani (<a href="#ref-Shimatani2001" role="doc-biblioref">2001a</a>)</span>, that is the probability for two individuals located <span class="math inline">\(r\)</span> apart to belong different species. We will rather write <span class="math inline">\(\beta_S(r)\)</span> for consistency with our notation system. It can be straightforwardly be generalized to <span class="math inline">\(\beta_R(r)\)</span>, the average divergence between to individuals taken at distance <span class="math inline">\(r\)</span>, thus a spatially explicit Rao’s index of diversity. These measures are actually <span class="math inline">\(\beta\)</span> differentiation diversity measures sensu <span class="citation" data-cites="Jurasinski2009">Jurasinski et al. (<a href="#ref-Jurasinski2009" role="doc-biblioref">2009</a>)</span>: they characterize how different spatial units <span class="math inline">\(r\)</span> apart are.</p>
 <p>We can thus define <span class="math inline">\(g_S(r)\)</span>, a normalized version of <span class="math inline">\(\beta_S(r)\)</span> and <span class="math inline">\(g_R(r)\)</span>, its generalization to Rao’s entropy.</p>
 <!--# TODO: add formulas, check consistency with @Pelissier2015 -->
 </section>
@@ -309,18 +326,147 @@ window.Quarto = {
 </section>
 </section>
 </section>
-<section id="application" class="level1" data-number="3">
+<section id="application" class="level1 page-columns page-full" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Application</h1>
-<section id="simulated-data" class="level2" data-number="3.1">
+<p></p>
+<p></p>
+<section id="simulated-data" class="level2 page-columns page-full" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="simulated-data"><span class="header-section-number">3.1</span> Simulated data</h2>
-<p>We provide here a few examples to illustrate how the <span class="math inline">\(K_R\)</span>-function behaves. In a first experiment, we simulated habitat preferences by generating heterogeneous spatial patterns in a checked 1-ha plot with two habitats: eight species were simulated with a twofold higher intensity in habitat 1, and 8 species with a twofold higher intensity in habitat 2, so that species abundant in one habitat were rare in the other one and vice versa <!--# (Fig. 1) -->.</p>
+<p>We provide here a few examples to illustrate how the <span class="math inline">\(K_R\)</span>-function behaves.</p>
+<div id="fig-sim_data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-sim_data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/sim_data-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-sim_data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Virtual heterogeneous spatial patterns (left) mimicking habitat preferences of 16 species in a checked 1-ha plot with two habitats: species <em>a</em> to <em>h</em> have a twofold higher habitat preference in grey patches and species <em>i</em> to <em>p</em> a twofold higher habitat preference in white patches. The random pattern (top) is obtained by the superimposition of heterogeneous species-specific Poisson processes. The pattern of limited dispersion (bottom) is obtained by the superimposition of species-specific Neyman-Scott processes with a Cauchy kernel (see text for details). The hypothetical phylogenetic tree (right) simulates trait clustering: species close in the tree have identical habitat preferences.
+</figcaption>
+</figure>
+</div>
+<section id="habitat-preference" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="habitat-preference">Habitat preference</h3>
+<p>In a first experiment (<a href="#fig-sim_data" class="quarto-xref">Figure&nbsp;1</a>), we simulated habitat preferences by generating heterogeneous spatial patterns in a checked 1-ha plot with two habitats: eight species were simulated with a twofold higher intensity in habitat 1, and 8 species with a twofold higher intensity in habitat 2, so that species abundant in one habitat were rare in the other one. We independently simulated the species-specific spatial patterns as heterogeneous Poisson or heterogeneous Neyman-Scott processes with a Cauchy dispersal kernel <span class="citation" data-cites="Ghorbani2013">(<a href="#ref-Ghorbani2013" role="doc-biblioref">Ghorbani 2013</a>)</span> mimicking limited dispersion. In the latter we fixed the scale parameter of the Cauchy kernel at 1, meaning that only 5% of offsprings were dispersed beyond around 20 m from their parents <span class="citation" data-cites="Munoz2013">(<a href="#ref-Munoz2013" role="doc-biblioref">Munoz et al. 2013</a>)</span>, so that most of them were located within the sampling window. The 16 species-specific patterns were then assembled into multivariate spatial patterns. A hypothetical phylogeny mimicking trait clustering was simulated, where species close in the tree have same habitat preferences <span class="citation" data-cites="Hardy2007">(<a href="#ref-Hardy2007" role="doc-biblioref">Hardy and Senterre 2007</a>)</span>.</p>
+<p><a href="#fig-Kd_CSR" class="quarto-xref">Figure&nbsp;2</a> shows that both these patterns exhibit a significant negative departure from the null hypothesis of species equivalence for the same range of r values that recovers the scale of the phylogenetic spatial structure representing the simulated pattern of habitat preferences.</p>
+<div id="fig-Kd_CSR" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-Kd_CSR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Kd-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-Kd_CSR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Test of the species equivalence hypothesis. <span class="math inline">\(K_R(r) / K_S(r)\)</span> curves are computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations.
+</figcaption>
+</figure>
+</div>
+<div id="fig-Kd_Clustered" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-Kd_Clustered-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Kd_Clustered-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-Kd_Clustered-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Test of the species equivalence hypothesis. <span class="math inline">\(K_R(r) / K_S(r)\)</span> curves are computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations.
+</figcaption>
+</figure>
+</div>
 </section>
-<section id="paracou" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="paracou"><span class="header-section-number">3.2</span> Paracou</h2>
+<section id="limited-similarity" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="limited-similarity">Limited similarity</h3>
+<p>In a second experiment, we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multi-Strauss process with, as between-species interaction matrix, the cophenetic distance derived from the clustered tree above. This means that the between-species competition intensity within a neighbouring disc of 5 m is proportional to their distance within the phylogenetic tree: species that are close together in the tree compete less that species that are far in the tree.</p>
+<p><a href="#fig-Similarity" class="quarto-xref">Figure&nbsp;4</a> shows that the resulting pattern of the point locations, as revealed by <span class="math inline">\(\hat{K}(r)\)</span>, is significantly regular with a deep negative peak at r = 5 m and that <span class="math inline">\(K_R(r) / K_S(r)\)</span> departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated. Restricted permutations within a cophenetic distance matrix, i.e.&nbsp;between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses <span class="citation" data-cites="Hardy2008a">(<a href="#ref-Hardy2008a" role="doc-biblioref">Hardy 2008</a>)</span>.</p>
+<p>All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package for R <span class="citation" data-cites="Pelissier2015">(<a href="#ref-Pelissier2015" role="doc-biblioref">Pélissier and Goreaud 2015</a>)</span>. Samples of R code used in the Application section are given in Appendix.</p>
+<div id="fig-Similarity" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-Similarity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Similarity-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-Similarity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Repulsive point pattern
+</figcaption>
+</figure>
+</div>
+<div id="fig-Kd_Similarity" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-Kd_Similarity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Kd_Similarity-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Kd_Similarity-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+</div>
+<figcaption class="quarto-float-caption-margin quarto-float-caption quarto-float-fig margin-caption" id="fig-Kd_Similarity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Virtual spatial pattern of competitive interaction between 16 species in a 1-ha plot. The pattern of interaction is obtained using un multi-Strauss inhibition process with a 5 m range and an interaction matrix corresponding to the cophenetic distance matrix derived from the clustered phylogenetic tree. <span class="math inline">\(K(r)\)</span> indicates that the spatial pattern of unmarked point locations (i.e.&nbsp;regardless of species labels) is significantly regular from 3 to 9 m (negative departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations), while <span class="math inline">\(K_R(r) / K_S(r)\)</span> computed with the cophenetic between-species distance matrix indicates a significant positive departure from the 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="paracou-a-tropical-forest-plot-in-french-guiana" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="paracou-a-tropical-forest-plot-in-french-guiana"><span class="header-section-number">3.2</span> Paracou: a tropical forest plot in French Guiana</h2>
+<section id="study-site-and-data" class="level3">
+<h3 class="anchored" data-anchor-id="study-site-and-data">Study site and data</h3>
+<p>We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana <span class="citation" data-cites="Gourlet-Fleury2004">(<a href="#ref-Gourlet-Fleury2004" role="doc-biblioref">Gourlet-Fleury et al. 2004</a>)</span>. Paracou was set up in 1984 to study the impact of silvicultural treatments on the forest dynamics based on control and logged-over plots. We used here data from a control plot of 250 x 250 m settled in 1990, in which 4128 trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (332 different species; Fig. 3-topleft). Since After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species. For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies <span class="citation" data-cites="Westoby1998">(<a href="#ref-Westoby1998" role="doc-biblioref">Westoby 1998</a>)</span>, i.e.&nbsp;the specific leaf area (SLA in cm2.g-1 of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds). These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterizes the importance of the growth response to favourable conditions, while H and Seed characterizes the importance of investment in the capacity to respond to disturbance. We also included the wood specific gravity (WSG in g.cm-3 of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. <span class="citation" data-cites="Chave2009">(<a href="#ref-Chave2009" role="doc-biblioref">Jerome Chave et al. 2009</a>)</span>. We built from these data, two different between-species distance matrices, a phylogenetic one based on the APG III classification <span class="citation" data-cites="Chase2009">(<a href="#ref-Chase2009" role="doc-biblioref">Chase and Reveal 2009</a>)</span> and a functional one based on the four traits described above. The phylogenetic distance was simply computed from APG III hierarchical tree, considering dpq = 1 if species p and q were from the same genus, dpq = 2 if they were from different genera in the same family and dpq = 3 if they were from different families. Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao quadratic entropy <span class="citation" data-cites="Pavoine2005c">(<a href="#ref-Pavoine2005c" role="doc-biblioref">Pavoine et al. 2005</a>)</span>. To ensure the same ultrametric properties to the functional distance matrix, we computed the cophenetic distance for a hierarchical clustering with Ward method (i.e.&nbsp;minimizing total within-cluster variance) based on functional trait dissimilarities, taken as Gower distance, as recommended for mixed variables <span class="citation" data-cites="Gower1971">(<a href="#ref-Gower1971" role="doc-biblioref">Gower 1971</a>)</span>. Both distance matrices were finally rescaled by their maximum in order to keep HD within the 0-1 standard range of values for diversity indices.</p>
+</section>
+<section id="analysis-of-species-diversity-spatial-pattern" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-of-species-diversity-spatial-pattern">Analysis of species diversity spatial pattern</h3>
+<p>The L-function (Fig. 3-toprigth), i.e.&nbsp;the linearized univariate version of Ripley K-function, shows a significant departure towards regularity of the unmarked spatial pattern (i.e.&nbsp;regardless of species labels) up to 9 m (negative departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations). <span class="math inline">\(K_R(r) / K_S(r)\)</span> computed with a phylogenetic between-species distance matrix shows a significant positive departure from the null hypothesis of species equivalence at short distances (based on 1000 Monte Carlo simulations), indicating limiting similarity (Fig. 3-bottomleft). As a short-range spatial regularity in tree stands is generally interpreted as resulting from self-thinning due to intense local competition <span class="citation" data-cites="Kenkel1988">(e.g. <a href="#ref-Kenkel1988" role="doc-biblioref">Kenkel 1988</a>)</span>, it therefore seems that the sharing of resources between locally competing neighbours enhanced niche differentiation and thus species diversity. This pattern doesn’t exist however when considering the between-species distance matrix based on the 4 functional traits together (Fig. 3-bottomrigth) or on each of them separately (Fig. S2), though these traits are generally considered as phylogenetically conserved <span class="citation" data-cites="Baraloto2012a">(e.g. <a href="#ref-Baraloto2012a" role="doc-biblioref">Baraloto et al. 2012</a>)</span>. This probably means that niche trade-offs that caused short-range limiting similarity do not concern the four functional traits considered in the present study.</p>
+</section>
 </section>
 </section>
 <section id="conclusion" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Conclusion</h1>
+<p>We demonstrated in this paper that the function of multitype point pattern analysis concomitantly proposed by <span class="citation" data-cites="Shen2013">Shen et al. (<a href="#ref-Shen2013" role="doc-biblioref">2013</a>)</span> and <span class="citation" data-cites="Pelissier2015">Pélissier and Goreaud (<a href="#ref-Pelissier2015" role="doc-biblioref">2015</a>)</span>, which integrates between-species differences in a distance-dependent measure of diversity, relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span> through his K-function, and the quadratic entropy introduced by <span class="citation" data-cites="Rao1982">Rao (<a href="#ref-Rao1982" role="doc-biblioref">1982</a>)</span> as a diversity coefficient accounting for non-uniform between-species distances. It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the K- and K12-functions. Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species. Observed spatial diversity patterns can thus be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity <span class="citation" data-cites="Hubbell2001">(<a href="#ref-Hubbell2001" role="doc-biblioref">Hubbell 2001</a>)</span>. This new tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.</p>
 </section>
 <section id="bibliography" class="level1 unnumbered">
 
@@ -331,11 +477,20 @@ window.Quarto = {
 <div id="ref-Altieri2021" class="csl-entry" role="listitem">
 Altieri, Linda, Daniela Cocchi, and Giulia Roli. 2021. <span>‘Spatial Entropy for Biodiversity and Environmental Data: <span class="nocase">The R-package SpatEntropy</span>’</span>. <em>Environmental Modelling &amp; Software</em> 144 (October): 105149. <a href="https://doi.org/10.1016/j.envsoft.2021.105149">https://doi.org/10.1016/j.envsoft.2021.105149</a>.
 </div>
+<div id="ref-Baraloto2012a" class="csl-entry" role="listitem">
+Baraloto, Christopher, Olivier J. Hardy, C. E. Timothy Paine, et al. 2012. <span>‘Using Functional Traits and Phylogenetic Trees to Examine the Assembly of Tropical Tree Communities’</span>. <em>Journal of Ecology</em> 100 (3): 690–701. <a href="https://doi.org/10.1111/j.1365-2745.2012.01966.x">https://doi.org/10.1111/j.1365-2745.2012.01966.x</a>.
+</div>
 <div id="ref-Batty1974" class="csl-entry" role="listitem">
 Batty, Michael. 1974. <span>‘Spatial <span>Entropy</span>’</span>. <em>Geographical Analysis</em> 6 (1): 1–31. <a href="https://doi.org/10.1111/j.1538-4632.1974.tb01014.x">https://doi.org/10.1111/j.1538-4632.1974.tb01014.x</a>.
 </div>
 <div id="ref-Cadotte2012" class="csl-entry" role="listitem">
 Cadotte, Marc W., Russel Dinnage, and David Tilman. 2012. <span>‘Phylogenetic Diversity Promotes Ecosystem Stability’</span>. <em>Ecology</em> 93 (8): S223–33. <a href="https://doi.org/10.1890/11-0426.1">https://doi.org/10.1890/11-0426.1</a>.
+</div>
+<div id="ref-Chase2009" class="csl-entry" role="listitem">
+Chase, Mark W., and James L. Reveal. 2009. <span>‘A Phylogenetic Classification of the Land Plants to Accompany <span>APG III</span>’</span>. <em>Botanical Journal of the Linnean Society</em> 161 (2): 122–27. <a href="https://doi.org/10.1111/j.1095-8339.2009.01002.x">https://doi.org/10.1111/j.1095-8339.2009.01002.x</a>.
+</div>
+<div id="ref-Chave2009" class="csl-entry" role="listitem">
+Chave, Jerome, David Coomes, Steven Jansen, Simon L. Lewis, Nathan G. Swenson, and Amy E. Zanne. 2009. <span>‘Towards a Worldwide Wood Economics Spectrum’</span>. <em>Ecology Letters</em> 12 (4): 351–66. <a href="https://doi.org/10.1111/j.1461-0248.2009.01285.x">https://doi.org/10.1111/j.1461-0248.2009.01285.x</a>.
 </div>
 <div id="ref-Chave2002" class="csl-entry" role="listitem">
 Chave, Jérôme, and Egbert G. Leigh. 2002. <span>‘A Spatially Explicit Neutral Model of <span><span class="math inline">\(\beta\)</span></span>-<span>Diversity</span> in Tropical Forests’</span>. <em>Theoretical Population Biology</em> 62 (2): 153–68. <a href="https://doi.org/10.1006/tpbi.2002.1597">https://doi.org/10.1006/tpbi.2002.1597</a>.
@@ -361,14 +516,26 @@ Diggle, Peter J. 1983. <em>Statistical Analysis of Spatial Point Patterns</em>. 
 <div id="ref-Eckel2008" class="csl-entry" role="listitem">
 Eckel, S., F. Fleischer, P. Grabarnik, and V. Schmidt. 2008. <span>‘An Investigation of the Spatial Correlations for Relative Purchasing Power in <span>Baden-Wurttemberg</span>’</span>. <em>Asta-Advances in Statistical Analysis</em> 92 (2): 135–52. <a href="https://doi.org/10.1007/s10182-008-0066-1">https://doi.org/10.1007/s10182-008-0066-1</a>.
 </div>
+<div id="ref-Ghorbani2013" class="csl-entry" role="listitem">
+Ghorbani, Mohammad. 2013. <span>‘Cauchy Cluster Process’</span>. <em>Metrika</em> 76 (5): 697–706. <a href="https://doi.org/10.1007/s00184-012-0411-y">https://doi.org/10.1007/s00184-012-0411-y</a>.
+</div>
 <div id="ref-Goreaud1999" class="csl-entry" role="listitem">
 Goreaud, François, and Raphaël Pélissier. 1999. <span>‘On Explicit Formulas of Edge-Effect Correction for <span>Ripley</span>’s <span class="nocase">K-function</span>’</span>. <em>Journal of Vegetation Science</em> 10 (3): 433–38.
 </div>
 <div id="ref-Goreaud2003" class="csl-entry" role="listitem">
 Goreaud, François, and Raphaël Pélissier. 2003. <span>‘Avoiding Misinterpretation of Biotic Interactions with the Intertype <span>K12</span> Function: Population Independence Vs Random Labelling Hypotheses’</span>. <em>Journal of Vegetation Science</em> 14 (5): 681–92. <a href="https://doi.org/10.1111/j.1654-1103.2003.tb02200.x">https://doi.org/10.1111/j.1654-1103.2003.tb02200.x</a>.
 </div>
+<div id="ref-Gourlet-Fleury2004" class="csl-entry" role="listitem">
+Gourlet-Fleury, Sylvie, Jean Marc Guehl, and Olivier Laroussinie. 2004. <em>Ecology &amp; Management of a Neotropical Rainforest. <span>Lessons</span> Drawn from <span>Paracou</span>, a Long-Term Experimental Research Site in <span>French Guiana</span></em>. Elsevier.
+</div>
+<div id="ref-Gower1971" class="csl-entry" role="listitem">
+Gower, J. C. 1971. <span>‘A General Coefficient of Similarity and Some of Its Properties’</span>. <em>Biometrics</em> 27 (4): 857–71. <a href="https://doi.org/10.2307/2528823">https://doi.org/10.2307/2528823</a>.
+</div>
 <div id="ref-Hardy2008a" class="csl-entry" role="listitem">
 Hardy, Olivier J. 2008. <span>‘Testing the Spatial Phylogenetic Structure of Local Communities: Statistical Performances of Different Null Models and Test Statistics on a Locally Neutral Community’</span>. <em>Journal of Ecology</em> 96 (5): 914–26. <a href="https://doi.org/10.1111/j.1365-2745.2008.01421.x">https://doi.org/10.1111/j.1365-2745.2008.01421.x</a>.
+</div>
+<div id="ref-Hardy2007" class="csl-entry" role="listitem">
+Hardy, Olivier J., and Bruno Senterre. 2007. <span>‘Characterizing the Phylogenetic Structure of Communities by an Additive Partitioning of Phylogenetic Diversity’</span>. <em>Journal of Ecology</em> 95 (3): 493–506. <a href="https://doi.org/10.1111/j.1365-2745.2007.01222.x">https://doi.org/10.1111/j.1365-2745.2007.01222.x</a>.
 </div>
 <div id="ref-Hubbell2001" class="csl-entry" role="listitem">
 Hubbell, Stephen P. 2001. <em>The Unified Neutral Theory of Biodiversity and Biogeography</em>. Princeton University Press.
@@ -382,6 +549,9 @@ Jost, Lou. 2006. <span>‘Entropy and Diversity’</span>. <em>Oikos</em> 113 (2
 <div id="ref-Jurasinski2009" class="csl-entry" role="listitem">
 Jurasinski, Gerald, Vroni Retzer, and Carl Beierkuhnlein. 2009. <span>‘Inventory, Differentiation, and Proportional Diversity: A Consistent Terminology for Quantifying Species Diversity’</span>. <em>Oecologia</em> 159 (1): 15–26. <a href="https://doi.org/10.1007/s00442-008-1190-z">https://doi.org/10.1007/s00442-008-1190-z</a>.
 </div>
+<div id="ref-Kenkel1988" class="csl-entry" role="listitem">
+Kenkel, N. C. 1988. <span>‘Pattern of Self-Thinning in Jack Pine: <span>Testing</span> the Random Mortality Hypothesis’</span>. <em>Ecology</em> 69 (4): 1017–24. <a href="https://doi.org/10.2307/1941257">https://doi.org/10.2307/1941257</a>.
+</div>
 <div id="ref-Losos2004" class="csl-entry" role="listitem">
 Losos, Elizabeth C., and Egbert Giles Leigh. 2004. <em>Tropical Forest Diversity and Dynamism: Findings from a Large-Scale Plot Network</em>. University of Chicago press.
 </div>
@@ -391,11 +561,17 @@ Lotwick, H. W., and B. W. Silverman. 1982. <span>‘Methods for Analysing Spatia
 <div id="ref-Mouquet2012" class="csl-entry" role="listitem">
 Mouquet, Nicolas, Vincent Devictor, Christine N. Meynard, et al. 2012. <span>‘Ecophylogenetics: Advances and Perspectives’</span>. <em>Biological Reviews</em> 87 (4): 769–85. <a href="https://doi.org/10.1111/j.1469-185X.2012.00224.x">https://doi.org/10.1111/j.1469-185X.2012.00224.x</a>.
 </div>
+<div id="ref-Munoz2013" class="csl-entry" role="listitem">
+Munoz, François, Champak R. Beeravolu, Raphaël Pélissier, and Pierre Couteron. 2013. <span>‘Do Spatially-Implicit Estimates of Neutral Migration Comply with Seed Dispersal Data in Tropical Forests?’</span> <em>Plos One</em> 8 (8). <a href="https://doi.org/10.1371/journal.pone.0072497">https://doi.org/10.1371/journal.pone.0072497</a>.
+</div>
 <div id="ref-Pavoine2012" class="csl-entry" role="listitem">
 Pavoine, Sandrine. 2012. <span>‘Clarifying and Developing Analyses of Biodiversity: Towards a Generalisation of Current Approaches’</span>. <em>Methods in Ecology and Evolution</em> 3 (3): 509–18. <a href="https://doi.org/10.1111/j.2041-210X.2011.00181.x">https://doi.org/10.1111/j.2041-210X.2011.00181.x</a>.
 </div>
 <div id="ref-Pavoine2011" class="csl-entry" role="listitem">
 Pavoine, Sandrine, and Michael B. Bonsall. 2011. <span>‘Measuring Biodiversity to Explain Community Assembly: A Unified Approach’</span>. <em>Biological Reviews</em> 86 (4): 792–812. <a href="https://doi.org/10.1111/j.1469-185X.2010.00171.x">https://doi.org/10.1111/j.1469-185X.2010.00171.x</a>.
+</div>
+<div id="ref-Pavoine2005c" class="csl-entry" role="listitem">
+Pavoine, Sandrine, Sébastien Ollier, and D. Pontier. 2005. <span>‘Measuring Diversity from Dissimilarities with <span>Rao</span>’s Quadratic Entropy: <span>Are</span> Any Dissimilarities Suitable?’</span> <em>Theoretical Population Biology</em> 67 (4): 231–39. <a href="https://doi.org/10.1016/j.tpb.2005.01.004">https://doi.org/10.1016/j.tpb.2005.01.004</a>.
 </div>
 <div id="ref-Pavoine2011a" class="csl-entry" role="listitem">
 <span class="nocase">Pavoine, Sandrine, Errol Vela, Sophie Gachet, Gérard de Belair, and Michael B. Bonsall</span>. 2011. <span>‘Linking Patterns in Phylogeny, Traits, Abiotic Variables and Space: A Novel Approach to Linking Environmental Filtering and Plant Community Assembly’</span>. <em>Journal of Ecology</em> 99 (1): 165–75. <a href="https://doi.org/10.1111/j.1365-2745.2010.01743.x">https://doi.org/10.1111/j.1365-2745.2010.01743.x</a>.
@@ -429,6 +605,9 @@ Simpson, E. H. 1949. <span>‘Measurement of Diversity’</span>. <em>Nature</em
 </div>
 <div id="ref-Stoyan1987" class="csl-entry" role="listitem">
 Stoyan, Dietrich, W. S. Kendall, and Joseph Mecke. 1987. <span>‘Stochastic Geometry and Its Applications’</span>. In <em>Wiley <span>Series</span> in Probability and Mathematical Statistics</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-Westoby1998" class="csl-entry" role="listitem">
+Westoby, Mark. 1998. <span>‘A Leaf-Height-Seed (<span>LHS</span>) Plant Ecology Strategy Scheme’</span>. <em>Plant and Soil</em> 199: 213–27. <a href="https://doi.org/10.1023/A:1004327224729">https://doi.org/10.1023/A:1004327224729</a>.
 </div>
 <div id="ref-Whittaker1960" class="csl-entry" role="listitem">
 Whittaker, R. H. 1960. <span>‘Vegetation of the <span>Siskiyou</span> Mountains, <span>Oregon</span> and <span>California</span>’</span>. <em>Ecological Monographs</em> 30 (3): 279–338. <a href="https://doi.org/10.2307/1943563">https://doi.org/10.2307/1943563</a>.
