@@ -165,7 +165,7 @@ In particular, the spatial pattern of plant communities may result from the comb
 While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity [@Clark2010; @Cadotte2012].
 As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology [@Mouquet2012], in order to account for the key components of species interactions with their biotic and abiotic environments.
 
-<!--# TODO: introduce ecological questions addressed in appliucation section -->
+<!--# TODO: introduce ecological questions addressed in application section -->
 
 Towards this goal, a number of novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed [@Pavoine2011].
 Among these methods some are specifically designed to explicitly account for space [e.g. @Pavoine2011a].
@@ -173,7 +173,7 @@ However those studies generally consider spatially discontinuous community sampl
 When mapped data are concerned, such as for instance those on tropical trees provided by large permanent forest plots [@Losos2004], the well-developed framework of the spatial point pattern analysis [@Ripley1976a; @Ripley1977] offers an efficient means of studying the continuous spatial variation in species diversity [@Condit2000; @Shimatani2001; @Rajala2012].
 A synthesis of the opportunities brought by this approach can be found in @Wiegand2017.
 
-<!--# TODO: developments of spatially explicit diversity indepent from point processes: neighbourhood diversity. -->
+<!--# TODO: developments of spatially explicit diversity independent from point processes: neighbourhood diversity. -->
 
 @Shen2013 and @Pelissier2015 concomitantly introduced within the framework of the spatial point pattern analysis a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences.
 If both contributions independently arrived to very similar functions, we believe that to help ecologists to well-understand and to take full advantage of novel approach, further clarifications are needed, especially regarding how it is related to well-known functions of spatial point pattern analysis, namely Ripley's K-function [@Ripley1977] and its intertype extension, the $K_{1,2}$-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
@@ -546,13 +546,15 @@ A hypothetical phylogeny mimicking trait clustering was simulated, where species
 # Computing Kr for the heterogeneous random pattern---
 # with a clustered cophenetic distance matrix 
 # and the species equivalence hypothesis
-kr.hrand.clust.se <- krfun(
-  p = hrand.spp, 
-  dis = clust.dist, 
-  H0 = "se", 
-  upto = 50,
-  by = 1, 
-  nsim = 1000
+silence <- capture.output(
+  kr.hrand.clust.se <- krfun(
+    p = hrand.spp, 
+    dis = clust.dist, 
+    H0 = "se", 
+    upto = 50,
+    by = 1, 
+    nsim = 1000
+  )
 )
 # Plot the Kd function
 plot(
@@ -576,13 +578,15 @@ $K_R(r) / K_S(r)$ curves are computed with the cophenetic distance matrix derive
 # Computing Kr for the heterogeneous multi-cauchy pattern pattern ---
 # with a clustered cophenetic distance matrix 
 # and the species equivalence hypothesis
-kr.hmcauchy.clust.se <- krfun(
-  p = hmcauchy.spp, 
-  dis = clust.dist, 
-  H0 = "se",
-  upto = 50,
-  by = 1,
-  nsim = 1000
+silence <- capture.output(
+  kr.hmcauchy.clust.se <- krfun(
+    p = hmcauchy.spp, 
+    dis = clust.dist, 
+    H0 = "se",
+    upto = 50,
+    by = 1,
+    nsim = 1000
+  )
 )
 par(fig = c(0.5, 1, 0, 1), new = TRUE)
 plot(
@@ -615,22 +619,31 @@ Samples of R code used in the Application section are given in Appendix.
 ::: {#fig-Similarity}
 ```{r}
 #| label: Similarity
-#simulating limiting similarity (Fig2)
+# Simulating limiting similarity (Fig2)
+# Species abundances
 freq <- table(hrand.spp$marks)
+# Normalized to frequencies
 freq <- as.vector(freq / sum(freq))
+# Model to simulate
 mod <- list(
   cif = "straussm", 
   par = list(
     beta = freq, 
     gamma = as.matrix(clust.dist),
-    radii = matrix(5, nlevels(hrand.spp$marks), nlevels(hrand.spp$marks))
+    radii = matrix(
+      5, 
+      nrow = nlevels(hrand.spp$marks), 
+      ncol = nlevels(hrand.spp$marks)
+    )
   ), 
   w = c(0, 100, 0, 100)
 )
-compet <- rmh(
-  model = mod, 
-  start = list(n.start = 500), 
-  control = list(p = 1, ptypes = freq)
+silence <- capture.output(
+  compet <- rmh(
+    model = mod, 
+    start = list(n.start = 500), 
+    control = list(p = 1)
+  )
 )
 levels(compet$marks) <- letters[1:16]
 compet.spp <- spp(
@@ -656,11 +669,13 @@ Repulsive point pattern
 ```{r}
 #| label: Kd_Similarity
 # Computing K and Kr for the limiting similarity pattern ---
-k.compet <- kfun(
-  p = compet.spp, 
-  upto = 50, 
-  by = 1,
-  nsim = 1000
+silence <- capture.output(
+  k.compet <- kfun(
+    p = compet.spp, 
+    upto = 50, 
+    by = 1,
+    nsim = 1000
+  )
 )
 plot(
   k.compet, 
@@ -671,13 +686,15 @@ plot(
   cols = c(1, 1, 1), 
   lwd = 2
 )
-kr.compet.clust.se <- krfun(
-  p = compet.spp, 
-  dis = clust.dist, 
-  H0 = "se", 
-  upto = 50, 
-  by = 1, 
-  nsim = 1000
+silence <- capture.output(
+  kr.compet.clust.se <- krfun(
+    p = compet.spp, 
+    dis = clust.dist, 
+    H0 = "se", 
+    upto = 50, 
+    by = 1, 
+    nsim = 1000
+  )
 )
 plot(
   kr.compet.clust.se,
