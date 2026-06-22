@@ -68,7 +68,7 @@ execute:
   # Show warnings
   warning: false
   # Cache code results
-  cache: false
+  cache: true
 # Template specific
 journalinfo: "Preprint"
 archive: "DOI: xxx/xx"
@@ -349,14 +349,18 @@ library("spatstat")
 library("ads")
 ```
 
-
 ## Simulated data
 
 We provide here a few examples to illustrate how the $K_R$-function behaves.
-In a first experiment, we simulated habitat preferences by generating heterogeneous spatial patterns in a checked 1-ha plot with two habitats: eight species were simulated with a twofold higher intensity in habitat 1, and 8 species with a twofold higher intensity in habitat 2, so that species abundant in one habitat were rare in the other one and vice versa <!--# (Fig. 1) -->.
 
+::: {#fig-sim_data}
 ```{r}
-#simulating a heterogeneous random pattern, with a reversed species frequency distribution in two discrete habitats (Fig1-Top)
+#| label: sim_data
+# Simulating a heterogeneous random pattern ---
+# with a reversed species frequency distribution in two discrete habitats
+# Top left
+# Images to show the grey habitats
+par_old <- par()
 habit1 <- as.im(
   function(x, y) {
     ifelse(
@@ -377,24 +381,41 @@ habit2 <- as.im(
   }, 
   W = owin(c(0, 100), c(0, 100))
 )
-dm <- sort(round(250*(x <- rlnorm(8)) / sum(x)), decreasing = T)
+# Simulate 8 log-normal abundances
+dm <- sort(round(250 * (x <- rlnorm(8)) / sum(x)), decreasing = TRUE)
+# Adjust the abundance of the first species to have exactly 250 individuals
 dm[1] <- ifelse(
   sum(dm) > 250, 
   dm[1] - (sum(dm) - 250), 
   dm[1] + (250 - sum(dm))
 )
+# Set the marks a to h
 marks1 <- factor(rep(letters[1:8], dm))
+# Generate the multinomial point patterns
 rand1 <- rmpoint(table(marks1), f = habit1, types = levels(marks1))
+# Set the marks i to p
 marks2 <- factor(rep(letters[9:16], dm))
+# Generate 8 more point patterns
 rand2 <- rmpoint(table(marks2), f = habit2, types = levels(marks2))
+# Merge the point patterns
 hrand <- superimpose(rand1, rand2)
+# Build an spp opject
 hrand.spp <- spp(
   hrand$x, 
   hrand$y, 
   window = c(0, 0, 100, 100), 
   marks = hrand$marks
 )
-plot(habit1, col = c("white", "lightgrey"))
+par(fig = c(0, 0.7, 0.5, 1), mar = c(0.5, 0, 0, 0))
+# Plot the white and grey areas
+plot(
+  habit1, 
+  col = c("white", "lightgrey"),
+  main = NULL, 
+  legend = FALSE, 
+  ribbon = FALSE
+)
+# Plot the points
 plot(
   hrand.spp, 
   cols = rep("black", nlevels(hrand.spp$marks)), 
@@ -404,82 +425,18 @@ plot(
   chars = levels(hrand.spp$marks), 
   add = TRUE
 )
-```
 
-```{r}
-H11 <- spp(hrand.spp$x, hrand.spp$y, window = c(0, 0, 50, 50), marks = hrand.spp$marks)
-H12 <- spp(hrand.spp$x, hrand.spp$y, window = c(50, 50, 100, 100), marks = hrand.spp$marks)
-H21 <- spp(hrand.spp$x, hrand.spp$y, window = c(50, 0, 100, 50), marks = hrand.spp$marks)
-H22 <- spp(hrand.spp$x, hrand.spp$y, window = c(0, 50, 50, 100), marks = hrand.spp$marks)
-H1 <- factor(c(as.character(H11$marks), as.character(H12$marks)))
-H2 <- factor(c(as.character(H21$marks), as.character(H22$marks)))
-M <- matrix(0, 2, 16)
-for (i in 1:16) {
-  M[, i] <- cbind(
-    ifelse(
-      !is.na(table(H1)[letters[i]]), 
-      table(H1)[letters[i]],
-      0
-    ), 
-    ifelse(
-      !is.na(table(H2)[letters[i]]), 
-      table(H2)[letters[i]], 
-      0
-    )
-  )
-}
-barplot(M, names.arg = letters[1:16], col = c("white", "lightgrey"))
-```
-
-```{r}
-#simulating a cophenetic distance matrix from a clustered phylogenetic tree (Fig1-Bottomleft)
-library("ape")
-clust.tree <- stree(16, "balanced", tip.label = levels(hrand.spp$marks))
-plot(clust.tree)
-```
-
-```{r}
-library("ade4")
-clust.dist <- cophenetic(
-  hclust(
-    newick2phylog(
-      write.tree(clust.tree), 
-      add.tools = TRUE
-    )$Wdist^2 / 2, 
-    "average"
-  )
-)
-clust.dist <- clust.dist / max(clust.dist)
-attr(clust.dist, "Labels") <- clust.tree$tip.label
-#computing Kr for the heterogeneous random pattern with a clustered cophenetic distance matrix and the species equivalence hypothesis (Fig1-Topright)
-kr.hrand.clust.se <- krfun(
-  p = hrand.spp, 
-  dis = clust.dist, 
-  H0 = "se", 
-  upto = 50,
-  by = 1, 
-  nsim = 1000
-)
-plot(
-  kr.hrand.clust.se, 
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
-```
-
-```{r}
-#simulating an heterogeneous pattern of limited dispersion, with a reversed species frequency distribution in two discrete habitats (Fig1-Bottom)
-#function for simulating an assemblage of Neyman-Scott processes with a Cauchy kernel 
+# Simulating an heterogeneous pattern of limited dispersion ---
+# with a reversed species frequency distribution in two discrete habitats.
+# Function for simulating an assemblage of Neyman-Scott processes 
+# with a Cauchy kernel
+# Bottom left
 simulticauchy <- function(marks, win, omega = 1) {
   m <- table(marks)
   ow <- as.owin(win)
   s <- area.owin(ow)
   for (i in 1:length(m)) {
-    nct <- ceiling(m[i]/5)
+    nct <- ceiling(m[i] / 5)
     if (inherits(win, "im")) {
       im <- win
       im$v <- ceiling(2 * im$v * (m[i] - nct) / nct)
@@ -505,9 +462,10 @@ simulticauchy <- function(marks, win, omega = 1) {
   return(spp(X$x, X$y, window = sw, marks = X$marks))
 }
 
-#simulating the pattern
+# Simulate the clustered point patterns
 mcauchy1.spp <- simulticauchy(marks1, habit1)
 mcauchy2.spp <- simulticauchy(marks2, habit2)
+# Built an spp object
 hmcauchy.spp <- spp(
   c(mcauchy1.spp$x, mcauchy2.spp$x), 
   c(mcauchy1.spp$y, mcauchy2.spp$y), 
@@ -519,7 +477,16 @@ hmcauchy.spp <- spp(
     )
   )
 )
-plot(habit1, col = c("white", "lightgrey"))
+par(fig = c(0, 0.7, 0, 0.5), mar = c(0, 0, 0.5, 0), new = TRUE)
+# Plot the white and grey areas
+plot(
+  habit1, 
+  col = c("white", "lightgrey"),
+  main = NULL, 
+  legend = FALSE, 
+  ribbon = FALSE
+)
+# Plot the points
 plot(
   hmcauchy.spp, 
   cols = rep("black", nlevels(hmcauchy.spp$marks)), 
@@ -529,22 +496,86 @@ plot(
   chars = levels(hmcauchy.spp$marks), 
   add = TRUE
 )
+
+
+# Simulating a cophenetic distance matrix from a clustered phylogenetic tree
+# Right
+library("ape")
+# Simulate a dendrogram
+clust.tree <- stree(16, type = "balanced", tip.label = levels(hrand.spp$marks))
+# Compute the distance matrix
+library("ade4")
+clust.dist <- cophenetic(
+  hclust(
+    newick2phylog(
+      write.tree(clust.tree), 
+      add.tools = TRUE
+    )$Wdist^2 / 2,
+    method = "average"
+  )
+)
+# Normalize the distances to max = 1
+clust.dist <- clust.dist / max(clust.dist)
+# Add the tree's tips
+attr(clust.dist, "Labels") <- clust.tree$tip.label
+# Plot the tree
+par(fig = c(0.7, 1, 0, 1), mar = c(0, 0, 0, 0), new = TRUE)
+plot(clust.tree)
+par(par_old)
 ```
 
+Virtual heterogeneous spatial patterns (left) mimicking habitat preferences of 16 species in a checked 1-ha plot with two habitats: species *a* to *h* have a twofold higher habitat preference in grey patches and species *i* to *p* a twofold higher habitat preference in white patches.
+The random pattern (top) is obtained by the superimposition of heterogeneous species-specific Poisson processes.
+The pattern of limited dispersion (bottom) is obtained by the superimposition of species-specific Neyman-Scott processes with a Cauchy kernel (see text for details).
+The hypothetical phylogenetic tree (right) simulates trait clustering: species close in the tree have identical habitat preferences.
+:::
+
+### Habitat preference
+
+In a first experiment (@fig-sim_data), we simulated habitat preferences by generating heterogeneous spatial patterns in a checked 1-ha plot with two habitats: eight species were simulated with a twofold higher intensity in habitat 1, and 8 species with a twofold higher intensity in habitat 2, so that species abundant in one habitat were rare in the other one.
+We independently simulated the species-specific spatial patterns as heterogeneous Poisson or heterogeneous Neyman-Scott processes with a Cauchy dispersal kernel [@Ghorbani2013] mimicking limited dispersion.
+In the latter we fixed the scale parameter of the Cauchy kernel at 1, meaning that only 5% of offsprings were dispersed beyond around 20 m from their parents [@Munoz2013], so that most of them were located within the sampling window.
+The 16 species-specific patterns were then assembled into multivariate spatial patterns.
+A hypothetical phylogeny mimicking trait clustering was simulated, where species close in the tree have same habitat preferences [@Hardy2007].
+
+@fig-Kd_CSR shows that both these patterns exhibit a significant negative departure from the null hypothesis of species equivalence for the same range of r values that recovers the scale of the phylogenetic spatial structure representing the simulated pattern of habitat preferences.
+
+::: {#fig-Kd_CSR}
 ```{r}
-H11 <- spp(hrand.spp$x, hrand.spp$y, window = c(0, 0, 50, 50), marks = hrand.spp$marks)
-H12 <- spp(hrand.spp$x, hrand.spp$y, window = c(50, 50, 100, 100), marks = hrand.spp$marks)
-H21 <- spp(hrand.spp$x, hrand.spp$y, window = c(50, 0, 100, 50), marks = hrand.spp$marks)
-H22 <- spp(hrand.spp$x, hrand.spp$y, window = c(0, 50, 50, 100), marks = hrand.spp$marks)
-H1 <- factor(c(as.character(H11$marks), as.character(H12$marks)))
-H2 <- factor(c(as.character(H21$marks), as.character(H22$marks)))
-M <- matrix(0, 2, 16)
-for (i in 1:16) M[,i] <- cbind(ifelse(!is.na(table(H1)[letters[i]]), table(H1)[letters[i]], 0), ifelse(!is.na(table(H2)[letters[i]]), table(H2)[letters[i]], 0))
-barplot(M, names.arg = letters[1:16], col = c("white", "lightgrey"))
+#| label: Kd
+# Computing Kr for the heterogeneous random pattern---
+# with a clustered cophenetic distance matrix 
+# and the species equivalence hypothesis
+kr.hrand.clust.se <- krfun(
+  p = hrand.spp, 
+  dis = clust.dist, 
+  H0 = "se", 
+  upto = 50,
+  by = 1, 
+  nsim = 1000
+)
+# Plot the Kd function
+plot(
+  kr.hrand.clust.se, 
+  opt = "K", 
+  main = NULL, 
+  sub = NULL, 
+  legend = FALSE, 
+  cols = c(1, 1, 1), 
+  lwd = 2
+)
 ```
 
+Test of the species equivalence hypothesis.
+$K_R(r) / K_S(r)$ curves are computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations.
+:::
+
+::: {#fig-Kd_Clustered}
 ```{r}
-#computing Kr for the heterogeneous multi-cauchy pattern pattern with a clustered cophenetic distance matrix and the species equivalence hypothesis (Fig1-Bottomright)
+#| label: Kd_Clustered
+# Computing Kr for the heterogeneous multi-cauchy pattern pattern ---
+# with a clustered cophenetic distance matrix 
+# and the species equivalence hypothesis
 kr.hmcauchy.clust.se <- krfun(
   p = hmcauchy.spp, 
   dis = clust.dist, 
@@ -553,6 +584,7 @@ kr.hmcauchy.clust.se <- krfun(
   by = 1,
   nsim = 1000
 )
+par(fig = c(0.5, 1, 0, 1), new = TRUE)
 plot(
   kr.hmcauchy.clust.se, 
   opt = "K",
@@ -562,9 +594,27 @@ plot(
   cols = c(1, 1, 1), 
   lwd = 2
 )
+par(par_old)
 ```
 
+Test of the species equivalence hypothesis.
+$K_R(r) / K_S(r)$ curves are computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations.
+:::
+
+### Limited similarity
+
+In a second experiment, we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multi-Strauss process with, as between-species interaction matrix, the cophenetic distance derived from the clustered tree above.
+This means that the between-species competition intensity within a neighbouring disc of 5 m is proportional to their distance within the phylogenetic tree: species that are close together in the tree compete less that species that are far in the tree.
+
+@fig-Similarity shows that the resulting pattern of the point locations, as revealed by $\hat{K}(r)$, is significantly regular with a deep negative peak at r = 5 m and that $K_R(r) / K_S(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
+Restricted permutations within a cophenetic distance matrix, i.e. between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses [@Hardy2008a].
+
+All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package for R [@Pelissier2015].
+Samples of R code used in the Application section are given in Appendix.
+
+::: {#fig-Similarity}
 ```{r}
+#| label: Similarity
 #simulating limiting similarity (Fig2)
 freq <- table(hrand.spp$marks)
 freq <- as.vector(freq / sum(freq))
@@ -599,8 +649,13 @@ plot(
 )
 ```
 
+Repulsive point pattern
+:::
+
+::: {#fig-Kd_Similarity}
 ```{r}
-#computing K and Kr for the limiting similarity pattern 
+#| label: Kd_Similarity
+# Computing K and Kr for the limiting similarity pattern ---
 k.compet <- kfun(
   p = compet.spp, 
   upto = 50, 
@@ -635,143 +690,40 @@ plot(
 )
 ```
 
-```{r}
-#simulating a lognormal frequency distribution of 500 trees of 16 species with o lognormal frequency distribution
-dm <- sort(round(500*(x <- rlnorm(16)) / sum(x)), decreasing = T)
-dm[1] <- ifelse(sum(dm) > 500, dm[1] - (sum(dm) - 500), dm[1] + (500 - sum(dm)))
-marks <- factor(rep(letters[1:16], dm))
+Virtual spatial pattern of competitive interaction between 16 species in a 1-ha plot.
+The pattern of interaction is obtained using un multi-Strauss inhibition process with a 5 m range and an interaction matrix corresponding to the cophenetic distance matrix derived from the clustered phylogenetic tree.
+$K(r)$ indicates that the spatial pattern of unmarked point locations (i.e. regardless of species labels) is significantly regular from 3 to 9 m (negative departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations), while $K_R(r) / K_S(r)$ computed with the cophenetic between-species distance matrix indicates a significant positive departure from the 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations.
+:::
 
-#simulating a random point pattern in a 1-ha sampling window, with a random allocation of marks (Fig. S1-Top)
-rand <- rpoint(500, win = owin(c(0, 100), c(0, 100)))
-rand.spp <- spp(rand$x, rand$y, c(0, 0, 100, 100), marks = sample(marks))
-plot(
-  rand.spp, 
-  cols = rep("black", nlevels(rand.spp$marks)), 
-  main = NULL, 
-  legend = FALSE, 
-  scale = FALSE, 
-  chars = levels(rand.spp$marks)
-)
-#computing K and Kr for the random pattern
-k.rand <- kfun(p = rand.spp, upto = 50, by = 1, nsim = 1000)
-plot(
-  k.rand, 
-  opt = "L", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-  
-)
-kr.rand <- krfun(
-  p = rand.spp, 
-  upto = 50, 
-  by = 1, 
-  nsim = 1000
-)
-plot(
-  kr.rand, 
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
-```
+## Paracou: a tropical forest plot in French Guiana
 
-```{r}
-#simulating a regular point pattern in a 1-ha sampling window, with a random allocation of marks using a Strauss inhibition process (Fig. S1-Middle)
-reg <- rStrauss(0.1, 0.2, 3, W = owin(c(0, 100), c(0, 100)))
-reg <- superimpose(reg, rpoint((500 - reg$n), win = owin(c(0, 100), c(0, 100))))
-reg.spp <- spp(
-  reg$x, 
-  reg$y, 
-  window = c(0, 0, 100, 100), 
-  marks = sample(marks)
-)
-plot(
-  reg.spp, 
-  cols = rep("black", nlevels(reg.spp$marks)), 
-  main = NULL, 
-  legend = FALSE, 
-  scale = FALSE, 
-  chars = levels(reg.spp$marks)
-)
-#computing K and Kr for the regular pattern 
-k.reg <- kfun(p = reg.spp, upto = 50, by = 1, nsim = 1000)
-plot(
-  k.reg, 
-  opt = "L", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
-kr.reg <- krfun(
-  p = reg.spp, 
-  upto = 50, 
-  by = 1, 
-  nsim = 1000
-)
-plot(
-  kr.reg, 
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
-```
+### Study site and data
 
-```{r}
-#simulating a clustered point pattern in a 1-ha sampling window, with a random allocation of marks using a cluster Matern process (Fig. S1-Bottom)
-clust <- rMatClust(0.0045, 15, 10, win = owin(c(0, 100), c(0, 100)))
-clust <- superimpose(
-  clust, 
-  rpoint((500 - clust$n), win = owin(c(0, 100), c(0, 100)))
-)
-clust.spp <- spp(
-  clust$x, 
-  clust$y, 
-  window = c(0, 0, 100, 100), 
-  marks = sample(marks)
-)
-plot(
-  clust.spp, 
-  cols = rep("black", nlevels(clust.spp$marks)), 
-  main = NULL, 
-  legend = FALSE, 
-  scale = FALSE, 
-  chars = levels(clust.spp$marks)
-)
-#computing K and Kr for the clustered pattern 
-k.clust <- kfun(p = clust.spp, upto = 50, by = 1, nsim = 1000)
-plot(
-  k.clust, 
-  opt = "L", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
-kr.clust <- krfun(p = clust.spp, upto = 50, by = 1, nsim = 1000)
-plot(
-  kr.clust, 
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
-```
+We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana [@Gourlet-Fleury2004].
+Paracou was set up in 1984 to study the impact of silvicultural treatments on the forest dynamics based on control and logged-over plots.
+We used here data from a control plot of 250 x 250 m settled in 1990, in which 4128 trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (332 different species; Fig. 3-topleft).
+Since After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species.
+For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies [@Westoby1998], i.e. the specific leaf area (SLA in cm2.g-1 of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds).
+These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterizes the importance of the growth response to favourable conditions, while H and Seed characterizes the importance of investment in the capacity to respond to disturbance.
+We also included the wood specific gravity (WSG in g.cm-3 of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
+We built from these data, two different between-species distance matrices, a phylogenetic one based on the APG III classification [@Chase2009] and a functional one based on the four traits described above.
+The phylogenetic distance was simply computed from APG III hierarchical tree, considering dpq = 1 if species p and q were from the same genus, dpq = 2 if they were from different genera in the same family and dpq = 3 if they were from different families.
+Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao quadratic entropy [@Pavoine2005c].
+To ensure the same ultrametric properties to the functional distance matrix, we computed the cophenetic distance for a hierarchical clustering with Ward method (i.e. minimizing total within-cluster variance) based on functional trait dissimilarities, taken as Gower distance, as recommended for mixed variables [@Gower1971].
+Both distance matrices were finally rescaled by their maximum in order to keep HD within the 0-1 standard range of values for diversity indices.
 
+### Analysis of species diversity spatial pattern
 
-## Paracou
+The L-function (Fig. 3-toprigth), i.e. the linearized univariate version of Ripley K-function, shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 9 m (negative departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations).
+$K_R(r) / K_S(r)$ computed with a phylogenetic between-species distance matrix shows a significant positive departure from the null hypothesis of species equivalence at short distances (based on 1000 Monte Carlo simulations), indicating limiting similarity (Fig. 3-bottomleft).
+As a short-range spatial regularity in tree stands is generally interpreted as resulting from self-thinning due to intense local competition [e.g. @Kenkel1988], it therefore seems that the sharing of resources between locally competing neighbours enhanced niche differentiation and thus species diversity.
+This pattern doesn't exist however when considering the between-species distance matrix based on the 4 functional traits together (Fig. 3-bottomrigth) or on each of them separately (Fig. S2), though these traits are generally considered as phylogenetically conserved [e.g. @Baraloto2012a].
+This probably means that niche trade-offs that caused short-range limiting similarity do not concern the four functional traits considered in the present study.
 
 # Conclusion
+
+We demonstrated in this paper that the function of multitype point pattern analysis concomitantly proposed by @Shen2013 and @Pelissier2015, which integrates between-species differences in a distance-dependent measure of diversity, relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his K-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
+It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the K- and K12-functions.
+Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species.
+Observed spatial diversity patterns can thus be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001].
+This new tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.
