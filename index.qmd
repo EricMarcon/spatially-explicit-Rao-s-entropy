@@ -716,15 +716,188 @@ $K(r)$ indicates that the spatial pattern of unmarked point locations (i.e. rega
 
 ### Study site and data
 
+```{r}
+#| label: Paracou6
+library("tidyverse")
+# Read Paracou 6 inventory
+p_6 <- read_csv2("data/Paracou6.csv")
+# Statistics for the text`
+p_6 %>% 
+  nrow() ->
+  n_trees
+p_6 %>% 
+  pull(spName) %>% 
+  unique() %>% 
+  length() ->
+  n_species
+# Point pattern
+library("ads")
+p_6.spp <- spp(
+  x = p_6$Xfield,
+  y = p_6$Yfield,
+  window = c(0, 0, 250, 250),
+  marks = p_6$spName
+)
+```
+
+```{r}
+#| label: Paracou_K
+# Computing K and Kr for the limiting similarity pattern ---
+silence <- capture.output(
+  k.p6 <- kfun(
+    p = p_6.spp, 
+    upto = 50, 
+    by = 1,
+    nsim = 1000
+  )
+)
+plot(
+  k.p6, 
+  opt = "L", 
+  main = NULL, 
+  sub = NULL, 
+  legend = FALSE, 
+  cols = c(1, 1, 1), 
+  lwd = 2
+)
+```
+
+
+```{r}
+#| label: Phylogeny
+library("ape")
+# Make a phylogeny
+p_6 %>%
+  # Keep a single line per species
+  group_by(Family, Genus, spName) %>% 
+  # Count to allow grouping
+  summarise(abundance = n()) %>% 
+  # Delete the groups
+  ungroup() %>% 
+  # Requires factors
+  mutate_if(is.character, as.factor)  %>% 
+  # Create the phylogeny
+  {as.phylo(~Family/Genus/spName, data = ., collapse = FALSE)} %>% 
+  # Branch lengths are identical
+  compute.brlen(method = 1) %>% 
+  # Turn multichotomies to dichotomies
+  multi2di() %>%  
+  # Merge branches without divergence 
+  collapse.singles() %>% 
+  # Distances
+  cophenetic() %>% 
+  # Divide by 2 for one-way distances
+  `/`(2) %>% 
+  # Make a dist object
+  as.dist() ->
+  p_6_phylo
+```
+
+```{r}
+#| label: Traits
+p_6_traits <- read_csv2("data/traits.csv")
+library("cluster")
+# Use a dataframe to name the rows (for daisy())
+p_6_traits.df <- as.data.frame(p_6_traits)
+rownames(p_6_traits.df) <- p_6_traits$spName
+p_6_traits.df %>% 
+  # Keep P6 species only
+  # filter(spName %in% p_6_phylo$tip.label) %>% 
+  # Keep trait values only
+  select(-(Family:spName)) %>% 
+  # Compute distance between rows
+  daisy(metric = "gower", type = list(ordered = 4)) %>% 
+  agnes() %>% 
+  as.hclust() %>% 
+  # Matrice de distances
+  cophenetic() %>% 
+  # Les distances sont comptées deux fois: les diviser par 2
+  `/`(2) %>% 
+  # Demi-matrice (objet de type dist pour ads)
+  as.dist() ->
+  dist_species
+```
+
+```{r}
+#| label: Kr_Paracou_fun
+silence <- capture.output(
+  kr.p_6_fun.se <- krfun(
+    p = p_6.spp, 
+    dis = dist_species, 
+    H0 = "se", 
+    upto = 50,
+    by = 1, 
+    nsim = 1000
+  )
+)
+# Plot the Kd function
+plot(
+  kr.p_6_fun.se, 
+  opt = "K", 
+  main = NULL, 
+  sub = NULL, 
+  legend = FALSE, 
+  cols = c(1, 1, 1), 
+  lwd = 2
+)
+```
+
+```{r}
+#| label: Kr_Paracou_phylo
+silence <- capture.output(
+  kr.p_6_phy.se <- krfun(
+    p = p_6.spp, 
+    dis = p_6_phylo, 
+    H0 = "se", 
+    upto = 50,
+    by = 1, 
+    nsim = 1000
+  )
+)
+# Plot the Kd function
+plot(
+  kr.p_6_phy.se, 
+  opt = "K", 
+  main = NULL, 
+  sub = NULL, 
+  legend = FALSE, 
+  cols = c(1, 1, 1), 
+  lwd = 2
+)
+```
+
+
+```{r}
+#| label: Kd_Paracou_phylo
+silence <- capture.output(
+  kd.p_6_phy.se <- kdfun(
+    p = p_6.spp, 
+    dis = p_6_phylo, 
+    upto = 50,
+    by = 1, 
+    nsim = 1000
+  )
+)
+# Plot the Kd function
+plot(
+  kd.p_6_phy.se, 
+  opt = "K", 
+  main = NULL, 
+  sub = NULL, 
+  legend = FALSE, 
+  cols = c(1, 1, 1), 
+  lwd = 2
+)
+```
 We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana [@Gourlet-Fleury2004].
 Paracou was set up in 1984 to study the impact of silvicultural treatments on the forest dynamics based on control and logged-over plots.
-We used here data from a control plot of 250 x 250 m settled in 1990, in which 4128 trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (332 different species; Fig. 3-topleft).
+We used here data from a control plot of 250 x 250 m settled in 1990, in which `n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species; Fig. 3-topleft).
 Since After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species.
-For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies [@Westoby1998], i.e. the specific leaf area (SLA in cm2.g-1 of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds).
+For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies [@Westoby1998], i.e. the specific leaf area (SLA in cm^2^.g^-1^ of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds).
 These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterizes the importance of the growth response to favourable conditions, while H and Seed characterizes the importance of investment in the capacity to respond to disturbance.
-We also included the wood specific gravity (WSG in g.cm-3 of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
+We also included the wood specific gravity (WSG in g.cm^-3^ of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
 We built from these data, two different between-species distance matrices, a phylogenetic one based on the APG III classification [@Chase2009] and a functional one based on the four traits described above.
-The phylogenetic distance was simply computed from APG III hierarchical tree, considering dpq = 1 if species p and q were from the same genus, dpq = 2 if they were from different genera in the same family and dpq = 3 if they were from different families.
+The phylogenetic distance was simply computed from APG III hierarchical tree, considering $d_{p,q} = 1$ if species $p$ and $q$ were from the same genus, $d_{p,q} = 2$ if they were from different genera in the same family and $d_{p,q} = 3$ if they were from different families.
 Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao quadratic entropy [@Pavoine2005c].
 To ensure the same ultrametric properties to the functional distance matrix, we computed the cophenetic distance for a hierarchical clustering with Ward method (i.e. minimizing total within-cluster variance) based on functional trait dissimilarities, taken as Gower distance, as recommended for mixed variables [@Gower1971].
 Both distance matrices were finally rescaled by their maximum in order to keep HD within the 0-1 standard range of values for diversity indices.
