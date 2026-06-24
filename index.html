@@ -456,7 +456,56 @@ Figure&nbsp;5: Virtual spatial pattern of competitive interaction between 16 spe
 <h2 data-number="3.2" class="anchored" data-anchor-id="paracou-a-tropical-forest-plot-in-french-guiana"><span class="header-section-number">3.2</span> Paracou: a tropical forest plot in French Guiana</h2>
 <section id="study-site-and-data" class="level3">
 <h3 class="anchored" data-anchor-id="study-site-and-data">Study site and data</h3>
-<p>We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana <span class="citation" data-cites="Gourlet-Fleury2004">(<a href="#ref-Gourlet-Fleury2004" role="doc-biblioref">Gourlet-Fleury et al. 2004</a>)</span>. Paracou was set up in 1984 to study the impact of silvicultural treatments on the forest dynamics based on control and logged-over plots. We used here data from a control plot of 250 x 250 m settled in 1990, in which 4128 trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (332 different species; Fig. 3-topleft). Since After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species. For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies <span class="citation" data-cites="Westoby1998">(<a href="#ref-Westoby1998" role="doc-biblioref">Westoby 1998</a>)</span>, i.e.&nbsp;the specific leaf area (SLA in cm2.g-1 of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds). These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterizes the importance of the growth response to favourable conditions, while H and Seed characterizes the importance of investment in the capacity to respond to disturbance. We also included the wood specific gravity (WSG in g.cm-3 of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. <span class="citation" data-cites="Chave2009">(<a href="#ref-Chave2009" role="doc-biblioref">Jerome Chave et al. 2009</a>)</span>. We built from these data, two different between-species distance matrices, a phylogenetic one based on the APG III classification <span class="citation" data-cites="Chase2009">(<a href="#ref-Chase2009" role="doc-biblioref">Chase and Reveal 2009</a>)</span> and a functional one based on the four traits described above. The phylogenetic distance was simply computed from APG III hierarchical tree, considering dpq = 1 if species p and q were from the same genus, dpq = 2 if they were from different genera in the same family and dpq = 3 if they were from different families. Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao quadratic entropy <span class="citation" data-cites="Pavoine2005c">(<a href="#ref-Pavoine2005c" role="doc-biblioref">Pavoine et al. 2005</a>)</span>. To ensure the same ultrametric properties to the functional distance matrix, we computed the cophenetic distance for a hierarchical clustering with Ward method (i.e.&nbsp;minimizing total within-cluster variance) based on functional trait dissimilarities, taken as Gower distance, as recommended for mixed variables <span class="citation" data-cites="Gower1971">(<a href="#ref-Gower1971" role="doc-biblioref">Gower 1971</a>)</span>. Both distance matrices were finally rescaled by their maximum in order to keep HD within the 0-1 standard range of values for diversity indices.</p>
+<p></p>
+<p></p>
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Paracou_K-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Kr_Paracou_fun-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Kr_Paracou_phylo-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p>
+<p></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/Kd_Paracou_phylo-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p> We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana <span class="citation" data-cites="Gourlet-Fleury2004">(<a href="#ref-Gourlet-Fleury2004" role="doc-biblioref">Gourlet-Fleury et al. 2004</a>)</span>. Paracou was set up in 1984 to study the impact of silvicultural treatments on the forest dynamics based on control and logged-over plots. We used here data from a control plot of 250 x 250 m settled in 1990, in which <code>n_trees</code> trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (335 different species; Fig. 3-topleft). Since After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species. For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies <span class="citation" data-cites="Westoby1998">(<a href="#ref-Westoby1998" role="doc-biblioref">Westoby 1998</a>)</span>, i.e.&nbsp;the specific leaf area (SLA in cm<sup>2</sup>.g<sup>-1</sup> of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds). These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterizes the importance of the growth response to favourable conditions, while H and Seed characterizes the importance of investment in the capacity to respond to disturbance. We also included the wood specific gravity (WSG in g.cm<sup>-3</sup> of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. <span class="citation" data-cites="Chave2009">(<a href="#ref-Chave2009" role="doc-biblioref">Jerôme Chave et al. 2009</a>)</span>. We built from these data, two different between-species distance matrices, a phylogenetic one based on the APG III classification <span class="citation" data-cites="Chase2009">(<a href="#ref-Chase2009" role="doc-biblioref">Chase and Reveal 2009</a>)</span> and a functional one based on the four traits described above. The phylogenetic distance was simply computed from APG III hierarchical tree, considering <span class="math inline">\(d_{p,q} = 1\)</span> if species <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> were from the same genus, <span class="math inline">\(d_{p,q} = 2\)</span> if they were from different genera in the same family and <span class="math inline">\(d_{p,q} = 3\)</span> if they were from different families. Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao quadratic entropy <span class="citation" data-cites="Pavoine2005c">(<a href="#ref-Pavoine2005c" role="doc-biblioref">Pavoine et al. 2005</a>)</span>. To ensure the same ultrametric properties to the functional distance matrix, we computed the cophenetic distance for a hierarchical clustering with Ward method (i.e.&nbsp;minimizing total within-cluster variance) based on functional trait dissimilarities, taken as Gower distance, as recommended for mixed variables <span class="citation" data-cites="Gower1971">(<a href="#ref-Gower1971" role="doc-biblioref">Gower 1971</a>)</span>. Both distance matrices were finally rescaled by their maximum in order to keep HD within the 0-1 standard range of values for diversity indices.</p>
 </section>
 <section id="analysis-of-species-diversity-spatial-pattern" class="level3">
 <h3 class="anchored" data-anchor-id="analysis-of-species-diversity-spatial-pattern">Analysis of species diversity spatial pattern</h3>
@@ -490,7 +539,7 @@ Cadotte, Marc W., Russel Dinnage, and David Tilman. 2012. <span>‘Phylogenetic 
 Chase, Mark W., and James L. Reveal. 2009. <span>‘A Phylogenetic Classification of the Land Plants to Accompany <span>APG III</span>’</span>. <em>Botanical Journal of the Linnean Society</em> 161 (2): 122–27. <a href="https://doi.org/10.1111/j.1095-8339.2009.01002.x">https://doi.org/10.1111/j.1095-8339.2009.01002.x</a>.
 </div>
 <div id="ref-Chave2009" class="csl-entry" role="listitem">
-Chave, Jerome, David Coomes, Steven Jansen, Simon L. Lewis, Nathan G. Swenson, and Amy E. Zanne. 2009. <span>‘Towards a Worldwide Wood Economics Spectrum’</span>. <em>Ecology Letters</em> 12 (4): 351–66. <a href="https://doi.org/10.1111/j.1461-0248.2009.01285.x">https://doi.org/10.1111/j.1461-0248.2009.01285.x</a>.
+Chave, Jerôme, David Coomes, Steven Jansen, Simon L. Lewis, Nathan G. Swenson, and Amy E. Zanne. 2009. <span>‘Towards a Worldwide Wood Economics Spectrum’</span>. <em>Ecology Letters</em> 12 (4): 351–66. <a href="https://doi.org/10.1111/j.1461-0248.2009.01285.x">https://doi.org/10.1111/j.1461-0248.2009.01285.x</a>.
 </div>
 <div id="ref-Chave2002" class="csl-entry" role="listitem">
 Chave, Jérôme, and Egbert G. Leigh. 2002. <span>‘A Spatially Explicit Neutral Model of <span><span class="math inline">\(\beta\)</span></span>-<span>Diversity</span> in Tropical Forests’</span>. <em>Theoretical Population Biology</em> 62 (2): 153–68. <a href="https://doi.org/10.1006/tpbi.2002.1597">https://doi.org/10.1006/tpbi.2002.1597</a>.
