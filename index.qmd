@@ -186,15 +186,56 @@ We finally provide worked examples based on simulated data and on a real dataset
 
 # Methods
 
-## Biodiversity measurement based on information theory
+## Simpson's and Rao's entropies
 
-### Definitions
+Simpson's index of species diversity [@Simpson1949] gives the probability that a randomly selected pair of individuals in a sample is comprised of two different species.
+It is more than an index: it is a measure of entropy [@Jost2006] and thus should be named Simpson's entropy.
+It is estimated with no bias by:
 
-<!--# TODO: recall entropy, diversity, order 2, phylo/functional -->
+$$\hat{D} = 1 - \sum_{s =1}^S{\frac{n_s \left(n_s - 1 \right)}{n \left(n - 1 \right)}}$$ {#eq-Simpson}
 
-### Diversity accumulation curves
+where $n$ and $S$ are the total numbers of individuals and species in the sample, respectively, and $n_p$ the number of individuals of species $s$.
 
-<!--# TODO: recall SAC, generalise to DAC and introduce EAC -->
+Non-uniform divergences between species allow defining phylogenetic or functional diversity [@Pielou1975].
+Rao's entropy is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
+
+An unbiased estimator [@Shimatani2001a] is:
+
+$$\hat{H}_D = \sum_{s =1}^S{\frac{n_s n_t}{n \left(n - 1 \right)}d_{p,q}}$$
+
+where $d_{p,q}$ is a measure of the pairwise divergence between species$p$ and $q$ (with $d_{p,q}$ = $d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{s,r}$ that defines a distance is not required).
+$H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011].
+
+Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
+
+Diversity is *scale-dependent*: its value increases with the sample size. It needs to be standardized. A common practise consists of estimating the asymptotic diversity,  i.e. the diversity of an hypothetical community the available data is assumed to be a representative sample. The estimators above are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
+
+## Diversity accumulation curves
+
+The Species Accumulation Curve (SAC) describes the expectation of the number of observed species with respect to the sample size [@Gotelli2001], assuming uniform and independent sampling of individuals or, equivalently, that all species are distributed independently according to homogeneous Poisson point patterns.
+It can be derived from the distribution of species abundances of the full sample [@Ugland2003].
+The sample size is a number of individuals that can be converted to a sample area assuming the density of individuals is constant.
+
+SACs allow to define biodiversity *at a given scale*.
+It is an alternative to estimating asymptotic diversity, e. g. with the well-known Chao1 estimator [@Chao1984],
+
+Diversity Accumulation Curves extend this approach to all measures of diversity.
+Simpson's entropy accumulation curves were derived by @Chao2014 and extended straightforwardly to Rao's entropy applied to ultrametric distances [@Marcon2014b].
+Entropy is generally converted into Hill numbers [@Jost2006], but this is not necessary here.
+
+Yet, DACs are *aspatial* [@Rajala2012], as they are designed to ignore the spatial pattern of the data. Spatial structure is generally considered as an empirical problem [@Gotelli2001], difficultly solved by deriving accumulation curves taking into account the spatial pattern of each species [@Picard2004].
+
+## Neighborhood diversity
+
+Taking into account biodiversity from the perspective of each individual, whose functioning is assumed to be related to it, requires estimating diversity in its neighbourhood, as argued by @Rajala2012.
+
+Rather than aspatial diversity accumulation curves, neighborhood diversity curves can be estimated empirically based on a fully-mapped dataset.
+The definition of neighborhood is restricted here to a circle or radius $r$ around each individual.
+Each of these circles can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged [@Marcon2014a] to obtain a value of $\alpha$ entropy.
+
+Neighborhood diversity can be computed with the package divent [@Marcon2026] for R [@R].
+The computation burden is heavy for community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in neighborhoods that do not fit in the sampling window must be extrapolated.
+An alternative approach, based on spatial statistics, allows the fast estimation of neighbourhood Simpson's and Rao's entropy, and reveals profound connections with the point-process theory.
 
 ## Distance-dependent entropy based on the point-process theory
 
@@ -229,14 +270,6 @@ The most interesting ones are the random labelling hypothesis, which means that,
 
 ### A distance-dependent Simpson's entropy
 
-Simpson's index of species diversity [@Simpson1949] gives the probability that a randomly selected pair of individuals in a sample is comprised of two different species.
-It is more than an index: it is a measure of entropy [@Jost2006] and thus should be named Simpson's entropy.
-It is estimated with no bias by:
-
-$$\hat{D} = 1 - \sum_{s =1}^S{\frac{n_s \left(n_s - 1 \right)}{n \left(n - 1 \right)}}$$ {#eq-Simpson}
-
-where $n$ and $S$ are the total numbers of individuals and species in the sample, respectively, and $n_p$ the number of individuals of species $s$.
-
 From this entropy, @Shimatani2001 proposed a distance-dependent version based on Ripley's K-function, from which we can write a version standardized by $\hat{D}$ as
 
 $$\hat{K}_S(r) = \left[ 1 - 
@@ -260,31 +293,23 @@ Using the unbiased estimator of $\hat{K}(r)$ introduced in @eq-Khat, allows corr
 We can notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics [@Shimatani2001, eq. 9]:
 
 $$\hat{K}_S(r) = \left[
-  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{s,t}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{p,q}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
   \right] / \hat{D}
   $$ {#eq-Ks12}
 
-with $\hat{K}_{s,t}(r)$ a generalization of $K_{12}(r)$ estimator introduced earlier, to any couple of different species $s$ and $t$.
+with $\hat{K}_{p,q}(r)$ a generalization of $K_{12}(r)$ estimator introduced earlier, to any couple of different species $p$ and $q$.
 
 ### A generalization to Rao's entropy
 
-Simpson's entropy is a special case of Rao's entropy, that is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
-An unbiased estimator [@Shimatani2001a] is:
-
-$$\hat{H}_D = \sum_{s =1}^S{\frac{n_s n_t}{n \left(n - 1 \right)}d_{s,t}}$$
-
-where and $d_{s,t}$ is a measure of the pairwise divergence between species $s$ and $t$ (with $d_{s,t}$ = $d_{t,s}$ and $d_{s,s} = 0$, but the triangular inequality $d_{s,t} + d_{s,u} \geq d_{s,u}$ that defines a distance is not required).
-$H_D$ is a measure of diversity commonly used in ecology to take into account non-uniform distances between species, such as phylogenetic or functional distances [@Pavoine2011].
-Taking $d_{s,t} = 1$ for all $s \neq t$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
 We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_S(r)$ that integrates Ripley's correction of edge effects estimated by:
 
 $$\hat{K}_R(r) = \left[
-  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{s,t}(r) d_{s,t}}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{K}(r)}}}
   \right] / \hat{H}_D
   $$
 
 This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity (i.e., $H_D$) in a disc of radius r centred on an arbitrary point of the pattern.
-$\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{s,t} = 1$ for all species $s \neq t$.
+$\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \neq q$.
 
 ### Multitype correlation and $\beta$ diversity
 
@@ -320,14 +345,14 @@ The null hypothesis of random labelling originally proposed by @Shimatani2001 pr
 It allows testing for an absence of interaction between neighbouring points, conditionally to the overall pattern of point locations, so that the probability to find a pair of identical marks is independent of distance.
 When the function is above 1, the mean diversity within a disc of radius r from an arbitrary point of the pattern is higher than the total sample diversity, and conversely.
 Local confidence limits of the random labelling hypothesis at a given significance level can be built from Monte Carlo rank tests @Diggle1979.
-But this hypothesis basically relies on the assumption that the marks result from a random process that affects individuals a posteriori with regards to the process of point location, so that we have for all $s$ types of marks $K_s(r) = K(r)$ [@Goreaud2003; @Eckel2008] and hence $K_R(r) = 1$.
+But this hypothesis basically relies on the assumption that the marks result from a random process that affects individuals a posteriori with regards to the process of point location, so that we have for all $p$ types of marks $K_s(r) = K(r)$ [@Goreaud2003; @Eckel2008] and hence $K_R(r) = 1$.
 This could for instance corresponds to a multitype process resulting from a disease attack in a plant population that would mark the individuals as sick, non-infected or healthy carrier [see also @Eckel2008 for an example in socio-economics].
 Sounded reasons for testing the random labelling hypothesis are however hardly conceivable in the context of species diversity, so that testing this hypothesis only permits limited inferences about the processes at the origin of the observed pattern of species diversity.
 
 ### The population independence null hypothesis
 
 A more meaningful hypothesis for species diversity studies is the one of mutually independent populations, postulating that the spatial pattern of each type of mark (or population) is the realization of a specific spatial process (for instance of limited dispersion) and that the location of points of each population is independent from the location of the points of the other populations in the resulting multivariate pattern.
-This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{1,2}$-function by @Lotwick1982 for which we expect that $K_{s,t}(r) = \pi r^2$ for any marks $s \neq t$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
+This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{1,2}$-function by @Lotwick1982 for which we expect that $K_{p,q}(r) = \pi r^2$ for any marks $p \neq q$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
 Note that this hypothesis differs from the random labelling hypothesis, except when all specific spatial patterns result from a stationary Poisson point process [@Diggle1983].
 
 A classical method for testing the mutually independent population hypothesis is to build a Monte Carlo rank test keeping the pattern of each population unchanged, but randomizing their relative positions by a random shifting procedure of each pattern around a torus [@Goreaud2003].
@@ -335,10 +360,10 @@ Such a procedure is cumbersome for highly multivariate patterns and is thus aban
 
 ### The species equivalence null hypothesis
 
-More interestingly $K_R(r)$ provides opportunities for testing a highly relevant ecological hypothesis for diversity studies, based on $d_{s,t}$, which quantifies how species differ one from each other.
+More interestingly $K_R(r)$ provides opportunities for testing a highly relevant ecological hypothesis for diversity studies, based on $d_{p,q}$, which quantifies how species differ one from each other.
 Shuffling between-species distances a large number of times means eliminating their differences and therefore testing a null hypothesis of species equivalence, put forward, for instance, in the neutral theory of biodiversity [@Hubbell2001].
-This null hypothesis can be tested conditionally to the pattern of point locations and to the spatial distribution of the species labels by permuting simultaneously the rows and columns in $d_{s,t}$, which is equivalent, in the case of a cophenetic distance matrix, to permuting the tips of a hierarchical (taxonomic or phylogenetic) tree [@Hardy2008a].
-It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{s,t}$ is a uniform between-species distance matrix.
+This null hypothesis can be tested conditionally to the pattern of point locations and to the spatial distribution of the species labels by permuting simultaneously the rows and columns in $d_{p,q}$, which is equivalent, in the case of a cophenetic distance matrix, to permuting the tips of a hierarchical (taxonomic or phylogenetic) tree [@Hardy2008a].
+It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{p,q}$ is a uniform between-species distance matrix.
 When focusing on the species equivalence hypothesis, $K_R(r) / K_S(r)$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
 With reference to these authors and to the usual notation in point pattern analysis, this ratio is appropriately designated as $K_d(r)$.
 
@@ -762,7 +787,6 @@ plot(
 )
 ```
 
-
 ```{r}
 #| label: Phylogeny
 library("ape")
@@ -866,7 +890,6 @@ plot(
 )
 ```
 
-
 ```{r}
 #| label: Kd_Paracou_phylo
 silence <- capture.output(
@@ -889,6 +912,7 @@ plot(
   lwd = 2
 )
 ```
+
 We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana [@Gourlet-Fleury2004].
 Paracou was set up in 1984 to study the impact of silvicultural treatments on the forest dynamics based on control and logged-over plots.
 We used here data from a control plot of 250 x 250 m settled in 1990, in which `n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species; Fig. 3-topleft).
