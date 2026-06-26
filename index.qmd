@@ -164,16 +164,15 @@ Local biotic and abiotic interactions are for long recognized as fundamental pro
 In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e. intra- and inter-specific) competition/facilitation and habitat preferences [@Dale1999].
 While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity [@Clark2010; @Cadotte2012].
 As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology [@Mouquet2012], in order to account for the key components of species interactions with their biotic and abiotic environments.
-
-<!--# TODO: introduce ecological questions addressed in application section -->
-
 Towards this goal, a number of novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed [@Pavoine2011].
 Among these methods some are specifically designed to explicitly account for space [e.g. @Pavoine2011a].
 However those studies generally consider spatially discontinuous community samples, i.e. the $\beta$-diversity component of @Whittaker1960, so that the underlying spatial framework can basically be related to the graph theory [@Dale2002].
+
+The interest of considering local diversity rather than at the scale of the whole community or sampling window has emerged in the literature since @Batty1974.
+A review can be found in @Altieri2021, with diverse approaches.
+It is not discussed that the functioning of a community is influenced by its biodiversity, but it is straightforward to consider that each individual is concerned by the diversity of its neighbourhood rather that of the whole community [e.g., @Hubbell2001a showed that tree mortality increased with neighbourhood species richness in a tropical evergreen forest].
 When mapped data are concerned, such as for instance those on tropical trees provided by large permanent forest plots [@Losos2004], the well-developed framework of the spatial point pattern analysis [@Ripley1976a; @Ripley1977] offers an efficient means of studying the continuous spatial variation in species diversity [@Condit2000; @Shimatani2001; @Rajala2012].
 A synthesis of the opportunities brought by this approach can be found in @Wiegand2017.
-
-<!--# TODO: developments of spatially explicit diversity independent from point processes: neighbourhood diversity. -->
 
 @Shen2013 and @Pelissier2015 concomitantly introduced within the framework of the spatial point pattern analysis a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences.
 If both contributions independently arrived to very similar functions, we believe that to help ecologists to well-understand and to take full advantage of novel approach, further clarifications are needed, especially regarding how it is related to well-known functions of spatial point pattern analysis, namely Ripley's K-function [@Ripley1977] and its intertype extension, the $K_{1,2}$-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
@@ -186,7 +185,9 @@ We finally provide worked examples based on simulated data and on a real dataset
 
 # Methods
 
-## Simpson's and Rao's entropies
+## From aspatial to spatial diversity
+
+### Simpson's and Rao's entropies
 
 Simpson's index of species diversity [@Simpson1949] gives the probability that a randomly selected pair of individuals in a sample is comprised of two different species.
 It is more than an index: it is a measure of entropy [@Jost2006] and thus should be named Simpson's entropy.
@@ -210,7 +211,8 @@ Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpso
 
 Diversity is *scale-dependent*: its value increases with the sample size. It needs to be standardized. A common practise consists of estimating the asymptotic diversity,  i.e. the diversity of an hypothetical community the available data is assumed to be a representative sample. The estimators above are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
 
-## Diversity accumulation curves
+
+### Diversity accumulation curves
 
 The Species Accumulation Curve (SAC) describes the expectation of the number of observed species with respect to the sample size [@Gotelli2001], assuming uniform and independent sampling of individuals or, equivalently, that all species are distributed independently according to homogeneous Poisson point patterns.
 It can be derived from the distribution of species abundances of the full sample [@Ugland2003].
@@ -225,16 +227,16 @@ Entropy is generally converted into Hill numbers [@Jost2006], but this is not ne
 
 Yet, DACs are *aspatial* [@Rajala2012], as they are designed to ignore the spatial pattern of the data. Spatial structure is generally considered as an empirical problem [@Gotelli2001], difficultly solved by deriving accumulation curves taking into account the spatial pattern of each species [@Picard2004].
 
-## Neighborhood diversity
+### Neighbourhood diversity
 
 Taking into account biodiversity from the perspective of each individual, whose functioning is assumed to be related to it, requires estimating diversity in its neighbourhood, as argued by @Rajala2012.
 
-Rather than aspatial diversity accumulation curves, neighborhood diversity curves can be estimated empirically based on a fully-mapped dataset.
-The definition of neighborhood is restricted here to a circle or radius $r$ around each individual.
-Each of these circles can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged [@Marcon2014a] to obtain a value of $\alpha$ entropy.
+Rather than aspatial diversity accumulation curves, neighbourhood diversity curves can be estimated empirically based on a fully-mapped dataset.
+The definition of neighbourhood is restricted here to a circle or radius $r$ around each individual.
+Each of these circles can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of an individual. We'll denote Simpson's and Rao's neighbourhood entropy $D(r)$ and $H_D(r)$ respectively.
 
-Neighborhood diversity can be computed with the package divent [@Marcon2026] for R [@R].
-The computation burden is heavy for community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in neighborhoods that do not fit in the sampling window must be extrapolated.
+Neighbourhood diversity can be computed with the package divent [@Marcon2026] for R [@R].
+The computation burden is heavy for community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in Neighbourhoods that do not fit in the sampling window must be extrapolated.
 An alternative approach, based on spatial statistics, allows the fast estimation of neighbourhood Simpson's and Rao's entropy, and reveals profound connections with the point-process theory.
 
 ## Distance-dependent entropy based on the point-process theory
@@ -270,22 +272,21 @@ The most interesting ones are the random labelling hypothesis, which means that,
 
 ### A distance-dependent Simpson's entropy
 
-From this entropy, @Shimatani2001 proposed a distance-dependent version based on Ripley's K-function, from which we can write a version standardized by $\hat{D}$ as
+@Shimatani2001 derived an estimator of the distance-dependent version of Simpson's entropy, $D(r)$, based on Ripley's K-function:
 
-$$\hat{K}_S(r) = \left[ 1 - 
-  \sum_{s =1}^S{\frac{\hat{\lambda}_s^2 \hat{K}_s(r)}{\hat{\lambda}^2 \hat{K}(r)}}
-  \right] / \hat{D}
-  $$ {#eq-Ks}
+$$\hat{D}(r) = 1 - 
+  \sum_{s =1}^S{\frac{\hat{\lambda}_s^2 \hat{K}_p(r)}{\hat{\lambda}^2 \hat{K}(r)}}
+  $$ {#eq-Dr}
 
-where $\hat{K}(r)$ and $\hat{K}_s(r)$ are Ripley's K-functions for all points of the pattern (no distinction of species) and for points of species s, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_s$ the corresponding intensity estimators.
+where $\hat{K}(r)$ and $\hat{K}_s(r)$ are Ripley's K-functions for all points of the pattern (no distinction of species) and for points of species $p$, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_s$ the corresponding intensity estimators.
 
-The numerator of the above equation corresponds to function $\hat{\alpha}(r)$ of @Shimatani2001, that we may name Simpson's neighbourhood entropy.
-Neighbourhood entropy (or diversity) is the entropy (or diversity) considered within a circle of radius $r$ around each point.
-The interest of considering local diversity rather than at the scale of the whole window has emerged in the literature since @Batty1974.
-A review can be found in @Altieri2021, with diverse approaches.
-It is not discussed that the functioning of a community is influenced by its biodiversity, but it is straightforward to consider that each individual is concerned by the diversity of its neighbourhood rather that of the whole community [e.g., @Hubbell2001a showed that tree mortality increased with neighbourhood species richness in a tropical evergreen forest].
+We can write a version standardized by $\hat{D}$ as
 
-$\alpha(r)$ tends to $D$ when $r$ increases so $K(r)$ tends to 1.
+$$\hat{K}_S(r) = \hat{D}(r) / \hat{D} $$ {#eq-Ks}
+  
+  
+
+$D(r)$ tends to $D$ when $r$ increases so $K_S(r)$ tends to 1.
 It is noticeable that $\hat{K}_S(r)$ has an expectation of 1 for all $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
 
 Using the unbiased estimator of $\hat{K}(r)$ introduced in @eq-Khat, allows correcting for edge effects for sampling windows of any shape.
@@ -303,12 +304,14 @@ with $\hat{K}_{p,q}(r)$ a generalization of $K_{12}(r)$ estimator introduced ear
 
 We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_S(r)$ that integrates Ripley's correction of edge effects estimated by:
 
-$$\hat{K}_R(r) = \left[
+$$\hat{K}_R(r) 
+= \hat{H}_D(r) / \hat{H}_D 
+= \left[
   \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{K}(r)}}}
   \right] / \hat{H}_D
-  $$
+  $$ {#eq-KR}
 
-This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity (i.e., $H_D$) in a disc of radius r centred on an arbitrary point of the pattern.
+This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity (i.e., $H_D$) in a disc of radius r centered on an arbitrary point of the pattern.
 $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \neq q$.
 
 ### Multitype correlation and $\beta$ diversity
@@ -329,10 +332,6 @@ These measures are actually $\beta$ differentiation diversity measures sensu @Ju
 We can thus define $g_S(r)$, a normalized version of $\beta_S(r)$ and $g_R(r)$, its generalization to Rao's entropy.
 
 <!--# TODO: add formulas, check consistency with @Pelissier2015 -->
-
-## Synthesis: a consistent measure of neighbourhood diversity
-
-<!--# TODO: summarize the story around Rao's entropy at a distance -->
 
 ## Testing ecological models
 
@@ -936,8 +935,13 @@ This probably means that niche trade-offs that caused short-range limiting simil
 
 # Conclusion
 
-We demonstrated in this paper that the function of multitype point pattern analysis concomitantly proposed by @Shen2013 and @Pelissier2015, which integrates between-species differences in a distance-dependent measure of diversity, relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his K-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
+The function of multitype point pattern analysis $K_R(r)$ introduced here is a normalized version of Rao's entropy measured in the neighborhood of individuals. 
+
+It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his K-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
 It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the K- and K12-functions.
 Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species.
-Observed spatial diversity patterns can thus be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001].
+This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype K12-functions (@#eq-KR).
+Other measures of neighborhood diversity address more aspects of biodiversity but loose link with the point process theory.
+
+Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001] with the $K_R(r)$ function.
 This new tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.
