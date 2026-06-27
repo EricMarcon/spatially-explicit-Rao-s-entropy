@@ -10,6 +10,10 @@ format:
   stylisharticle-html:
     # Color example, see "Text color"
     css: colors.css
+    code-links:
+      - text: GitHub repository
+        href: https://github.com/EricMarcon/spatially-explicit-Rao-s-entropy
+        repo: EricMarcon/spatially-explicit-Rao-s-entropy
 # Authors (https://quarto.org/docs/journals/authors.html#author-schema)
 author:
   - name: Eric Marcon
