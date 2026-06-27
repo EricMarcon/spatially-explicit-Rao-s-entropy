@@ -270,7 +270,7 @@ When it does not, the isotropic correction proposed by @Ripley1977 applies to wi
 A common extension of this univariate function is the intertype (or bivariate) *K~12~*-function proposed by @Lotwick1982.
 Its estimator is:
 
-$$\hat{K}_{1,2}(r) =
+$$\hat{K}_{12}(r) =
   \frac{1}{\hat{\lambda_2}n_1}
   \sum_{i=1}^{n_1}{\sum_{j=1}^{n_2}{
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,,r\right)
@@ -359,7 +359,7 @@ Sounded reasons for testing the random labelling hypothesis are however hardly c
 ### The population independence null hypothesis
 
 A more meaningful hypothesis for species diversity studies is the one of mutually independent populations, postulating that the spatial pattern of each type of mark (or population) is the realization of a specific spatial process (for instance of limited dispersion) and that the location of points of each population is independent from the location of the points of the other populations in the resulting multivariate pattern.
-This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{1,2}$-function by @Lotwick1982 for which we expect that $K_{p,q}(r) = \pi r^2$ for any marks $p \neq q$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
+This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{12}$-function by @Lotwick1982 for which we expect that $K_{p,q}(r) = \pi r^2$ for any marks $p \neq q$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
 Note that this hypothesis differs from the random labelling hypothesis, except when all specific spatial patterns result from a stationary Poisson point process [@Diggle1983].
 
 A classical method for testing the mutually independent population hypothesis is to build a Monte Carlo rank test keeping the pattern of each population unchanged, but randomizing their relative positions by a random shifting procedure of each pattern around a torus [@Goreaud2003].
@@ -925,9 +925,9 @@ As a short-range spatial regularity in tree stands is generally interpreted as r
 The function of multitype point pattern analysis $K_R(r)$ introduced here is a normalized version of Rao's entropy measured in the neighborhood of individuals.
 
 It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his *K*-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
-It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and $K~12~$-functions.
+It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and *K~12~*-functions.
 Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species.
-This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype K12-functions (@eq-KR).
+This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype $K~12~$-functions (@eq-KR).
 Other measures of neighborhood diversity address more aspects of biodiversity but loose link with the point process theory.
 
 Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001] with the $K_R(r)$ function.
