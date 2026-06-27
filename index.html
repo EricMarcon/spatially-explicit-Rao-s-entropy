@@ -11,7 +11,7 @@
 <meta name="author" content="Elodie Allié">
 <meta name="author" content="Florence Puech">
 <meta name="author" content="Raphaël Pélissier">
-<meta name="keywords" content="template, demo">
+<meta name="keywords" content="Spatially-explicit diversity, Rao’s entropy, Simpson’s entropy, Species equivalence">
 
 <title>Unifying spatially-explicit Rao’s entropy, spatial concentration, and accumulation curves: the different aspects of local biodiversity</title>
 <style>
@@ -216,7 +216,7 @@ window.Quarto = {
 <div>
   <div class="keywords">
     <div class="block-title">Keywords</div>
-    <p>template, demo</p>
+    <p>Spatially-explicit diversity, Rao’s entropy, Simpson’s entropy, Species equivalence</p>
   </div>
 </div>
 
@@ -257,7 +257,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="neighbourhood-diversity">Neighbourhood diversity</h3>
 <p>Taking into account biodiversity from the perspective of each individual, whose functioning is assumed to be related to it, requires estimating diversity in its neighbourhood, as argued by <span class="citation" data-cites="Rajala2012">Rajala and Illian (<a href="#ref-Rajala2012" role="doc-biblioref">2012</a>)</span>.</p>
 <p>Rather than aspatial diversity accumulation curves, neighbourhood diversity curves can be estimated empirically based on a fully-mapped dataset. The definition of neighbourhood is restricted here to a circle or radius <span class="math inline">\(r\)</span> around each individual. Each of these circles can be considered as a local community whose entropy (e.g.&nbsp;Simpson’s or Rao’s entropy) can be estimated and averaged <span class="citation" data-cites="Marcon2014a">(<a href="#ref-Marcon2014a" role="doc-biblioref">Marcon et al. 2014</a>)</span> to obtain a value of <span class="math inline">\(\alpha\)</span> entropy, that estimates the expected entropy in the neighbourhood of an individual. We’ll denote Simpson’s and Rao’s neighbourhood entropy <span class="math inline">\(D(r)\)</span> and <span class="math inline">\(H_D(r)\)</span> respectively.</p>
-<p>Neighbourhood diversity can be computed with the package divent <span class="citation" data-cites="Marcon2026">(<a href="#ref-Marcon2026" role="doc-biblioref">Marcon and Puech 2026</a>)</span> for R <span class="citation" data-cites="R">(<a href="#ref-R" role="doc-biblioref"><strong>R?</strong></a>)</span>. The computation burden is heavy for community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in Neighbourhoods that do not fit in the sampling window must be extrapolated. An alternative approach, based on spatial statistics, allows the fast estimation of neighbourhood Simpson’s and Rao’s entropy, and reveals profound connections with the point-process theory.</p>
+<p>Neighbourhood diversity can be computed with the package divent <span class="citation" data-cites="Marcon2026">(<a href="#ref-Marcon2026" role="doc-biblioref">Marcon and Puech 2026</a>)</span> for R <span class="citation" data-cites="R">(<a href="#ref-R" role="doc-biblioref">R Core Team 2026</a>)</span>. The computation burden is heavy for community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in Neighbourhoods that do not fit in the sampling window must be extrapolated. An alternative approach, based on spatial statistics, allows the fast estimation of neighbourhood Simpson’s and Rao’s entropy, and reveals profound connections with the point-process theory.</p>
 </section>
 </section>
 <section id="distance-dependent-entropy-based-on-the-point-process-theory" class="level2" data-number="2.2">
@@ -526,7 +526,7 @@ Figure&nbsp;7: Non-significant positive departure at short distances of the <em>
 <section id="conclusion" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Conclusion</h1>
 <p>The function of multitype point pattern analysis <span class="math inline">\(K_R(r)\)</span> introduced here is a normalized version of Rao’s entropy measured in the neighborhood of individuals.</p>
-<p>It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span> through his <em>K</em>-function, and the quadratic entropy introduced by <span class="citation" data-cites="Rao1982">Rao (<a href="#ref-Rao1982" role="doc-biblioref">1982</a>)</span> as a diversity coefficient accounting for non-uniform between-species distances. It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the <em>K</em>- and <span class="math inline">\(K~12~\)</span>-functions. Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species. This approach is allowed only by Rao’s entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype K12-functions (@#eq-KR). Other measures of neighborhood diversity address more aspects of biodiversity but loose link with the point process theory.</p>
+<p>It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span> through his <em>K</em>-function, and the quadratic entropy introduced by <span class="citation" data-cites="Rao1982">Rao (<a href="#ref-Rao1982" role="doc-biblioref">1982</a>)</span> as a diversity coefficient accounting for non-uniform between-species distances. It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the <em>K</em>- and <span class="math inline">\(K~12~\)</span>-functions. Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species. This approach is allowed only by Rao’s entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype K12-functions (<a href="#eq-KR" class="quarto-xref">Equation&nbsp;7</a>). Other measures of neighborhood diversity address more aspects of biodiversity but loose link with the point process theory.</p>
 <p>Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity <span class="citation" data-cites="Hubbell2001">(<a href="#ref-Hubbell2001" role="doc-biblioref">Hubbell 2001</a>)</span> with the <span class="math inline">\(K_R(r)\)</span> function. This new tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.</p>
 </section>
 <section id="bibliography" class="level1 unnumbered">
@@ -669,6 +669,9 @@ Picard, Nicolas, M. Karembe, and Philippe Birnbaum. 2004. <span>‘Species-Area 
 </div>
 <div id="ref-Pielou1975" class="csl-entry" role="listitem">
 Pielou, Evelyn C. 1975. <em>Ecological Diversity</em>. Wiley.
+</div>
+<div id="ref-R" class="csl-entry" role="listitem">
+R Core Team. 2026. <em>R: <span>A</span> Language and Environment for Statistical Computing</em>. R Foundation for Statistical Computing.
 </div>
 <div id="ref-Rajala2012" class="csl-entry" role="listitem">
 Rajala, T., and J. Illian. 2012. <span>‘A Family of Spatial Biodiversity Measures Based on Graphs’</span>. <em>Environmental and Ecological Statistics</em> 19 (4): 545–72. <a href="https://doi.org/10.1007/s10651-012-0200-9">https://doi.org/10.1007/s10651-012-0200-9</a>.
