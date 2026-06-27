@@ -50,7 +50,11 @@ author:
 # Abstract and Keywords
 abstract: |
   To be written.
-keywords: [template, demo]
+keywords:
+  - Spatially-explicit diversity
+  - Rao's entropy
+  - Simpson's entropy
+  - Species equivalence
 # Bibliography
 reference-section-title: References
 bibliography: references.bib
@@ -923,7 +927,7 @@ The function of multitype point pattern analysis $K_R(r)$ introduced here is a n
 It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his *K*-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
 It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and $K~12~$-functions.
 Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species.
-This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype K12-functions (\@#eq-KR).
+This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype K12-functions (@eq-KR).
 Other measures of neighborhood diversity address more aspects of biodiversity but loose link with the point process theory.
 
 Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001] with the $K_R(r)$ function.
