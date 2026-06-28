@@ -229,9 +229,7 @@ It can be derived from the distribution of species abundances of the full sample
 The sample size is a number of individuals that can be converted to a sample area assuming the density of individuals is constant.
 
 SACs allow to define biodiversity *at a given scale*.
-It is an alternative to estimating asymptotic diversity, e.
-g.
-with the well-known Chao1 estimator [@Chao1984],
+It is an alternative to estimating asymptotic diversity, e.g. with the well-known Chao1 estimator [@Chao1984],
 
 Diversity Accumulation Curves extend this approach to all measures of diversity.
 Simpson's entropy accumulation curves were derived by @Chao2014 and extended straightforwardly to Rao's entropy applied to ultrametric distances [@Marcon2014b].
@@ -286,7 +284,7 @@ The most interesting ones are the random labelling hypothesis, which means that,
 
 ### A distance-dependent Simpson's entropy
 
-@Shimatani2001 derived an estimator of the distance-dependent version of Simpson's entropy, $D(r)$, based on Ripley's *K*-function:
+@Shimatani2001 derived an estimator of the neighbourhood Simpson's entropy, $D(r)$, based on Ripley's *K*-function:
 
 $$\hat{D}(r) = 1 - 
   \sum_{s =1}^S{\frac{\hat{\lambda}_s^2 \hat{K}_p(r)}{\hat{\lambda}^2 \hat{K}(r)}}
@@ -330,20 +328,21 @@ $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \
 
 Our *K~R~*- and *K~S~*-functions are cumulative functions as is the original *K*-function of @Ripley1977.
 This means that they are estimated for a series of concentric neighbourhood discs of increasing radii, for instance by a regular distance interval $dr$.
-Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987; @Wiegand2004], that can be seen as the derivative of $K(r)$, giving the probably to encounter neighbouring points in concentric annuli between $r$ and $r - dr$.
-$K_d(r)$ of @Shen2013 is such a function, very close to $g_R(r)$, the derivative of our $K_R(r)$ above [@Pelissier2015].
-$K_d(r)$ is therefore an awkward appellation for Shen's et al. function, which would have been better named as $g_d(r)$ as to remain consistent with the classical notation used in point pattern analysis.
+Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987; @Wiegand2004], that is the derivative of $K(r)$, giving the probably to encounter neighbouring points in concentric annuli between $r$ and $r - dr$ and relate it to $\beta$ diversity.
 
-The same reasoning can be built from the so-called Simpson's $\beta$ diversity index to $g_R(r)$.
 @Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species.
 @Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's \beta index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species.
 We will rather write $\beta_S(r)$ for consistency with our notation system.
-It can be straightforwardly be generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$, thus a spatially explicit Rao's \beta index of diversity.
-These measures are actually $\beta$ differentiation diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
+It can be straightforwardly be generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013], thus a spatially explicit Rao's \beta index of diversity.
 
-We can thus define $g_S(r)$, a normalized version of $\beta_S(r)$ and $g_R(r)$, its generalization to Rao's entropy.
+$$\hat{\beta}_R(r) 
+= \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}
+  $$ {#eq-gR}
 
-<!--# TODO: add formulas, check consistency with @Pelissier2015 -->
+These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
+Yet, although both the numerator and the denominator of $\hat{\beta}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{H}_D(r)$ but $\hat{\beta}_R(r)$ is not the derivative of $\hat{H}_D(r)$.
+Consequently the definition of $\beta_R(r)$ (actually, that of $1 - F(r)$) does not comply with the orthodox framework of entropy partitioning [@Jost2007; @Marcon2014a].
+We argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity for this reason and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
 
 ## Testing ecological models
 
@@ -860,14 +859,14 @@ plot(
   lwd = 2
 )
 ```
-Spatial pattern of Paracou plot 6. Significant (departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations) repulsion between trees is detected up to 12 m.
-:::
 
+Spatial pattern of Paracou plot 6.
+Significant (departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations) repulsion between trees is detected up to 12 m.
+:::
 
 The *L*-function, i.e. the linearized univariate version of Ripley *K*-function, shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m @fig-Pararcou_K).
 
 ::: {#fig-Paracou_KR}
-
 ```{r}
 #| label: Kr_Paracou_phylo
 silence <- capture.output(
