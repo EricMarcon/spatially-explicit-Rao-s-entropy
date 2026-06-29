@@ -284,44 +284,37 @@ The most interesting ones are the random labelling hypothesis, which means that,
 
 ### A distance-dependent Simpson's entropy
 
-@Shimatani2001 derived an estimator of the neighbourhood Simpson's entropy, $D(r)$, based on Ripley's *K*-function:
+@Shimatani2001 derived an estimator of the neighbourhood Simpson's entropy they denoted $\alpha(r)$, that we will note $\hat{K}_S(r)$, based on Ripley's *K*-function:
 
-$$\hat{D}(r) = 1 - 
-  \sum_{s =1}^S{\frac{\hat{\lambda}_s^2 \hat{K}_p(r)}{\hat{\lambda}^2 \hat{K}(r)}}
-  $$ {#eq-Dr}
+$$\hat{K}_S(r) = 1 - 
+  \sum_{s =1}^S{\frac{\hat{\lambda}_p^2 \hat{K}_p(r)}{\hat{\lambda}^2 \hat{K}(r)}}
+  $$ {#eq-Ks}
 
-where $\hat{K}(r)$ and $\hat{K}_s(r)$ are Ripley's *K*-functions for all points of the pattern (no distinction of species) and for points of species $p$, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_s$ the corresponding intensity estimators.
+where $\hat{K}(r)$ and $\hat{K}_p(r)$ are Ripley's *K*-functions for all points of the pattern (no distinction of species) and for points of species $p$, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_p$ the corresponding intensity estimators.
 
-We can write a version standardized by $\hat{D}$ as
-
-$$\hat{K}_S(r) = \hat{D}(r) / \hat{D} $$ {#eq-Ks}
-
-$D(r)$ tends to $D$ when $r$ increases so $K_S(r)$ tends to 1.
-It is noticeable that $\hat{K}_S(r)$ has an expectation of 1 for all $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
+$K_S(r)$ tends to $D$ when $r$ increases.
+It is noticeable that $K_S(r) / D$ has an expectation of 1 for all $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
 
 Using the unbiased estimator of $\hat{K}(r)$ introduced in @eq-Khat, allows correcting for edge effects for sampling windows of any shape.
 
 We can notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics [@Shimatani2001, eq. 9]:
 
-$$\hat{K}_S(r) = \left[
-  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{p,q}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
-  \right] / \hat{D}
-  $$ {#eq-Ks12}
+$$\hat{K}_S(r) = \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{
+  \frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{p,q}(r)}{\hat{\lambda}^2 \hat{K}(r)}
+}}$$ {#eq-Ks12}
 
 with $\hat{K}_{p,q}(r)$ a generalization of $K_{12}(r)$ estimator introduced earlier, to any couple of different species $p$ and $q$.
 
 ### A generalization to Rao's entropy
 
-We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_S(r)$ that integrates Ripley's correction of edge effects estimated by:
+We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to the neighbourhood Rao's quadratic entropy $K_S(r)$ that integrates Ripley's correction of edge effects estimated by:
 
-$$\hat{K}_R(r) 
-= \hat{H}_D(r) / \hat{H}_D 
-= \left[
-  \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{K}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{K}(r)}}}
-  \right] / \hat{H}_D
-  $$ {#eq-KR}
+$$\hat{K}_R(r)
+= \sum_{p=1}^S{\sum_{q=1, p\ne q}^S{
+  \frac{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{K}(r)}
+}} $$ {#eq-KR}
 
-This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity (i.e., $H_D$) in a disc of radius r centered on an arbitrary point of the pattern.
+$K_R(r) / H_D$ has an expectation of 1 under the random labelling hypothesis.
 $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \neq q$.
 
 ### Multitype correlation and $\beta$ diversity
@@ -331,17 +324,17 @@ This means that they are estimated for a series of concentric neighbourhood disc
 Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987; @Wiegand2004], that is the derivative of $K(r)$, giving the probably to encounter neighbouring points in concentric annuli between $r$ and $r - dr$ and relate it to $\beta$ diversity.
 
 @Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species.
-@Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's \beta index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species.
-We will rather write $\beta_S(r)$ for consistency with our notation system.
-It can be straightforwardly be generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013], thus a spatially explicit Rao's \beta index of diversity.
+@Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's $\beta$ index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species.
+We will rather write $g_S(r)$ for consistency with our notation system.
+It can be straightforwardly be generalized to $g_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013], thus a spatially explicit Rao's \beta index of diversity:
 
-$$\hat{\beta}_R(r) 
-= \sum_{s=1}^S{\sum_{t=1, s\ne t}^S{\frac{\hat{\lambda}_s \hat{\lambda}_t \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}
+$$\hat{g}_R(r) 
+= \sum_{p=1}^S{\sum_{q=1, p\ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}
   $$ {#eq-gR}
 
 These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
-Yet, although both the numerator and the denominator of $\hat{\beta}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{H}_D(r)$ but $\hat{\beta}_R(r)$ is not the derivative of $\hat{H}_D(r)$.
-Consequently the definition of $\beta_R(r)$ (actually, that of $1 - F(r)$) does not comply with the orthodox framework of entropy partitioning [@Jost2007; @Marcon2014a].
+Yet, although both the numerator and the denominator of $\hat{g}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{K}_D(r)$ but $\hat{g}_R(r)$ is not the derivative of $\hat{K}_D(r)$.
+Consequently the definition of $g_R(r)$ (actually, that of $1 - F(r)$) does not comply with the orthodox framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $\hat{K}_R(r+dr)= \hat{K}_R(r) + g_R(r)$.
 We argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity for this reason and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
 
 ## Testing ecological models
@@ -374,7 +367,7 @@ More interestingly, $K_R(r)$ provides opportunities for testing a highly relevan
 Shuffling between-species distances a large number of times means eliminating their differences and therefore testing a null hypothesis of species equivalence, put forward, for instance, in the neutral theory of biodiversity [@Hubbell2001].
 This null hypothesis can be tested conditionally to the pattern of point locations and to the spatial distribution of the species labels by permuting simultaneously the rows and columns in $d_{p,q}$, which is equivalent, in the case of a cophenetic distance matrix, to permuting the tips of a hierarchical (taxonomic or phylogenetic) tree [@Hardy2008a].
 It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{p,q}$ is a uniform between-species distance matrix.
-When focusing on the species equivalence hypothesis, $K_R(r) / K_S(r)$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
+When focusing on the species equivalence hypothesis, $[K_R(r) / H_D] / [K_S(r) / D]$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
 With reference to these authors and to the usual notation in point pattern analysis, this ratio is appropriately designated as $K_d(r)$.
 
 # Application
@@ -604,7 +597,7 @@ plot(
 ```
 
 Test of the species equivalence hypothesis of the habitat preference-experiment.
-The $K_R(r)$ curve (solid lineà is computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations (dashed lines; the dotted line represents the average simulated values).
+The $K_R(r)$ curve (solid line is computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations (dashed lines; the dotted line represents the average simulated values).
 Negative departure from null hypothesis is observed over 2 m: the neighbourhood phylogenetic diversity is below its expected value due to habitat preference.
 :::
 
