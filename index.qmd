@@ -132,7 +132,11 @@ knitr::knit_hooks$set(
 packages <- c(
   "ade4",
   "ads",
+  "dbmss",
   "divent",
+  "ggplotify",
+  "gridExtra",
+  "khroma",
   "spatstat",
   "tidyverse"
 )
@@ -286,7 +290,6 @@ The most interesting ones are the random labelling hypothesis, which means that,
 
 @Shimatani2001 derived an estimator of the neighbourhood Simpson's entropy, $D(r)$, based on Ripley's *K*-function:
 
-
 $$\hat{D}(r) = 1 - 
   \sum_{s =1}^S{\frac{\hat{\lambda}_p^2 \hat{K}_p(r)}{\hat{\lambda}^2 \hat{K}(r)}}
   $$ {#eq-Dr}
@@ -337,8 +340,7 @@ We will rather write $\beta_S(r)$ for consistency with our notation system.
 It can be straightforwardly be generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013], thus a spatially explicit Rao's \beta index of diversity:
 
 $$\hat{\beta}_R(r) 
-= \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}
-$$ {#eq-betaR}
+= \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}$$ {#eq-betaR}
 
 These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
 Yet, although both the numerator and the denominator of $\hat{\beta}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{H}_D(r)$ but $\hat{\beta}_R(r)$ is not the derivative of $\hat{H}_D(r)$.
@@ -375,7 +377,7 @@ More interestingly, $K_R(r)$ provides opportunities for testing a highly relevan
 Shuffling between-species distances a large number of times means eliminating their differences and therefore testing a null hypothesis of species equivalence, put forward, for instance, in the neutral theory of biodiversity [@Hubbell2001].
 This null hypothesis can be tested conditionally to the pattern of point locations and to the spatial distribution of the species labels by permuting simultaneously the rows and columns in $d_{p,q}$, which is equivalent, in the case of a cophenetic distance matrix, to permuting the tips of a hierarchical (taxonomic or phylogenetic) tree [@Hardy2008a].
 It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{p,q}$ is a uniform between-species distance matrix.
-When focusing on the species equivalence hypothesis,  $K_R(r) / K_S(r)$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
+When focusing on the species equivalence hypothesis, $K_R(r) / K_S(r)$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
 With reference to these authors and to the usual notation in point pattern analysis, this ratio is appropriately designated as $K_d(r)$.
 
 # Application
@@ -383,11 +385,98 @@ With reference to these authors and to the usual notation in point pattern analy
 ```{r}
 library("spatstat")
 library("ads")
+library("dbmss")
+# Function to convert fads curves to fv objects
+# that have an autoplot method in dbmss
+# x: a fads object
+# opt: which function to plot, i.e. the list item that contains the data
+# fname: the name of the function to plot
+# Alpha: the confidence interval used in ads, to pass to autoplot()
+# unitname: the distance unit, spatstat style, to pass to autoplot()
+fads2fv <- function(x, opt = "kr", fname = "KR", Alpha = 0.01, unitname = c("meter", "meters")) {
+  # Read the dataframe of results
+  the_df <- cbind(r = x$r, x[[opt]][, c("obs", "theo", "sup", "inf")])
+  names(the_df)[2] <- fname
+  labl <- c(
+    "r", 
+    "hat(%s)[obs](r)", 
+    "bar(%s)(r)", 
+    "hat(%s)[lo](r)", 
+    "hat(%s)[hi](r)"
+  )
+  desc <- c(
+    "Distance argument r",                      
+    "observed value of %s for data pattern",
+    "sample mean of %s from simulations",
+    "lower pointwise envelope of %s from simulations",
+    "upper pointwise envelope of %s from simulations"
+  )
+  # Make an fv object
+  the_fv <- fv(
+    the_df,
+    argu = "r",
+    ylab = paste0(fname, "(r)"),
+    valu = fname,
+    fmla = ".~r",
+    alim = c(0, max(the_df$r)),
+    labl = labl,
+    desc = desc,
+    unitname = unitname,
+    fname = fname
+  )
+  fvnames(the_fv, ".s") <- c("sup", "inf")
+  
+  attr(the_fv, "einfo") <- list(Alpha = Alpha)
+
+  # Return
+  return(the_fv)
+}
+
+# Function to convert spp objects to wmppp objects
+# that have an autoplot method in dbmss
+# X: an spp point pattern
+# unitname: the distance unit, spatstat style.
+spp2ppp <- function(X, unitname = c("meter", "meters")) {
+  # Rectangle window is assumed
+  if ("rectangle" %in% X$window$type ) {
+    the_window <-  spatstat.geom::owin(
+      xrange = c(X$window$xmin, X$window$xmax),
+      yrange = c(X$window$ymin, X$window$ymax)
+    )
+  } else {
+    stop("The window must be a rectangle")
+  }
+  # Marks may be  numeric or chars
+  if (is.numeric(X$marks)) {
+    the_wmppp <- dbmss::wmppp(
+      data.frame(
+        X = X$x,
+        Y = X$y,
+        PointWeight = X$marks
+      ),
+      window = the_window,
+      unitname = unitname
+    )
+  } else {
+    the_wmppp <- dbmss::wmppp(
+      data.frame(
+        X = X$x,
+        Y = X$y,
+        PointType = X$marks
+      ),
+      window = the_window,
+      unitname = unitname
+    )
+  }
+  return(the_wmppp)
+}
 ```
 
 ## Simulated data
 
 We provide here a few examples to illustrate how the $K_R$-function behaves.
+All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package [@Pelissier2015].
+Figures were produced by the dbmss package [@Marcon2014].
 
 ::: {#fig-sim_data}
 ```{r}
@@ -575,11 +664,11 @@ The 16 species-specific patterns were then assembled into multivariate spatial p
 A hypothetical phylogeny mimicking trait clustering was simulated, where species close in the tree have same habitat preferences [@Hardy2007].
 The cophenetic distances derived from the tree were normalized to 1.
 
-@fig-KR_CSR and @fig-KR_Clustered show that both these patterns exhibit a significant negative departure from the null hypothesis of species equivalence for the same range of $r$ values that recovers the scale of the phylogenetic spatial structure representing the simulated pattern of habitat preferences.
+@fig-KR_habitat show that both these patterns exhibit a significant negative departure from the null hypothesis of species equivalence for the same range of $r$ values that recovers the scale of the phylogenetic spatial structure representing the simulated pattern of habitat preferences.
 
-::: {#fig-KR_CSR}
+::: {#fig-KR_habitat}
 ```{r}
-#| label: KR_CSR
+#| label: KR_habitat
 # Computing Kr for the heterogeneous random pattern---
 # with a clustered cophenetic distance matrix 
 # and the species equivalence hypothesis
@@ -593,28 +682,16 @@ silence <- capture.output(
     nsim = 1000
   )
 )
-# Plot the Kd function
-plot(
-  kr.hrand.clust.se, 
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  lwd = 2
-)
-```
+# Plot the Kr function
+kr.hrand.clust.se %>% 
+  fads2fv() %>% 
+  autoplot() + 
+  theme(legend.position = "none") +
+  xlab("distance (r)") +
+  ylab(expression(K[R](r))) ->
+  fig_KR_CSR
 
-Test of the species equivalence hypothesis of the habitat preference-experiment.
-The $K_R(r)$ curve (solid line is computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations (dashed lines; the dotted line represents the average simulated values).
-Negative departure from null hypothesis is observed over 2 m: the neighbourhood phylogenetic diversity is below its expected value due to habitat preference.
-:::
-
-::: {#fig-KR_Clustered}
-```{r}
-#| label: KR_Clustered
 # Computing Kr for the heterogeneous multi-cauchy pattern pattern ---
-# with a clustered cophenetic distance matrix 
-# and the species equivalence hypothesis
 silence <- capture.output(
   kr.hmcauchy.clust.se <- krfun(
     p = hmcauchy.spp, 
@@ -625,36 +702,40 @@ silence <- capture.output(
     nsim = 1000
   )
 )
-plot(
-  kr.hmcauchy.clust.se, 
-  opt = "K",
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
+kr.hmcauchy.clust.se %>% 
+  fads2fv() %>% 
+  autoplot() + 
+  theme(legend.position = "none") +
+  xlab("distance (r)") +
+  ylab(expression(K[R](r))) ->
+  fig_KR_Clustered
+
+# Figure
+library("gridExtra")
+grid.arrange(
+  fig_KR_CSR + labs(tag = "a"), 
+  fig_KR_Clustered + labs(tag = "b") , 
+  ncol = 2
 )
 ```
 
-Test of the species equivalence hypothesis in the habitat-preference and limited-dispersion experiment.
-Same legend as @fig-KR_CSR.
-The $K_R(r)$ curve is below the confidence envelop of the null hypothesis of species equivalence at all distances over 2m.
+Test of the species equivalence hypothesis of the habitat preference-experiment with (a) a completely random point pattern and (b) a clustered one.
+The $K_R(r)$ curve (solid line is computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations (dashed lines; the dotted line represents the average simulated values).
+Negative departure from null hypothesis is observed over 2 m: the neighbourhood phylogenetic diversity is below its expected value due to habitat preference.
 :::
 
 ### Limited similarity
 
-In a second experiment (@fig-Similarity), we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multi-Strauss process with, as between-species interaction matrix, the cophenetic distance derived from the clustered tree above.
+In a second experiment (@fig-KR_Similarity), we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multi-Strauss process with, as between-species interaction matrix, the cophenetic distance derived from the clustered tree above.
 This means that the between-species competition intensity within a neighbouring disc of 5 m varies with their proximity within the phylogenetic tree: species that are close together in the tree compete more that species that are far in the tree, with no interaction between species that are not in the same half of the tree.
 
-@fig-KR_Similarity shows that $K_R(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
+@fig-KR_Similarity(b) shows that $K_R(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
 Restricted permutations within a cophenetic distance matrix, i.e. between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses [@Hardy2008a].
 
-All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package [@Pelissier2015].
-
-::: {#fig-Similarity}
+::: {#fig-KR_Similarity}
 ```{r}
-#| label: Similarity
-# Simulating limiting similarity
+#| label: KR_Similarity
+# Simulating limiting similarity ---
 # Species abundances
 freq <- table(hrand.spp$marks)
 # Normalized to frequencies
@@ -688,27 +769,28 @@ compet.spp <- spp(
   window = c(0, 0, 100, 100), 
   marks = compet$marks
 )
-# Plot it
-plot(
-  compet.spp, 
-  cols = rep("black", nlevels(compet.spp$marks)), 
-  main = NULL, 
-  legend = FALSE, 
-  scale = FALSE, 
-  chars = levels(compet.spp$marks)
+# Plot it with ggplot
+# compet.spp %>% 
+#   spp2ppp() %>% 
+#   autoplot(MaxPointTypes = 16) + 
+#   khroma::scale_colour_nightfall(discrete = TRUE) +
+#   theme(legend.position = "none") ->
+#   fig_compet.spp
+# or with base R
+fig_compet.spp <- ggplotify::as.ggplot(
+  ~plot(
+    compet.spp, 
+    cols = rep("black", nlevels(compet.spp$marks)), 
+    main = NULL, 
+    legend = FALSE, 
+    scale = FALSE, 
+    chars = levels(compet.spp$marks)
+  )
 )
-```
 
-Multitype Strauss point pattern mimicking limited similarity.
-The strength of repulsion between each pair of points decreases with their distance in the phylogeny.
-:::
-
-::: {#fig-KR_Similarity}
-```{r}
-#| label: KR_Similarity
 # Computing Kr for the limiting similarity pattern ---
 silence <- capture.output(
-  kr.compet.clust.se <- krfun(
+  kr.compet.se <- krfun(
     p = compet.spp, 
     dis = clust.dist, 
     H0 = "se", 
@@ -717,20 +799,27 @@ silence <- capture.output(
     nsim = 1000
   )
 )
-plot(
-  kr.compet.clust.se,
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1),
-  lwd = 2
+
+# Plot the Kr function
+kr.compet.se %>% 
+  fads2fv() %>% 
+  autoplot() + 
+  theme(legend.position = "none") +
+  ylab(expression(K[R](r))) ->
+  fig_KR_compet
+
+# Figure
+grid.arrange(
+  fig_compet.spp + labs(tag = "a"), 
+  fig_KR_compet + labs(tag = "b") , 
+  ncol = 2
 )
 ```
 
-Spatial pattern of competitive interaction between 16 species in a 1-ha plot.
+\(a\) Multitype Strauss point pattern mimicking limited similarity.
 The pattern of interaction is obtained using un multi-Strauss inhibition process with a 5 m range and an interaction matrix corresponding to the cophenetic distance matrix derived from the clustered phylogenetic tree.
-$K_R(r)$ computed with the cophenetic between-species distance matrix indicates a significant positive departure from the 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations from 3 to 9 m.
+The strength of repulsion between each pair of points decreases with their distance in the phylogeny.
+(b) $K_R(r)$ computed with the cophenetic between-species distance matrix indicates a significant positive departure from the 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations from 3 to 10 m, with a peak at 5 m: because of competition, the neighbourhood diversity is higher than expected.
 :::
 
 ## Paracou: a tropical forest plot in French Guiana
@@ -809,17 +898,6 @@ p_6_traits.df %>%
   daisy(metric = "gower", type = list(ordered = 4)) %>% 
   # The square root is euclidean (Gower, 1966)
   sqrt() ->
-# %>% 
-#   agnes() %>% 
-#   as.hclust() %>% 
-#   # Matrice de distances
-#   cophenetic() %>% 
-#   # Les distances sont comptées deux fois: les diviser par 2
-#   # `/`(2) %>% 
-#   # Normalize to 1
-#   `/`(max(.)) %>% 
-#  # Demi-matrice (objet de type dist pour ads)
-#  as.dist() ->
   dist_species
 ```
 
@@ -832,8 +910,9 @@ These traits are acknowledged to illustrate the major trade-offs in plant fitnes
 We also included the wood specific gravity (WSG in g.cm^-3^ of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
 We built from these data, two different between-species distance matrices, a phylogenetic one based on the APG III classification [@Chase2009] and a functional one based on the four traits described above.
 The phylogenetic distance was simply computed from APG III hierarchical tree, considering $d_{p,q} = 1$ if species $p$ and $q$ were from the same genus, $d_{p,q} = 2$ if they were from different genera in the same family and $d_{p,q} = 3$ if they were from different families.
-Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao quadratic entropy [@Pavoine2005c].
-To ensure the same ultrametric properties to the functional distance matrix, we computed the cophenetic distance for a hierarchical clustering with Ward method (i.e. minimizing total within-cluster variance) based on functional trait dissimilarities, taken as Gower distance, as recommended for mixed variables [@Gower1971].
+Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao's quadratic entropy [@Pavoine2005c].
+The functional distance matrix was based on functional trait dissimilarities, taken as Gower distance [@Gower1971].
+Its square-root transformation ensured it was euclidean [@Gower1966], but not ultrametric.
 Both distance matrices were finally rescaled by their maximum in order to keep Rao's entropy within the 0-1 standard range of values for diversity indices.
 
 ### Analysis of species diversity spatial pattern
@@ -869,7 +948,8 @@ The *L*-function, i.e. the linearized univariate version of Ripley *K*-function,
 
 ::: {#fig-Paracou_KR}
 ```{r}
-#| label: Kr_Paracou_phylo
+#| label: Kr_Paracou
+# Computing phylogentetic diversity ---
 silence <- capture.output(
   kr.p_6_phy.se <- krfun(
     p = p_6.spp, 
@@ -880,19 +960,15 @@ silence <- capture.output(
     nsim = 1000
   )
 )
-# Plot the Kd function
-plot(
-  kr.p_6_phy.se, 
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
-```
+# Plot the Kr function
+kr.p_6_phy.se %>% 
+  fads2fv() %>% 
+  autoplot() + 
+  theme(legend.position = "none") +
+  ylab(expression(K[R](r))) ->
+  fig_KR_p_6_phy.se
 
-```{r}
+# Computing functional diversity ---
 #| label: Kr_Paracou_fun
 silence <- capture.output(
   kr.p_6_fun.se <- krfun(
@@ -905,18 +981,23 @@ silence <- capture.output(
   )
 )
 # Plot the Kr function
-plot(
-  kr.p_6_fun.se, 
-  opt = "K", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
+kr.p_6_fun.se %>% 
+  fads2fv() %>% 
+  autoplot() + 
+  theme(legend.position = "none") +
+  ylab(expression(K[R](r))) ->
+  fig_KR_p_6_fun.se
+
+# Figure
+grid.arrange(
+  fig_KR_p_6_phy.se + labs(tag = "a"), 
+  fig_KR_p_6_fun.se + labs(tag = "b") , 
+  ncol = 2
 )
 ```
 
-Non-significant positive departure at short distances of the *K~R~*-function applied to Paracou plot 6 considering the phylogenetic and functional distances between species.
+*K~R~*-function applied to Paracou plot 6 considering (a) the phylogenetic and (b) functional distances between species.
+Non-significant positive departure of both curves from the species equivalence hypothesis at short distances, combined with the observerved spatial dispersion of the trees, suggest that limited similarity occurs.
 :::
 
 $K_R(r)$ computed with both phylogenetic and functional between-species distance matrix shows a significant positive departure from the null hypothesis of species equivalence at short distances, indicating limiting similarity (@fig-Paracou_KR).
