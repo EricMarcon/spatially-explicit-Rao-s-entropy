@@ -4,12 +4,10 @@ title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and ac
 format:
   stylisharticle-pdf:
     keep-tex: true
-    # Color example, see "Text color"
-    header-includes:
-      \definecolor{grey}{RGB}{191, 191, 191}
+    include-in-header:
+      text: |
+        \usepackage[font=small]{caption}
   stylisharticle-html:
-    # Color example, see "Text color"
-    css: colors.css
     code-links:
       - text: GitHub repository
         href: https://github.com/EricMarcon/spatially-explicit-Rao-s-entropy
@@ -477,13 +475,7 @@ spp2ppp <- function(X, unitname = c("meter", "meters")) {
 }
 ```
 
-## Simulated data
-
-We provide here a few examples to illustrate how the $K_R$-function behaves.
-All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package [@Pelissier2015].
-Figures were produced by the dbmss package [@Marcon2014].
-
-::: {#fig-sim_data fig-env="figure*"}
+::: {#fig-sim_data fig-env="figure*" fig-pos="!t"}
 ```{r}
 #| label: sim_data
 # Simulating a heterogeneous random pattern ---
@@ -667,6 +659,12 @@ The random pattern (top) is obtained by the superimposition of heterogeneous spe
 The pattern of limited dispersion (bottom) is obtained by the superimposition of species-specific Neyman-Scott processes with a Cauchy kernel (see text for details).
 The hypothetical phylogenetic tree (right) simulates trait clustering: species close in the tree have identical habitat preferences.
 :::
+
+## Simulated data
+
+We provide here a few examples to illustrate how the $K_R$-function behaves.
+All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package [@Pelissier2015].
+Figures were produced by the dbmss package [@Marcon2014].
 
 ### Habitat preference
 
