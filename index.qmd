@@ -159,11 +159,14 @@ options(width = 50)
 
 # ggplot style
 library("tidyverse")
-theme_set(theme_bw())
-theme_update(
-  panel.background = element_rect(fill = "transparent", colour = NA),
-  plot.background = element_rect(fill = "transparent", colour = NA)
-)
+# Function to call in each chunk
+ggtheme_set <- function() {
+  theme_set(theme_bw())
+  theme_update(
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    plot.background = element_rect(fill = "transparent", colour = NA)
+  )
+}
 knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
 
 # Random seed
@@ -316,11 +319,13 @@ $$\hat{K}_S(r) = \left[
 
 We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_R(r)$ that integrates Ripley's correction of edge effects estimated by:
 
-$$\hat{K}_R(r) 
-= \hat{H}_D(r) / \hat{H}_D 
-= \left[
+$$\begin{aligned}
+\hat{K}_R(r) 
+&= \hat{H}_D(r) / \hat{H}_D \\
+&= \left[
   \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{K}(r)}}}
   \right] / \hat{H}_D
+\end{aligned}
   $$ {#eq-KR}
 
 This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity in a disc of radius r centered on an arbitrary point of the pattern.
@@ -393,7 +398,7 @@ library("dbmss")
 # fname: the name of the function to plot
 # Alpha: the confidence interval used in ads, to pass to autoplot()
 # unitname: the distance unit, spatstat style, to pass to autoplot()
-fads2fv <- function(x, opt = "kr", fname = "KR", Alpha = 0.01, unitname = c("meter", "meters")) {
+fads2fv <- function(x, opt = "kr", fname = "KR", Alpha = 0.01, unitname = c("metre", "metres")) {
   # Read the dataframe of results
   the_df <- cbind(r = x$r, x[[opt]][, c("obs", "theo", "sup", "inf")])
   names(the_df)[2] <- fname
@@ -478,7 +483,7 @@ We provide here a few examples to illustrate how the $K_R$-function behaves.
 All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package [@Pelissier2015].
 Figures were produced by the dbmss package [@Marcon2014].
 
-::: {#fig-sim_data}
+::: {#fig-sim_data fig-env="figure*"}
 ```{r}
 #| label: sim_data
 # Simulating a heterogeneous random pattern ---
@@ -536,18 +541,20 @@ par(fig = c(0, 0.7, 0.5, 1), mar = c(0.5, 0, 0, 0))
 plot(
   habit1, 
   col = c("white", "lightgrey"),
-  main = NULL, 
-  legend = FALSE, 
-  ribbon = FALSE
+  main = NULL,
+  legend = FALSE,
+  ribbon = FALSE,
+  csize = 1/2
 )
 # Plot the points
 plot(
-  hrand.spp, 
-  cols = rep("black", nlevels(hrand.spp$marks)), 
-  main = NULL, 
-  legend = FALSE, 
-  scale = FALSE, 
-  chars = levels(hrand.spp$marks), 
+  hrand.spp,
+  cols = rep("black", nlevels(hrand.spp$marks)),
+  main = NULL,
+  legend = FALSE,
+  scale = FALSE,
+  chars = levels(hrand.spp$marks),
+  csize = 1/2,
   add = TRUE
 )
 
@@ -613,12 +620,13 @@ plot(
 )
 # Plot the points
 plot(
-  hmcauchy.spp, 
-  cols = rep("black", nlevels(hmcauchy.spp$marks)), 
-  main = NULL, 
-  legend = FALSE, 
-  scale = FALSE, 
-  chars = levels(hmcauchy.spp$marks), 
+  hmcauchy.spp,
+  cols = rep("black", nlevels(hmcauchy.spp$marks)),
+  main = NULL,
+  legend = FALSE,
+  scale = FALSE,
+  chars = levels(hmcauchy.spp$marks),
+  csize = 1/2,
   add = TRUE
 )
 
@@ -644,7 +652,12 @@ clust.dist <- clust.dist / max(clust.dist)
 # Add the tree's tips
 attr(clust.dist, "Labels") <- clust.tree$tip.label
 # Plot the tree
-par(fig = c(0.7, 1, 0, 1), mar = c(0, 0, 0, 0), new = TRUE)
+par(
+  fig = c(0.7, 1, 0, 1), 
+  mar = c(0, 0, 0, 0),
+  cex = 0.9,
+  new = TRUE
+)
 plot(clust.tree)
 par(par_old)
 ```
@@ -666,9 +679,10 @@ The cophenetic distances derived from the tree were normalized to 1.
 
 @fig-KR_habitat show that both these patterns exhibit a significant negative departure from the null hypothesis of species equivalence for the same range of $r$ values that recovers the scale of the phylogenetic spatial structure representing the simulated pattern of habitat preferences.
 
-::: {#fig-KR_habitat}
+::: {#fig-KR_habitat fig-env="figure*"}
 ```{r}
 #| label: KR_habitat
+ggtheme_set()
 # Computing Kr for the heterogeneous random pattern---
 # with a clustered cophenetic distance matrix 
 # and the species equivalence hypothesis
@@ -687,7 +701,6 @@ kr.hrand.clust.se %>%
   fads2fv() %>% 
   autoplot() + 
   theme(legend.position = "none") +
-  xlab("distance (r)") +
   ylab(expression(K[R](r))) ->
   fig_KR_CSR
 
@@ -706,7 +719,6 @@ kr.hmcauchy.clust.se %>%
   fads2fv() %>% 
   autoplot() + 
   theme(legend.position = "none") +
-  xlab("distance (r)") +
   ylab(expression(K[R](r))) ->
   fig_KR_Clustered
 
@@ -732,9 +744,10 @@ This means that the between-species competition intensity within a neighbouring 
 @fig-KR_Similarity(b) shows that $K_R(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
 Restricted permutations within a cophenetic distance matrix, i.e. between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses [@Hardy2008a].
 
-::: {#fig-KR_Similarity}
+::: {#fig-KR_Similarity  fig-env="figure*"}
 ```{r}
 #| label: KR_Similarity
+ggtheme_set()
 # Simulating limiting similarity ---
 # Species abundances
 freq <- table(hrand.spp$marks)
@@ -784,7 +797,8 @@ fig_compet.spp <- ggplotify::as.ggplot(
     main = NULL, 
     legend = FALSE, 
     scale = FALSE, 
-    chars = levels(compet.spp$marks)
+    chars = levels(compet.spp$marks),
+    csize = 1/2
   )
 )
 
@@ -811,12 +825,12 @@ kr.compet.se %>%
 # Figure
 grid.arrange(
   fig_compet.spp  + coord_fixed() + labs(tag = "a"), 
-  fig_KR_compet + coord_fixed(ratio = 95) + labs(tag = "b") , 
+  fig_KR_compet + coord_fixed(ratio = 50) + labs(tag = "b") , 
   ncol = 2
 )
 ```
 
-\(a\) Multitype Strauss point pattern mimicking limited similarity.
+\(a\) Multitype Strauss point pattern mimicking limited similarity in a 100x100-m window.
 The pattern of interaction is obtained using un multi-Strauss inhibition process with a 5-m range and an interaction matrix corresponding to the cophenetic distance matrix derived from the clustered phylogenetic tree.
 The strength of repulsion between each pair of points decreases with their distance in the phylogeny.
 (b) $K_R(r)$ computed with the cophenetic between-species distance matrix indicates a significant positive departure from the 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations from 3 to 10 m, with a peak at 5 m: because of competition, the neighbourhood diversity is higher than expected.
@@ -923,6 +937,7 @@ Both distance matrices were finally rescaled by their maximum in order to keep R
 ::: {#fig-Paracou_K}
 ```{r}
 #| label: Paracou_K
+ggtheme_set()
 # Computing K
 silence <- capture.output(
   k.p_6 <- kfun(
@@ -932,15 +947,12 @@ silence <- capture.output(
     nsim = 1000
   )
 )
-plot(
-  k.p_6, 
-  opt = "L", 
-  main = NULL, 
-  sub = NULL, 
-  legend = FALSE, 
-  cols = c(1, 1, 1), 
-  lwd = 2
-)
+# Plot the L function
+k.p_6 %>% 
+  fads2fv(opt = "l", fname = "L") %>% 
+  autoplot() + 
+  theme(legend.position = "none") +
+  ylab(expression(L(r)))
 ```
 
 Spatial pattern of Paracou plot 6.
@@ -949,9 +961,10 @@ Significant (departure from the 1% confidence envelop of complete spatial random
 
 The *L*-function, i.e. the linearised univariate version of Ripley *K*-function, shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m @fig-Paracou_K).
 
-::: {#fig-KR_Paracou}
+::: {#fig-Paracou_KR fig-env="figure*"}
 ```{r}
-#| label: KR_Paracou
+#| label: Paracou-KR
+ggtheme_set()
 # Function to compute K_R combining distances and H0
 kr_dis_h0 <- function(p, dis, H0, upto = 20, by = 0.5, nsim = 1000) {
   silence <- capture.output(
@@ -1013,20 +1026,20 @@ Under the random-labelling null hypothesis, a very significant lack of diversity
 Under species-equivalence null hypothesis, non-significant positive departure of both curves (c) and (d) at short distances, combined with the observed spatial dispersion of the trees, suggest limited similarity when the intraspecific spatial patterns are preserved.
 :::
 
-$K_R(r)$ computed with both phylogenetic and functional between-species distance matrix show very similar patterns (@fig-KR_Paracou).
+$K_R(r)$ computed with both phylogenetic and functional between-species distance matrix show very similar patterns (@fig-Paracou_KR).
 Converging results were expected because the traits retained are generally considered as phylogenetically conserved [e.g. @Baraloto2012a].
 
 The random-labelling null hypothesis compare the neighbourhood diversity of that of a plot where the trees are located at the same place but have their species shuffled.
-@fig-KR_Paracou(a) and (b) show that significantly lower-than-expected diversity occurs up to around 50 m.
+@fig-Paracou_KR(a) and (b) show that significantly lower-than-expected diversity occurs up to around 50 m.
 Habitat preference may be confused with the mere effect of intraspecific aggregation with this null hypothesis.
 
 The species-equivalence null hypothesis preserves the species individual spatial distributions.
-Compared to it, @fig-KR_Paracou(c) and (d) show higher-than-expected diversity at short range.
-The departure from the 99%-confidence envelope is not sharp: the curves are confused with the edges of the envelopes.
+Compared to it, @fig-Paracou_KR(c) and (d) show higher-than-expected diversity at short range.
+The departure from the 1%-confidence envelope of the phylogenetic entropy is not sharp: the curves are confused with the edges of the envelopes.
 
 Short-range spatial regularity in tree stands is generally interpreted as resulting from self-thinning due to intense local competition [e.g. @Kenkel1988].
 It therefore seems that the sharing of resources between locally competing neighbours enhanced niche differentiation and thus species diversity.
-In other words, combining the spatial pattern of diversity (@fig-KR_Paracou) and the spatial pattern of the trees (@fig-Paracou_K) reveals that limiting similarity in the trees neighbourhood is its driver at short distance.
+In other words, combining the spatial pattern of diversity (@fig-Paracou_KR) and the spatial pattern of the trees (@fig-Paracou_K) reveals that limiting similarity in the trees neighbourhood is its driver at short distance.
 Even though their global point pattern shows regularity at this scale, most tree species are individually aggregated in Paracou [@Collinet1997], and more generally in tropical forests [@Condit2000].
 Controlling for their spatial structure with the species-equivalence null hypothesis allows disentangling the processes that drive the spatial distribution of species.
 
@@ -1037,7 +1050,7 @@ The function of multitype point pattern analysis $K_R(r)$ introduced here is a n
 It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his *K*-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
 It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and *K~12~*-functions.
 Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species.
-This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype $K~12~$-functions (@eq-KR).
+This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype *K~12~*-functions (@eq-KR).
 Other measures of neighbourhood diversity address more aspects of biodiversity but loose link with the point process theory.
 
 Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001] with the $K_R(r)$ function.
