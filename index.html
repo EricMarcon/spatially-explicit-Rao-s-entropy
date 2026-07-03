@@ -93,7 +93,6 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="colors.css">
 </head>
 
 <body class="quarto-light">
@@ -341,10 +340,7 @@ window.Quarto = {
 <h1 data-number="3"><span class="header-section-number">3</span> Application</h1>
 <p></p>
 <p></p>
-<section id="simulated-data" class="level2 page-columns page-full" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="simulated-data"><span class="header-section-number">3.1</span> Simulated data</h2>
-<p>We provide here a few examples to illustrate how the <span class="math inline">\(K_R\)</span>-function behaves. All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package <span class="citation" data-cites="Pelissier2015">(<a href="#ref-Pelissier2015" role="doc-biblioref">Pélissier and Goreaud 2015</a>)</span>. Figures were produced by the dbmss package <span class="citation" data-cites="Marcon2014">(<a href="#ref-Marcon2014" role="doc-biblioref">Marcon et al. 2015</a>)</span>.</p>
-<div id="fig-sim_data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-env="figure*">
+<div id="fig-sim_data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-pos="!t" data-fig-env="figure*">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-sim_data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <p></p>
@@ -364,6 +360,9 @@ Figure&nbsp;1: Virtual heterogeneous spatial patterns (left) mimicking habitat p
 </figcaption>
 </figure>
 </div>
+<section id="simulated-data" class="level2 page-columns page-full" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="simulated-data"><span class="header-section-number">3.1</span> Simulated data</h2>
+<p>We provide here a few examples to illustrate how the <span class="math inline">\(K_R\)</span>-function behaves. All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package <span class="citation" data-cites="Pelissier2015">(<a href="#ref-Pelissier2015" role="doc-biblioref">Pélissier and Goreaud 2015</a>)</span>. Figures were produced by the dbmss package <span class="citation" data-cites="Marcon2014">(<a href="#ref-Marcon2014" role="doc-biblioref">Marcon et al. 2015</a>)</span>.</p>
 <section id="habitat-preference" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="habitat-preference">Habitat preference</h3>
 <p>In a first experiment (<a href="#fig-sim_data" class="quarto-xref">Figure&nbsp;1</a>), we simulated habitat preferences by generating heterogeneous spatial patterns in a checked 1-ha plot with two habitats: eight species were simulated with a twofold higher intensity in habitat 1, and 8 species with a twofold higher intensity in habitat 2, so that species abundant in one habitat were rare in the other one. We independently simulated the species-specific spatial patterns as heterogeneous Poisson or heterogeneous Neyman-Scott processes with a Cauchy dispersal kernel <span class="citation" data-cites="Ghorbani2013">(<a href="#ref-Ghorbani2013" role="doc-biblioref">Ghorbani 2013</a>)</span> mimicking limited dispersion. In the latter we fixed the scale parameter of the Cauchy kernel at 1, meaning that only 5% of offsprings were dispersed beyond above 20 m from their parents <span class="citation" data-cites="Munoz2013">(<a href="#ref-Munoz2013" role="doc-biblioref">Munoz et al. 2013</a>)</span>. The 16 species-specific patterns were then assembled into multivariate spatial patterns. A hypothetical phylogeny mimicking trait clustering was simulated, where species close in the tree have same habitat preferences <span class="citation" data-cites="Hardy2007">(<a href="#ref-Hardy2007" role="doc-biblioref">Hardy and Senterre 2007</a>)</span>. The cophenetic distances derived from the tree were normalized to 1.</p>
