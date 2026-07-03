@@ -810,8 +810,8 @@ kr.compet.se %>%
 
 # Figure
 grid.arrange(
-  fig_compet.spp + labs(tag = "a"), 
-  fig_KR_compet + labs(tag = "b") , 
+  fig_compet.spp  + coord_fixed() + labs(tag = "a"), 
+  fig_KR_compet + coord_fixed(ratio = 95) + labs(tag = "b") , 
   ncol = 2
 )
 ```
