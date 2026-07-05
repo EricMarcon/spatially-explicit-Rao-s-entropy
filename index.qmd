@@ -179,7 +179,7 @@ While each single process may either promote or demote species coexistence, the 
 As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology [@Mouquet2012], in order to account for the key components of species interactions with their biotic and abiotic environments.
 Towards this goal, a number of novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed [@Pavoine2011].
 Among these methods some are specifically designed to explicitly account for space [e.g. @Pavoine2011a].
-However those studies generally consider spatially discontinuous community samples, i.e. the $\beta$-diversity component of @Whittaker1960, so that the underlying spatial framework can basically be related to the graph theory [@Dale2002].
+However, those studies generally consider spatially discontinuous community samples, i.e. the $\beta$-diversity component of @Whittaker1960, so that the underlying spatial framework can basically be related to the graph theory [@Dale2002].
 
 The interest of considering local diversity rather than at the scale of the whole community or sampling window has emerged in the literature since @Batty1974.
 A review can be found in @Altieri2021, with diverse approaches.
@@ -223,7 +223,7 @@ $H_D$ is a measure of diversity commonly used in ecology, namely because it can 
 Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
 
 Diversity is *scale-dependent*: its value increases with the sample size so it needs to be standardized.
-A common practise consists of estimating the asymptotic diversity, i.e. the diversity of an hypothetical community the available data is assumed to be a representative sample of.
+A common practise consists of estimating the asymptotic diversity, i.e. the diversity of a hypothetical community the available data is assumed to be a representative sample of.
 The estimators above are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
 
 ### Diversity accumulation curves
@@ -271,7 +271,7 @@ $$\hat{K}(r) =
 where $n$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity generally estimated as $n/A$, with $A$ the sampling window area.
 The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points $i$ and $j$ are less than $r$ apart, 0 else.
 $c(i, j, r)$ is the correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
-When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbors whith no bias.
+When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbours with no bias.
 
 A common extension of this univariate function is the intertype (or bivariate) *K~12~*-function proposed by @Lotwick1982.
 We will denote it $K_{p,q}$ for clarity.
@@ -338,7 +338,7 @@ Some authors however prefer to refer to the framework of the pair-correlation fu
 @Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species.
 @Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's $\beta$ index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species.
 We will rather write $\beta_S(r)$ for consistency with our notation system.
-It can be straightforwardly be generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013].
+It can be straightforwardly generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013].
 The spatially explicit Rao's \beta index of diversity is:
 
 $$\hat{\beta}_R(r) 
@@ -346,7 +346,7 @@ $$\hat{\beta}_R(r)
 
 These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
 Yet, although both the numerator and the denominator of $\hat{\beta}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{H}_D(r)$, $\hat{\beta}_R(r)$ is not the derivative of $\hat{H}_D(r)$.
-Consequently the definition of $\beta_R(r)$ does not comply with the classical framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $K_R(r+dr)= K_R(r) + g_R(r)$.
+Consequently, the definition of $\beta_R(r)$ does not comply with the classical framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $K_R(r+dr)= K_R(r) + g_R(r)$.
 
 We argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity, for this reason and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
 
@@ -550,7 +550,7 @@ plot(
   add = TRUE
 )
 
-# Simulating an heterogeneous pattern of limited dispersion ---
+# Simulating a heterogeneous pattern of limited dispersion ---
 # with a reversed species frequency distribution in two discrete habitats.
 # Function for simulating an assemblage of Neyman-Scott processes 
 # with a Cauchy kernel
@@ -742,7 +742,7 @@ This means that the between-species competition intensity within a neighbouring 
 @fig-KR_Similarity(b) shows that $K_R(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
 Restricted permutations within a cophenetic distance matrix, i.e. between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses [@Hardy2008a].
 
-::: {#fig-KR_Similarity  fig-env="figure*"}
+::: {#fig-KR_Similarity fig-env="figure*"}
 ```{r}
 #| label: KR_Similarity
 ggtheme_set()
@@ -920,7 +920,7 @@ Paracou was set up in 1984 to study the impact of silvicultural treatments on th
 We used here data from a control plot (#6) of 250 x 250 m in which `n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species).
 After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species.
 For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies [@Westoby1998], i.e. the specific leaf area (SLA in cm^2^.g^-1^ of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds).
-These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterizes the importance of the growth response to favourable conditions, while H and Seed characterizes the importance of investment in the capacity to respond to disturbance.
+These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterises the importance of the growth response to favourable conditions, while H and Seed characterise the importance of investment in the capacity to respond to disturbance.
 We also included the wood specific gravity (WSG in g.cm^-3^ of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
 
 From these data, we built two different between-species distance matrices, a phylogenetic one based on the APG III classification [@Chase2009] and a functional one based on the four traits described above.
@@ -1027,7 +1027,7 @@ Under species-equivalence null hypothesis, non-significant positive departure of
 $K_R(r)$ computed with both phylogenetic and functional between-species distance matrix show very similar patterns (@fig-Paracou_KR).
 Converging results were expected because the traits retained are generally considered as phylogenetically conserved [e.g. @Baraloto2012a].
 
-The random-labelling null hypothesis compare the neighbourhood diversity of that of a plot where the trees are located at the same place but have their species shuffled.
+The random-labelling null hypothesis compares the neighbourhood diversity of that of a plot where the trees are located at the same place but have their species shuffled.
 @fig-Paracou_KR(a) and (b) show that significantly lower-than-expected diversity occurs up to around 50 m.
 Habitat preference may be confused with the mere effect of intraspecific aggregation with this null hypothesis.
 
@@ -1037,7 +1037,7 @@ The departure from the 1%-confidence envelope of the phylogenetic entropy is not
 
 Short-range spatial regularity in tree stands is generally interpreted as resulting from self-thinning due to intense local competition [e.g. @Kenkel1988].
 It therefore seems that the sharing of resources between locally competing neighbours enhanced niche differentiation and thus species diversity.
-In other words, combining the spatial pattern of diversity (@fig-Paracou_KR) and the spatial pattern of the trees (@fig-Paracou_K) reveals that limiting similarity in the trees neighbourhood is its driver at short distance.
+In other words, combining the spatial pattern of diversity (@fig-Paracou_KR) and the spatial pattern of the trees (@fig-Paracou_K) reveals that limiting similarity in the trees' neighbourhood is its driver at short distance.
 Even though their global point pattern shows regularity at this scale, most tree species are individually aggregated in Paracou [@Collinet1997], and more generally in tropical forests [@Condit2000].
 Controlling for their spatial structure with the species-equivalence null hypothesis allows disentangling the processes that drive the spatial distribution of species.
 
