@@ -173,7 +173,7 @@ set.seed(973)
 
 # Introduction
 
-Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities.
+Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities [@Nemetschek2025].
 In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e. intra- and inter-specific) competition/facilitation and habitat preferences [@Dale1999].
 While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity [@Clark2010; @Cadotte2012].
 As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology [@Mouquet2012], in order to account for the key components of species interactions with their biotic and abiotic environments.
@@ -215,15 +215,15 @@ Rao's entropy is the expected divergence between individuals of a randomly selec
 
 An unbiased estimator [@Shimatani2001a] is:
 
-$$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$
+$$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$ {#eq-shimatani}
 
-where $d_{p,q}$ is a measure of the pairwise divergence between species$p$ and $q$ (with $d_{p,q}$ = $d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
+where $d_{p,q}$ is a measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q}$ = $d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
 $H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011].
 
 Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
 
 Diversity is *scale-dependent*: its value increases with the sample size so it needs to be standardized.
-A common practise consists of estimating the asymptotic diversity, i.e. the diversity of a hypothetical community the available data is assumed to be a representative sample of.
+A common practice consists of estimating the asymptotic diversity, i.e. the diversity of a hypothetical community the available data is assumed to be a representative sample of.
 The estimators above are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
 
 ### Diversity accumulation curves
@@ -231,14 +231,12 @@ The estimators above are doubly unbiased: in a finite sample, they estimate entr
 The Species Accumulation Curve (SAC) describes the expectation of the number of observed species with respect to the sample size [@Gotelli2001], assuming uniform and independent sampling of individuals or, equivalently, that continuous sampling happens in a community where all species are distributed independently according to homogeneous Poisson point patterns.
 It can be derived from the distribution of species abundances of the full sample [@Ugland2003].
 The sample size is a number of individuals that can be converted to a sample area assuming the density of individuals is constant.
-
-SACs allow to define biodiversity *at a given scale*.
+SACs allow to define biodiversity *at a given spatial scale*.
 It is an alternative to estimating asymptotic diversity, e.g. with the well-known Chao1 estimator [@Chao1984].
 
 Diversity Accumulation Curves (DACs) extend this approach to all measures of diversity.
 Simpson's entropy accumulation curves were derived by @Chao2014 and extended straightforwardly to Rao's entropy applied to ultrametric distances [@Marcon2014b].
 Entropy is generally converted into Hill numbers [@Jost2006], but this is not necessary here because the value of entropy can be interpreted.
-
 Yet, DACs are *aspatial* [@Rajala2012], as they are designed to ignore the spatial pattern of the data.
 Spatial structure is generally considered as an empirical issue [@Gotelli2001], difficultly solved by deriving accumulation curves taking into account the spatial pattern of each species [@Picard2004].
 
@@ -247,8 +245,8 @@ Spatial structure is generally considered as an empirical issue [@Gotelli2001], 
 Taking into account biodiversity from the perspective of each individual, whose functioning is assumed to be related to it, requires estimating diversity in its neighbourhood, as argued by @Rajala2012.
 
 Rather than aspatial diversity accumulation curves, neighbourhood diversity curves can be estimated empirically based on a fully-mapped dataset.
-The definition of neighbourhood is restricted here to a circle or radius $r$ around each individual.
-Each of these circles can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of an individual.
+The definition of neighbourhood is restricted here to a disc or radius $r$ around each individual.
+Each of these discs can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of an individual.
 We'll denote Simpson's and Rao's neighbourhood entropy $D(r)$ and $H_D(r)$ respectively.
 
 Neighbourhood diversity can be computed with the package divent [@Marcon2026] for R [@R].
@@ -260,7 +258,7 @@ An alternative approach, based on spatial statistics, allows the fast estimation
 ### Ripley's K
 
 The framework of spatial point pattern analysis, as introduced by @Ripley1977, relies on the *K*-function, defined so that $\lambda K(r)$ is the expected number of neighbours located within a distance $r$ of an arbitrary point of the pattern with intensity $\lambda$.
-Its classical unbiased estimator for a point pattern located within a finite sampling window is
+Its classical unbiased estimator for a point pattern located within a finite sampling window is:
 
 $$\hat{K}(r) = 
   \frac{1}{\hat{\lambda}n} 
@@ -339,7 +337,7 @@ Some authors however prefer to refer to the framework of the pair-correlation fu
 @Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's $\beta$ index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species.
 We will rather write $\beta_S(r)$ for consistency with our notation system.
 It can be straightforwardly generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013].
-The spatially explicit Rao's \beta index of diversity is:
+The spatially explicit Rao's $\beta$ index of diversity is:
 
 $$\hat{\beta}_R(r) 
 = \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}$$ {#eq-betaR}
