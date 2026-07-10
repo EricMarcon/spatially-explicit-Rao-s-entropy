@@ -16,39 +16,51 @@ format:
 author:
   - name: Eric Marcon
     orcid: 0000-0002-5249-321X
-    affiliations:
-      - name: AgroParisTech
-        id: 1
-        city: Montpellier
-        state: France
-      - name: AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
-        id: 2
-        city: Montpellier
-        state: France
     email: eric.marcon@agroparistech.fr
     attributes:
       corresponding: true
     url: https://ericmarcon.github.io/
+    affiliations:
+      - ref: APT
+      - ref: Amap
   - name: Christopher Baraloto
     orcid: 0000-0001-7322-8581
     affiliations:
-      - name: Florida International University
-        id: 3
-        city: Miami
-        state: Florida
+      - ref: FIU
   - name: Elodie Allié
     orcid: 0000-0001-8807-7982
+    affiliations:
+      - ref: PSN
   - name: Florence Puech
     orcid: 0000-0002-5279-6878
     affiliations:
-      - name: Université Paris-Saclay, INRAE, AgroParisTech, Paris-Saclay Applied Economics
-        id: 4
-        city: Palaiseau
-        state: France
+      - ref: PSAE
   - name: Raphaël Pélissier
     orcid: 0000-0003-4845-5090
     affiliations:
-      - id: 2
+      - ref: Amap
+affiliations:
+  - name: AgroParisTech
+    id: APT
+    city: Montpellier
+    state: France
+  - name: AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
+    id: Amap
+    number: 2
+    city: Montpellier
+    country: France
+  - name: Florida International University
+    id: FIU
+    city: Miami
+    state: Florida
+  - name: Pôle Sup Nature
+    id: PSN
+    city: Montpellier
+    country: France
+  - name: Université Paris-Saclay, INRAE, AgroParisTech, Paris-Saclay Applied Economics
+    id: PSAE
+    city: Palaiseau
+    country: France
 # Abstract and Keywords
 abstract: |
   To be written.
@@ -173,7 +185,7 @@ set.seed(973)
 
 # Introduction
 
-Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities [@Nemetschek2025].
+Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities [@Keddy1992; @Nemetschek2025].
 In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e. intra- and inter-specific) competition/facilitation and habitat preferences [@Dale1999].
 While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity [@Clark2010; @Cadotte2012].
 As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology [@Mouquet2012], in order to account for the key components of species interactions with their biotic and abiotic environments.
