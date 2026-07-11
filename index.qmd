@@ -200,8 +200,8 @@ When mapped data are concerned, such as for instance those on tropical trees pro
 A synthesis of the opportunities brought by this approach can be found in @Wiegand2017.
 
 @Shen2013 and @Pelissier2015 concomitantly introduced, within the framework of the spatial point pattern analysis, a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences.
-. Since both contributions independently arrived to very similar functionsapproaches, we believe that to help ecologists to well-understand and to take full advantage of novel approach, further clarifications are needed to help ecologists to take full advantage of this development.
-In particular, it is important to , especially regarding how it is relatedrelate non-uniform differences to well-known functions of spatial point pattern analysis, namely Ripley’s *K*-function [@Ripley1977] and its intertype extension, the *K~12~*-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
+Since both contributions independently arrived to very similar approaches, we believe further clarifications are needed to help ecologists to take full advantage of this development.
+In particular, it is important to relate non-uniform differences to well-known functions of spatial point pattern analysis, namely Ripley’s *K*-function [@Ripley1977] and its intertype extension, the *K~p,q~*-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
 
 The aim of this chapter is thus to introduce the rationale behind the functions of multivariate point pattern analysis that integrate between-species differences in a distance–dependent measure of diversity.
 It can basically be seen as an extension of the work of @Shimatani2001 based on Simpson's entropy to Rao's entropy, one of the most powerful and flexible measure of species diversity [@Pavoine2012].
@@ -259,7 +259,7 @@ Considering biodiversity from the perspective of each individual, whose function
 
 Rather than aspatial diversity accumulation curves, neighbourhood diversity curves can be estimated empirically based on a fully-mapped dataset.
 The definition of neighbourhood is restricted here to a disc defined by radius $r$ around each individual.
-Each of these discs can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of an individual.
+Each of these discs can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged across sampled individuals [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of a random individual.
 We'll denote Simpson's and Rao's neighbourhood entropy $D(r)$ and $H_D(r)$ respectively.
 
 Neighbourhood diversity can be computed with the package divent [@Marcon2026] for R [@R].
@@ -279,24 +279,26 @@ $$\hat{K}(r) =
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
   }}$$ {#eq-Khat}
 
-where $n$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity generally estimated as $n/A$, with $A$ the sampling window area.
+where $n$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity estimated as $n/A$, with $A$ the sampling window area.
 The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points $i$ and $j$ are less than $r$ apart, 0 else.
 $c(i, j, r)$ is the correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
 When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbours with no bias.
 
-A common extension of this univariate function is the intertype (or bivariate) *K~12~*-function proposed by @Lotwick1982.
-We will denote it $K_{p,q}$ for clarity.
-Its estimator is:
+A common extension of this univariate function is the intertype (or bivariate) function proposed by @Lotwick1982 for marked point patterns, that we will denote $K_{p,q}$.
+Here, the mark of a point, called its type, is the species of the individual represented by the point.
 
 $$\hat{K}_{p,q}(r) =
-  \frac{1}{\hat{\lambda_q}n_1}
+  \frac{A}{\hat{\lambda_p}\hat{\lambda_q}}
   \sum_{i=1}^{n_p}{\sum_{j=1}^{n_q}{
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
-  }}$$ {#eq-K12hat}
+  }}$$
+
+where $n_p$ and $n_q$ are the number of points of types $p$ and $q$ respectively. 
+$\hat{\lambda}_p$ and $\hat{\lambda}_q$ are their intensities.
 
 $K(r)$ is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window.
 In contrast, $K_{p,q}(r)$ allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses.
-The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types 1 and 2 are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type 1 points is independent from population of type 2 points [@Goreaud2003].
+The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types $p$ and $q$ are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type-$p$ points is independent from population of type-\$q\$ points [@Goreaud2003].
 
 ### A distance-dependent Simpson's entropy
 
@@ -308,12 +310,12 @@ $$\hat{D}(r) = 1 -
 
 where $\hat{K}(r)$ and $\hat{K}_p(r)$ are Ripley's *K*-functions for all points of the pattern (no distinction of species) and for points of species $p$, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_p$ the corresponding intensity estimators.
 
-We can write a version standardized by $\hat{D}(r)$ as:
+We can define $K_S(r)$ as a version of $D(r)$ standardized by $D$, estimated as:
 
 $$\hat{K}_S(r) = \hat{D}(r) / \hat{D} $$ {#eq-Ks}
 
 $D(r)$ tends to $D$ when $r$ increases so $K_S(r)$ tends to 1.
-It is noticeable that $\hat{K}_S(r)$ has an expectation of 1 for any $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
+It is noticeable that $K_S(r)$ has an expectation of 1 for any $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
 
 Using the unbiased estimator of $\hat{K}(r)$, introduced in @eq-Khat, allows correcting for edge effects for sampling windows of any shape.
 
@@ -322,7 +324,7 @@ We can notice for the following that $\hat{K}_S(r)$ can also be estimated by con
 $$\hat{K}_S(r) = \left[
   \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
   \right] / \hat{D}
-  $$ {#eq-Ks12}
+  $$ {#eq-Ks_pq}
 
 ### A generalization to Rao's entropy
 
@@ -355,11 +357,11 @@ The spatially explicit Rao's $\beta$ index of diversity is:
 $$\hat{\beta}_R(r) 
 = \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}$$ {#eq-betaR}
 
-These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
+These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are in terms of species composition.
 Yet, although both the numerator and the denominator of $\hat{\beta}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{H}_D(r)$, $\hat{\beta}_R(r)$ is not the derivative of $\hat{H}_D(r)$.
-Consequently, the definition of $\beta_R(r)$ does not comply with the classical framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $K_R(r+dr)= K_R(r) + g_R(r)$.
+Consequently, the definition of $\beta_R(r)$ does not comply with the classical framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $K_R(r+dr)= K_R(r) + g_R(r)$
 
-We argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity, for this reason – and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
+For this reason, we argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity, and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
 
 ## Testing ecological models
 
@@ -378,12 +380,12 @@ In the context of species diversity, the random labelling hypothesis corresponds
 
 ### The population independence null hypothesis
 
-A more meaningful hypothesis for species diversity studies is the one of mutually independent populations, postulating that the spatial pattern of each type of mark (or population) is the realization of a specific spatial process (for instance of limited dispersion) and that the location of points of each population is independent from the location of the points of the other populations in the resulting multivariate pattern.
-This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{12}$-function by @Lotwick1982 for which we expect that $K_{p,q}(r) = \pi r^2$ for any marks $p \neq q$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
+A more meaningful hypothesis for species diversity studies is the one of mutually independent populations, postulating that the spatial pattern of each population (i.e., the individuals of the same type) is the realization of a specific spatial process (for instance of limited dispersion) and that the location of points of each population is independent from the location of the points of the other populations in the resulting multivariate pattern.
+This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{p,q}$-function by @Lotwick1982 for which we expect that $K_{p,q}(r) = \pi r^2$ for any mark $p \neq q$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
 Note that this hypothesis differs from the random labelling hypothesis, except when all specific spatial patterns result from a stationary Poisson point process [@Diggle1983].
 
 A classical method for testing the mutually independent population hypothesis is to build a Monte Carlo rank test keeping the pattern of each population unchanged but randomizing their relative positions by a random shifting procedure of each pattern around a torus [@Goreaud2003].
-Such a procedure is cumbersome for highly multivariate patterns and is thus abandoned.
+Such a procedure is cumbersome for highly multivariate patterns and is considered suboptimal for testing diversity patterns.
 
 ### The species equivalence null hypothesis
 
@@ -392,7 +394,7 @@ Shuffling between-species distances many times means eliminating their differenc
 This null hypothesis can be tested conditionally to the pattern of point locations and to the spatial distribution of the species labels by permuting simultaneously the rows and columns in $d_{p,q}$, which is equivalent, in the case of a cophenetic distance matrix, to permuting the tips of a hierarchical (taxonomic or phylogenetic) tree [@Hardy2008a].
 It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{p,q}$ consists of a uniform between-species distance matrix.
 When focusing on the species equivalence hypothesis, $K_R(r) / K_S(r)$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
-With reference to these authors and to the usual notation in point pattern analysis, this ratio is appropriately designated as $K_d(r)$.
+With reference to these authors and to the usual notation in point pattern analysis, $K_R(r) / K_S(r)$ is appropriately designated as $K_d(r)$.
 
 # Application
 
@@ -1057,10 +1059,10 @@ Controlling for their spatial structure with the species-equivalence null hypoth
 The function of multitype point pattern analysis $K_R(r)$ introduced here is a normalised version of Rao's entropy measured in the neighbourhood of individuals.
 
 It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his *K*-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
-It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and *K~12~*-functions.
+It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and *K~p,q~*-functions.
 Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species.
-We note that orthogonal functional axes can also be considered independently using this approach, allowing the potential comparison of assembly processes due to habitat filtering, competition, or interactions with natural enemies. 
-This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype *K~12~*-functions (@eq-KR).
+We note that orthogonal functional axes can also be considered independently using this approach, allowing the potential comparison of assembly processes due to habitat filtering, competition, or interactions with natural enemies.
+This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype *K~p,q~*-functions (@eq-KR).
 Other measures of neighbourhood diversity address more aspects of biodiversity but loose link with the point process theory.
 
 Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001] with the $K_R(r)$ function.
