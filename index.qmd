@@ -225,10 +225,9 @@ where $n$ and $S$ are the total numbers of individuals and species in the sample
 
 Non-uniform divergences between species allow defining phylogenetic or functional diversity [@Pielou1975].
 Rao's entropy is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
-
 An unbiased estimator [@Shimatani2001a] is:
 
-$$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$ {#eq-shimatani}
+$$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$ {#eq-Rao}
 
 where $d_{p,q}$ is a measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q}$ = $d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
 $H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011].
@@ -237,7 +236,9 @@ Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpso
 
 Diversity is *scale-dependent*: its value increases with the sample size so it needs to be standardized.
 A common practice consists of estimating the asymptotic diversity, i.e. the diversity of a hypothetical community the available data is assumed to be a representative sample of.
-The estimators above are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
+For instance, species asymptotic richness is often estimated with the well-known Chao1 estimator [@Chao1984]
+
+The estimators above (@eq-Simpson and @eq-Rao) are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
 
 ### Diversity accumulation curves
 
@@ -245,7 +246,7 @@ The Species Accumulation Curve (SAC) describes the expectation of the number of 
 It can be derived from the distribution of species abundances of the full sample [@Ugland2003].
 The sample size consists of a number of individuals that can be converted to a sample area assuming the density of individuals is constant.
 SACs allow to define biodiversity *at a given spatial scale*.
-It is an alternative to estimating asymptotic diversity, e.g. with the well-known Chao1 estimator [@Chao1984].
+It is an alternative to estimating asymptotic diversity.
 
 Diversity Accumulation Curves (DACs) extend this approach to all measures of diversity.
 Simpson's entropy accumulation curves were derived by @Chao2014 and extended straightforwardly to Rao's entropy applied to ultrametric distances [@Marcon2014b].
@@ -301,7 +302,7 @@ $\hat{\lambda}_p$ and $\hat{\lambda}_q$ are their intensities.
 
 $K(r)$ is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window.
 In contrast, $K_{p,q}(r)$ allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses.
-The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types $p$ and $q$ are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type-$p$ points is independent from population of type-\$q\$ points [@Goreaud2003].
+The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types $p$ and $q$ are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type-$p$ points is independent from population of type-$q$ points [@Goreaud2003].
 
 ### A distance-dependent Simpson's entropy
 
@@ -320,7 +321,7 @@ $$\hat{K}_S(r) = \hat{D}(r) / \hat{D} $$ {#eq-Ks}
 $D(r)$ tends to $D$ when $r$ increases so $K_S(r)$ tends to 1.
 It is noticeable that $K_S(r)$ has an expectation of 1 for any $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
 
-Using the unbiased estimator of $\hat{K}(r)$, introduced in @eq-Khat, allows correcting for edge effects for sampling windows of any shape.
+Using the unbiased estimator of $\hat{K}(r)$, introduced in @eq-Khat, allows correcting for edge effects in sampling windows of any shape.
 
 We can notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics [@Shimatani2001, eq. 9]:
 
@@ -825,7 +826,7 @@ fig_compet.spp <- ggplotify::as.ggplot(
     csize = 1/2
   ),
   # Do not cut the title
-  vjust = -2/100
+  scale = 0.95
 )
 
 # Computing Kr for the limiting similarity pattern ---
@@ -946,7 +947,7 @@ p_6_traits.df %>%
 
 We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana [@Gourlet-Fleury2004].
 The Paracou experiment was established in 1984 to study the impact of silvicultural treatments on on forest dynamics in a series of large (6.25 ha) control and logged plots.
-We used here data from a control plot (#6) of 250 x 250 m in which `n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species).
+We used here data from a control plot (#6) of 250 x 250 m in which `r n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species).
 After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species [@Baraloto2012a].
 For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies [@Westoby1998], i.e. the specific leaf area (SLA in cm^2^.g^-1^ of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds).
 These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterises the importance of the growth response to favourable conditions, while H and Seed characterise the importance of investment in the capacity to respond to disturbance.
@@ -986,7 +987,7 @@ Spatial pattern of trees in a 6.25 ha forest plot in French Guiana (Paracou plot
 Significant (departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations) repulsion between trees is detected up to 12 m.
 :::
 
-The *L*-function shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m @fig-Paracou_K).
+The *L*-function shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m (@fig-Paracou_K).
 
 ::: {#fig-Paracou_KR fig-env="figure*"}
 ```{r}
@@ -1048,9 +1049,9 @@ grid.arrange(
 ```
 
 *K~R~*-function applied to Paracou plot 6 considering the phylogenetic (left) and functional (right) distances between species, with respect to the random-labelling (top) and the species-equivalence (bottom) null hypotheses.
-The phylogenetic and the functional patterns are very similar.
+The phylogenetic and functional patterns are very similar.
 Under the random-labelling null hypothesis, a very significant lack of diversity is observed up to 50 m (a and b).
-Under species-equivalence null hypothesis, non-significant positive departure of both curves (c) and (d) at short distances, combined with the observed spatial dispersion of the trees, suggest limited similarity when the intraspecific spatial patterns are preserved.
+Under the species-equivalence null hypothesis, non-significant positive departure of both curves (c) and (d) at short distances, combined with the observed spatial dispersion of the trees, suggest limited similarity when the intraspecific spatial patterns are preserved.
 :::
 
 $K_R(r)$ computed with both phylogenetic and functional between-species distance matrix show very similar patterns (@fig-Paracou_KR).
@@ -1064,7 +1065,7 @@ The species-equivalence null hypothesis preserves the species individual spatial
 @fig-Paracou_KR(c) and (d) illustrate that under this model we observe higher-than-expected diversity at short distances.
 The departure from the 1%-confidence envelope of the phylogenetic entropy is not sharp: the curves overlap with the edges of the envelopes.
 
-Short-range spatial regularity in tree stands is generally interpreted tp result from self-thinning due to intense local competition [e.g. @Kenkel1988].
+Short-range spatial regularity in tree stands is generally interpreted to result from self-thinning due to intense local competition [e.g. @Kenkel1988].
 It therefore seems that the sharing of resources between locally competing neighbours enhanced niche differentiation and thus species diversity.
 In other words, combining the spatial pattern of diversity (@fig-Paracou_KR) and the spatial pattern of the trees (@fig-Paracou_K) reveals that limiting similarity in the trees' neighbourhood drives assembly at small spatial scales.
 Even though their global point pattern shows regularity at this scale, most tree species are individually aggregated in Paracou [@Collinet1997], and more generally in tropical forests [@Condit2000].
@@ -1082,4 +1083,4 @@ This approach is allowed only by Rao's entropy, thanks to its mathematical prope
 Other measures of neighbourhood diversity address more aspects of biodiversity but loose link with the point process theory.
 
 Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001] with the $K_R(r)$ function.
-This new tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.
+This tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.
