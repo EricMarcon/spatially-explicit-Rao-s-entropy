@@ -1,5 +1,5 @@
 ---
-title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different aspects of local biodiversity"
+title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different facets of local biodiversity to examine community assembly"
 # Output formats
 format:
   stylisharticle-pdf:
@@ -284,6 +284,9 @@ The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points 
 $c(i, j, r)$ is the correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
 When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbours with no bias.
 
+The *L* function [@Besag1977a] modifies the *K* function so that its expectation is 0 rather than $\pi r^2$ if the point process is homogeneous Poisson (i.e. the points are distributed uniformly and independently).
+We will plot it in @fig-Paracou_K: $L(r) = \sqrt{K(r) / \pi} - r$.
+
 A common extension of this univariate function is the intertype (or bivariate) function proposed by @Lotwick1982 for marked point patterns, that we will denote $K_{p,q}$.
 Here, the mark of a point, called its type, is the species of the individual represented by the point.
 
@@ -293,7 +296,7 @@ $$\hat{K}_{p,q}(r) =
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
   }}$$
 
-where $n_p$ and $n_q$ are the number of points of types $p$ and $q$ respectively. 
+where $n_p$ and $n_q$ are the number of points of types $p$ and $q$ respectively.
 $\hat{\lambda}_p$ and $\hat{\lambda}_q$ are their intensities.
 
 $K(r)$ is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window.
@@ -541,15 +544,18 @@ hrand.spp <- spp(
   window = c(0, 0, 100, 100), 
   marks = hrand$marks
 )
-par(fig = c(0, 0.7, 0.5, 1), mar = c(0.5, 0, 0, 0))
+par(
+  fig = c(0, 0.7, 0.5, 1), 
+  mar = c(0.5, 0, 0, 0),
+  cex.main = 1/2
+)
 # Plot the white and grey areas
 plot(
   habit1, 
   col = c("white", "lightgrey"),
-  main = NULL,
+  main = "Random Pattern",
   legend = FALSE,
-  ribbon = FALSE,
-  csize = 1/2
+  ribbon = FALSE
 )
 # Plot the points
 plot(
@@ -562,6 +568,7 @@ plot(
   csize = 1/2,
   add = TRUE
 )
+par(par_old)
 
 # Simulating a heterogeneous pattern of limited dispersion ---
 # with a reversed species frequency distribution in two discrete habitats.
@@ -614,13 +621,18 @@ hmcauchy.spp <- spp(
     )
   )
 )
-par(fig = c(0, 0.7, 0, 0.5), mar = c(0, 0, 0.5, 0), new = TRUE)
+par(
+  fig = c(0, 0.7, 0, 0.5), 
+  mar = c(0, 0, 0.5, 0), 
+  cex.main = 1/2, 
+  new = TRUE
+)
 # Plot the white and grey areas
 plot(
   habit1, 
   col = c("white", "lightgrey"),
-  main = NULL, 
-  legend = FALSE, 
+  main = "Limited dispersion", 
+  legend = FALSE,
   ribbon = FALSE
 )
 # Plot the points
@@ -742,7 +754,8 @@ grid.arrange(
 )
 ```
 
-Test of the species equivalence hypothesis of the habitat preference-experiment with (a) a completely random point pattern and (b) a clustered one.
+Detection of habitat preference.
+Test of the species equivalence hypothesis in the habitat-preference experiment with (a) a completely random point pattern and (b) a clustered one.
 The $K_R(r)$ curve (solid line is computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations (grey area; the dotted line represents the average simulated values).
 Negative departure from null hypothesis is observed over 2 m: the neighbourhood phylogenetic diversity is below its expected value due to habitat preference.
 :::
@@ -805,12 +818,14 @@ fig_compet.spp <- ggplotify::as.ggplot(
   ~plot(
     compet.spp, 
     cols = rep("black", nlevels(compet.spp$marks)), 
-    main = NULL, 
+    main = "Limiting similarity", 
     legend = FALSE, 
-    scale = FALSE, 
+    scale = TRUE, 
     chars = levels(compet.spp$marks),
     csize = 1/2
-  )
+  ),
+  # Do not cut the title
+  vjust = -2/100
 )
 
 # Computing Kr for the limiting similarity pattern ---
@@ -841,9 +856,10 @@ grid.arrange(
 )
 ```
 
-\(a\) Multitype Strauss point pattern mimicking limiting similarity in a 100x100-m window.
+Detection of limiting similarity.
+(a) Multitype Strauss point pattern mimicking limiting similarity in a 100x100-m window.
 The pattern of interaction is obtained using un multi-Strauss inhibition process with a 5-m range and an interaction matrix corresponding to the cophenetic distance matrix derived from the clustered phylogenetic tree.
-The strength of repulsion between each pair of points decreases with their distance in the phylogeny.
+The strength of repulsion between each pair of points decreases with their distance in the phylogeny and vanishes between species that are not in the same half of the tree.
 (b) $K_R(r)$ computed with the cophenetic between-species distance matrix indicates a significant positive departure from the 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations from 3 to 10 m, with a peak at 5 m: because of competition, the neighbourhood diversity is higher than expected.
 :::
 
@@ -970,7 +986,7 @@ Spatial pattern of trees in a 6.25 ha forest plot in French Guiana (Paracou plot
 Significant (departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations) repulsion between trees is detected up to 12 m.
 :::
 
-The *L*-function, i.e. the linearised univariate version of Ripley *K*-function, shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m @fig-Paracou_K).
+The *L*-function shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m @fig-Paracou_K).
 
 ::: {#fig-Paracou_KR fig-env="figure*"}
 ```{r}
