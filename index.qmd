@@ -291,7 +291,7 @@ The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points 
 $c(i, j, r)$ is the correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
 When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbours with no bias.
 
-The *L* function [@Besag1977a] modifies the *K* function so that its expectation is 0 rather than $\pi r^2$ if the point process is homogeneous Poisson (i.e. the points are distributed uniformly and independently): $L(r) = \sqrt{K(r) / \pi} - r$.
+The *L*-function [@Besag1977a] modifies the *K*-function so that its expectation is 0 rather than $\pi r^2$ if the point process is homogeneous Poisson (i.e. the points are distributed uniformly and independently): $L(r) = \sqrt{K(r) / \pi} - r$.
 
 A common extension of this univariate function is the intertype (or bivariate) function proposed by @Lotwick1982 for marked point patterns, that we will denote $K_{p,q}$.
 Here, the mark of a point, called its type, is the species of the individual represented by the point.
