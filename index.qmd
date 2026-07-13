@@ -63,7 +63,13 @@ affiliations:
     country: France
 # Abstract and Keywords
 abstract: |
-  To be written.
+  This chapter introduces a multivariate analytical framework integrating spatial point pattern methodologies and Rao's  entropy to quantify species diversity in ecological communities. 
+  Neighbourhood diversity is introduced as a spatialised extension of diversity accumulation curves.
+  Measuring it with Rao's entropy reveals profound links with Ripley's K-function, developped to characterise the spatial structure of point patterns.
+  Rao's neighbourhood entropy can be tested against random labeling and species equivalence null hypotheses to provide insights into ecological processes such as habitat preferences and competitive interactions.
+  The methods are illustrated by applications on simulated datasets and a tropical forest plot in French Guiana.
+  This approach offers a robust means to detect ecological drivers like competition and habitat filtering, enriching our understanding of community assembly while maintaining scalable flexibility across taxonomic, phylogenetic, and functional dimensions.
+
 keywords:
   - Spatially-explicit diversity
   - Rao's entropy
@@ -201,7 +207,7 @@ A synthesis of the opportunities brought by this approach can be found in @Wiega
 
 @Shen2013 and @Pelissier2015 concomitantly introduced, within the framework of the spatial point pattern analysis, a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences.
 Since both contributions independently arrived to very similar approaches, we believe further clarifications are needed to help ecologists to take full advantage of this development.
-In particular, it is important to relate non-uniform differences to well-known functions of spatial point pattern analysis, namely Ripley’s *K*-function [@Ripley1977] and its intertype extension, the *K~p,q~*-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
+In particular, it is important to relate non-uniform differences to well-known functions of spatial point pattern analysis, namely Ripley's *K*-function [@Ripley1977] and its intertype extension, the *K~p,q~*-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
 
 The aim of this chapter is thus to introduce the rationale behind the functions of multivariate point pattern analysis that integrate between-species differences in a distance–dependent measure of diversity.
 It can basically be seen as an extension of the work of @Shimatani2001 based on Simpson's entropy to Rao's entropy, one of the most powerful and flexible measure of species diversity [@Pavoine2012].
@@ -285,8 +291,7 @@ The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points 
 $c(i, j, r)$ is the correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
 When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbours with no bias.
 
-The *L* function [@Besag1977a] modifies the *K* function so that its expectation is 0 rather than $\pi r^2$ if the point process is homogeneous Poisson (i.e. the points are distributed uniformly and independently).
-We will plot it in @fig-Paracou_K: $L(r) = \sqrt{K(r) / \pi} - r$.
+The *L* function [@Besag1977a] modifies the *K* function so that its expectation is 0 rather than $\pi r^2$ if the point process is homogeneous Poisson (i.e. the points are distributed uniformly and independently): $L(r) = \sqrt{K(r) / \pi} - r$.
 
 A common extension of this univariate function is the intertype (or bivariate) function proposed by @Lotwick1982 for marked point patterns, that we will denote $K_{p,q}$.
 Here, the mark of a point, called its type, is the species of the individual represented by the point.
@@ -764,7 +769,7 @@ Negative departure from null hypothesis is observed over 2 m: the neighbourhood 
 ### Limiting similarity
 
 In a second experiment (@fig-KR_Similarity), we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multi-Strauss process with, as between-species interaction matrix, the cophenetic distance derived from the clustered tree above.
-This means that the between-species competition intensity within a neighbouring disc of 5 m varies with their proximity within the phylogenetic tree: : closely-related species compete more than distantly-related species, with no interaction between species that are not in the same half of the tree.
+This means that the between-species competition intensity within a neighbouring disc of 5 m varies with their proximity within the phylogenetic tree: closely-related species compete more than distantly-related species, with no interaction between species that are not in the same half of the tree.
 
 @fig-KR_Similarity(b) shows that $K_R(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
 Restricted permutations within a cophenetic distance matrix, i.e. between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses [@Hardy2008a].
