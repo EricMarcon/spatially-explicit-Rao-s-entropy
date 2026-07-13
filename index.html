@@ -271,7 +271,7 @@ window.Quarto = {
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
   }} \tag{3}\]</span></span></p>
 <p>where <span class="math inline">\(n\)</span> is the number of points of the pattern, <span class="math inline">\(\hat{\lambda}\)</span> is the pattern intensity estimated as <span class="math inline">\(n/A\)</span>, with <span class="math inline">\(A\)</span> the sampling window area. The indicator function <span class="math inline">\(\mathbf{1}( \|x_i - x_j\| \leq r)\)</span> equals 1 when points <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are less than <span class="math inline">\(r\)</span> apart, 0 else. <span class="math inline">\(c(i, j, r)\)</span> is the correction of edge effects equal to 1 when the circle of radius <span class="math inline">\(r\)</span> fits into the sampling window. When it does not, the isotropic correction proposed by <span class="citation" data-cites="Ripley1977">Ripley (<a href="#ref-Ripley1977" role="doc-biblioref">1977</a>)</span> applies to windows of any shape thanks to appropriate geometrical considerations <span class="citation" data-cites="Goreaud1999">(<a href="#ref-Goreaud1999" role="doc-biblioref">Goreaud and Pélissier 1999</a>)</span> to estimate the number of neighbours with no bias.</p>
-<p>The <em>L</em> function <span class="citation" data-cites="Besag1977a">(<a href="#ref-Besag1977a" role="doc-biblioref">Besag 1977</a>)</span> modifies the <em>K</em> function so that its expectation is 0 rather than <span class="math inline">\(\pi r^2\)</span> if the point process is homogeneous Poisson (i.e.&nbsp;the points are distributed uniformly and independently): <span class="math inline">\(L(r) = \sqrt{K(r) / \pi} - r\)</span>.</p>
+<p>The <em>L</em>-function <span class="citation" data-cites="Besag1977a">(<a href="#ref-Besag1977a" role="doc-biblioref">Besag 1977</a>)</span> modifies the <em>K</em>-function so that its expectation is 0 rather than <span class="math inline">\(\pi r^2\)</span> if the point process is homogeneous Poisson (i.e.&nbsp;the points are distributed uniformly and independently): <span class="math inline">\(L(r) = \sqrt{K(r) / \pi} - r\)</span>.</p>
 <p>A common extension of this univariate function is the intertype (or bivariate) function proposed by <span class="citation" data-cites="Lotwick1982">Lotwick and Silverman (<a href="#ref-Lotwick1982" role="doc-biblioref">1982</a>)</span> for marked point patterns, that we will denote <span class="math inline">\(K_{p,q}\)</span>. Here, the mark of a point, called its type, is the species of the individual represented by the point.</p>
 <p><span class="math display">\[\hat{K}_{p,q}(r) =
   \frac{A}{\hat{\lambda_p}\hat{\lambda_q}}
@@ -343,7 +343,7 @@ window.Quarto = {
 <h1 data-number="3"><span class="header-section-number">3</span> Application</h1>
 <p></p>
 <p></p>
-<div id="fig-sim_data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-env="figure*" data-fig-pos="!t">
+<div id="fig-sim_data" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full" data-fig-pos="!t" data-fig-env="figure*">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-sim_data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <p></p>
