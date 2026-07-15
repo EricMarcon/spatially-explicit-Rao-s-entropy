@@ -300,7 +300,7 @@ $$\hat{K}_{p,q}(r) =
   \frac{A}{\hat{\lambda_p}\hat{\lambda_q}}
   \sum_{i=1}^{n_p}{\sum_{j=1}^{n_q}{
     \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
-  }}$$
+  }}$$ {#eq-K_pq}
 
 where $n_p$ and $n_q$ are the number of points of types $p$ and $q$ respectively.
 $\hat{\lambda}_p$ and $\hat{\lambda}_q$ are their intensities.
@@ -348,7 +348,7 @@ $$\begin{aligned}
 \end{aligned}
   $$ {#eq-KR}
 
-This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity in a disc of radius r centered on an arbitrary point of the pattern.
+This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity in a disc of radius $r$ centered on an arbitrary point of the pattern.
 $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \neq q$.
 
 ### Multitype correlation and $\beta$ diversity
