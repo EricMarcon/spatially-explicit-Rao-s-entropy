@@ -2,6 +2,7 @@
 title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different facets of local biodiversity to examine community assembly"
 # Output formats
 format:
+  docx: default
   stylisharticle-pdf:
     keep-tex: true
     include-in-header:
@@ -63,7 +64,7 @@ affiliations:
     country: France
 # Abstract and Keywords
 abstract: |
-  This chapter introduces a multivariate analytical framework integrating spatial point pattern methodologies and Rao's  entropy to quantify species diversity in ecological communities. 
+  This chapter introduces a multivariate analytical framework integrating spatial point pattern methodologies and Rao's entropy to quantify species diversity in ecological communities. 
   Neighbourhood diversity is introduced as a spatialised extension of diversity accumulation curves.
   Measuring it with Rao's entropy reveals profound links with Ripley's K-function, developped to characterise the spatial structure of point patterns.
   Rao's neighbourhood entropy can be tested against random labeling and species equivalence null hypotheses to provide insights into ecological processes such as habitat preferences and competitive interactions.
@@ -101,29 +102,32 @@ corrauthorlabel: Corresponding Author
 ---
 
 ```{r}
-#| label: DoNotModify
-### Utilities for R. 
-# Do not modify unless you don't use R: then, delete this chunk.
-# Installation of R packages if necessary
-install_packages <- function(packages) {
-  invisible(
-    sapply(
-      packages, 
-      FUN = function(package) {
-        if (!package %in% installed.packages()[, 1]) {
-          install.packages(
-            package, 
-            repos = "https://cran.rstudio.com/", 
-            quiet = TRUE
-          )
-        }
-      }
-    )
-  )
-}
-
-# Basic packages
-install_packages(c("knitr", "formatR"))
+#| label: Setup
+# Necessary packages
+packages_required <- c(
+  # R tools
+  "knitr", 
+  "formatR", 
+  # Scientific packages
+  "ade4",
+  "ads",
+  "dbmss",
+  "divent",
+  "ggplotify",
+  "gridExtra",
+  "khroma",
+  "spatstat",
+  "tidyverse"
+)
+# Already installed?
+packages_installed <- vapply(
+  packages_required, 
+  FUN = requireNamespace, 
+  FUN.VALUE = TRUE, 
+  quietly = TRUE
+) 
+# Install missing packages
+install.packages(names(packages_installed)[!packages_installed])
 
 # Chunk font size hook: allows size='small' or any valid Latex font size in chunk options
 def.chunk.hook <- knitr::knit_hooks$get("chunk")
@@ -137,28 +141,6 @@ knitr::knit_hooks$set(
     )
   }
 )
-```
-
-```{r}
-#| label: Options
-### Customized R options for this document
-# Delete this chunk if you don't use R
-
-# Add necessary packages here
-packages <- c(
-  "ade4",
-  "ads",
-  "dbmss",
-  "divent",
-  "ggplotify",
-  "gridExtra",
-  "khroma",
-  "spatstat",
-  "tidyverse"
-)
-# Install them
-install_packages(packages)
-
 # knitr options (https://yihui.org/knitr/options/)
 knitr::opts_chunk$set(
   # Code chunk automatic format if tidy is TRUE
@@ -197,7 +179,6 @@ The diversity of these abiotic and biotic interactions in space and/or time is a
 Consequently, the ecological literature reveals increasing efforts to integrate approaches from phylogenetics, functional and community ecology [@Mouquet2012], to account for the key components of species interactions with their biotic and abiotic environments.
 Several novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed [@Pavoine2011].
 Among these methods, some are specifically designed to explicitly account for space [e.g. @Pavoine2011a].
-However, those studies generally consider spatially discontinuous community samples, i.e. the $\beta$-diversity component of @Whittaker1960, so that the underlying spatial framework can basically be related to the graph theory [@Dale2002].
 
 The interest of considering local diversity rather than at the scale of the whole community or sampling window has emerged in the literature since @Batty1974.
 A review can be found in @Altieri2021, with diverse approaches.
@@ -269,7 +250,7 @@ The definition of neighbourhood is restricted here to a disc defined by radius $
 Each of these discs can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged across sampled individuals [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of a random individual.
 We'll denote Simpson's and Rao's neighbourhood entropy $D(r)$ and $H_D(r)$ respectively.
 
-Neighbourhood diversity can be computed with the package divent [@Marcon2026] for R [@R].
+Neighbourhood diversity can be computed with the *divent* package [@Marcon2026] for R [@R].
 The computational burden is heavy for a community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in neighbourhoods that do not fit in the sampling window must be extrapolated.
 An alternative approach, based on spatial statistics, allows the rapid estimation of neighbourhood Simpson's and Rao's entropy, and reveals profound connections with the point-process theory.
 
@@ -353,8 +334,13 @@ $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \
 
 ### Multitype correlation and $\beta$ diversity
 
+@Whittaker1960 introduced the framework of diversity partitioning and defined the concepts of $\alpha$ and $\beta$ diversity we recall here for the clarity of what follows.
+$\alpha$ diversity is the average diversity of continuous areas, such as forest plots or, here, the discs around points that define neighbourhood diversity.
+In contrast, $\beta$ diversity characterises how dissimilar discontinuous areas are from each other, defining differentiation $\beta$ diversity or from their assemblage, defining proportional $\beta$ diversity [@Jurasinski2009].
+$\gamma$ diversity is in turn the diversity of the assemblage: it can be partitioned into $\alpha$ and proportional $\beta$ diversities [@Pavoine2004; @Jost2007].
+
 Our *K~R~*- and *K~S~*-functions are cumulative functions as is the original *K*-function of @Ripley1977.
-This means that they are estimated for a series of concentric neighbourhood discs of increasing radii.
+This means that they are estimated for a series of concentric neighbourhood discs of increasing radii and relate to $\alpha$ diversity.
 Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987; @Wiegand2004], that is the derivative of $K(r)$, giving the probability to encounter neighbouring points in concentric annuli between $r$ and $r - dr$, and relate it to $\beta$ diversity.
 
 @Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species.
@@ -951,7 +937,7 @@ p_6_traits.df %>%
 ```
 
 We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana [@Gourlet-Fleury2004].
-The Paracou experiment was established in 1984 to study the impact of silvicultural treatments on on forest dynamics in a series of large (6.25 ha) control and logged plots.
+The Paracou experiment was established in 1984 to study the impact of silvicultural treatments on forest dynamics in a series of large (6.25 ha) control and logged plots.
 We used here data from a control plot (#6) of 250 x 250 m in which `r n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species).
 After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species [@Baraloto2012a].
 For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies [@Westoby1998], i.e. the specific leaf area (SLA in cm^2^.g^-1^ of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds).
