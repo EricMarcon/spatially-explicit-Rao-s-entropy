@@ -216,7 +216,7 @@ An unbiased estimator [@Shimatani2001a] is:
 
 $$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$ {#eq-Rao}
 
-where $d_{p,q}$ is a measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q}$ = $d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
+where $d_{p,q}$ is a measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q} = d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
 $H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011].
 
 Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
@@ -248,7 +248,7 @@ Considering biodiversity from the perspective of each individual, whose function
 Rather than aspatial diversity accumulation curves, neighbourhood diversity curves can be estimated empirically based on a fully-mapped dataset.
 The definition of neighbourhood is restricted here to a disc defined by radius $r$ around each individual.
 Each of these discs can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged across sampled individuals [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of a random individual.
-We'll denote Simpson's and Rao's neighbourhood entropy $D(r)$ and $H_D(r)$ respectively.
+We'll denote Simpson's and Rao's neighbourhood entropies $D(r)$ and $H_D(r)$ respectively.
 
 Neighbourhood diversity can be computed with the *divent* package [@Marcon2026] for R [@R].
 The computational burden is heavy for a community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in neighbourhoods that do not fit in the sampling window must be extrapolated.
@@ -261,13 +261,13 @@ An alternative approach, based on spatial statistics, allows the rapid estimatio
 The framework of spatial point pattern analysis, as introduced by @Ripley1977, relies on the *K*-function, defined so that $\lambda K(r)$ is the expected number of neighbours located within a distance $r$ of an arbitrary point of the pattern with intensity $\lambda$.
 Its classical unbiased estimator for a point pattern located within a finite sampling window is:
 
-$$\hat{K}(r) = 
+$$\hat{K}\left( r \right) = 
   \frac{1}{\hat{\lambda}n} 
   \sum_{i=1}^{n}{\sum_{j=1}^{n}{
-    \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
+    \mathbf{1}\left( \|x_i - x_j\| \leq r \right) c\left(i, j, r \right)
   }}$$ {#eq-Khat}
 
-where $n$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity estimated as $n/A$, with $A$ the sampling window area.
+where $n$ is the number of points of the pattern, $\lambda$ is the pattern intensity estimated as $n/A$, with $A$ the sampling window area.
 The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points $i$ and $j$ are less than $r$ apart, 0 else.
 $c(i, j, r)$ is the correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
 When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbours with no bias.
@@ -277,10 +277,10 @@ The *L*-function [@Besag1977a] modifies the *K*-function so that its expectation
 A common extension of this univariate function is the intertype (or bivariate) function proposed by @Lotwick1982 for marked point patterns, that we will denote $K_{p,q}$.
 Here, the mark of a point, called its type, is the species of the individual represented by the point.
 
-$$\hat{K}_{p,q}(r) =
+$$\hat{K}_{p,q}\left( r \right) =
   \frac{A}{\hat{\lambda_p}\hat{\lambda_q}}
   \sum_{i=1}^{n_p}{\sum_{j=1}^{n_q}{
-    \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
+    \mathbf{1}\left( \|x_i - x_j\| \leq r \right) c\left(i, j, r \right)
   }}$$ {#eq-K_pq}
 
 where $n_p$ and $n_q$ are the number of points of types $p$ and $q$ respectively.
@@ -294,15 +294,15 @@ The most interesting ones are the random labelling hypothesis, which means that,
 
 @Shimatani2001 derived an estimator of the neighbourhood Simpson's entropy, $D(r)$, based on Ripley's *K*-function:
 
-$$\hat{D}(r) = 1 - 
-  \sum_{p=1}^S{\frac{\hat{\lambda}_p^2 \hat{K}_p(r)}{\hat{\lambda}^2 \hat{K}(r)}}
-  $$ {#eq-Dr}
+$$\hat{D}\left( r \right) = 1 - 
+  \sum_{p=1}^S{\frac{\hat{\lambda}_p^2 \hat{K}_p\left( r \right)}{\hat{\lambda}^2 \hat{K}\left( r \right)}}
+  $$
 
 where $\hat{K}(r)$ and $\hat{K}_p(r)$ are Ripley's *K*-functions for all points of the pattern (no distinction of species) and for points of species $p$, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_p$ the corresponding intensity estimators.
 
 We can define $K_S(r)$ as a version of $D(r)$ standardized by $D$, estimated as:
 
-$$\hat{K}_S(r) = \hat{D}(r) / \hat{D} $$ {#eq-Ks}
+$$\hat{K}_S\left( r \right) = \hat{D}\left( r \right) / \hat{D}$$ {#eq-Ks}
 
 $D(r)$ tends to $D$ when $r$ increases so $K_S(r)$ tends to 1.
 It is noticeable that $K_S(r)$ has an expectation of 1 for any $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
@@ -312,7 +312,11 @@ Using the unbiased estimator of $\hat{K}(r)$, introduced in @eq-Khat, allows cor
 We can notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics [@Shimatani2001, eq. 9]:
 
 $$\hat{K}_S(r) = \left[
-  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S
+    {\frac
+      {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}\left( r \right)}
+      {\hat{\lambda}^2 \hat{K}\left( r \right)}}
+  }
   \right] / \hat{D}
   $$ {#eq-Ks_pq}
 
@@ -321,15 +325,19 @@ $$\hat{K}_S(r) = \left[
 We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_R(r)$ that integrates Ripley's correction of edge effects estimated by:
 
 $$\begin{aligned}
-\hat{K}_R(r) 
-&= \hat{H}_D(r) / \hat{H}_D \\
+\hat{K}_R\left( r \right) 
+&= \hat{H}_D\left( r \right) / \hat{H}_D \\
 &= \left[
-  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{
+  \frac
+    {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}\left( r \right) d_{p,q}}
+    {\hat{\lambda}^2 \hat{K}\left( r \right)}}
+  }
   \right] / \hat{H}_D
 \end{aligned}
   $$ {#eq-KR}
 
-This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity in a disc of radius $r$ centered on an arbitrary point of the pattern.
+This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity in a disc of radius $r$ centred on an arbitrary point of the pattern.
 $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \neq q$.
 
 ### Multitype correlation and $\beta$ diversity
@@ -349,12 +357,15 @@ We will rather write $\beta_S(r)$ for consistency with our notation system.
 It can be straightforwardly generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013].
 The spatially explicit Rao's $\beta$ index of diversity is:
 
-$$\hat{\beta}_R(r) 
-= \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}$$ {#eq-betaR}
+$$\hat{\beta}_R\left( r \right) 
+  = \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac
+    {\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}\left( r \right) d_{p,q}}
+    {\hat{\lambda}^2 \hat{g}\left( r \right)}}
+}$$ {#eq-betaR}
 
 These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are in terms of species composition.
 Yet, although both the numerator and the denominator of $\hat{\beta}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{H}_D(r)$, $\hat{\beta}_R(r)$ is not the derivative of $\hat{H}_D(r)$.
-Consequently, the definition of $\beta_R(r)$ does not comply with the classical framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $K_R(r+dr)= K_R(r) + g_R(r)$
+Consequently, the definition of $\beta_R(r)$ does not comply with the classical framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $K_R(r+dr)= K_R(r) + g_R(r)$.
 
 For this reason, we argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity, and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
 
@@ -367,7 +378,7 @@ Beyond measuring diversity, it also allows inferring ecological processes respon
 
 The null hypothesis of random labelling originally proposed by @Shimatani2001 provides a test of departure of $\hat{K}_R(r)$ from a random distribution of the mark labels among points of the pattern.
 It allows testing for an absence of interaction between neighbouring points, conditionally to the overall pattern of point locations, so that the probability to find a pair of identical marks is independent of distance.
-When the function is above 1, the mean diversity within a disc of radius r from an arbitrary point of the pattern is higher than the total sample diversity, and conversely.
+When the function is above 1, the mean diversity within a disc of radius $r$ from an arbitrary point of the pattern is higher than the total sample diversity, and conversely.
 Local confidence limits of the random labelling hypothesis at a given significance level can be built from Monte Carlo rank tests [@Diggle1979].
 This hypothesis basically relies on the assumption that the marks result from a random process that affects individuals a posteriori with regards to the process of point location, so that we have for all $p$ types of marks $K_p(r) = K(r)$ [@Goreaud2003; @Eckel2008] and hence $K_R(r) = 1$.
 This could for instance corresponds to a multitype process resulting from a disease attack in a plant population that would mark the individuals as sick, non-infected or healthy carriers [see also @Eckel2008 for an example in socio-economics].
@@ -680,8 +691,8 @@ The hypothetical phylogenetic tree (right) simulates trait clustering: species c
 ## Simulated data
 
 We provide here a few examples to illustrate how the $K_R$-function behaves.
-All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package [@Pelissier2015].
-Figures were produced by the dbmss package [@Marcon2014].
+All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the *ads* package [@Pelissier2015].
+Figures were produced by the *dbmss* package [@Marcon2014].
 
 ### Habitat preference
 
