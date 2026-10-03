@@ -2,7 +2,6 @@
 title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different facets of local biodiversity to examine community assembly"
 # Output formats
 format:
-  docx: default
   stylisharticle-pdf:
     keep-tex: true
     include-in-header:
@@ -396,7 +395,7 @@ $$\beta_R\left( r \right)
     {\lambda^2 g\left( r \right)}}
 }$$ {#eq-betaR}
 
-where $g_{p,q} = \lambda_p \lambda_q \frac{dK_{p,q}}{2 \pi r dr}$ is the bivariate g-function.
+where $g_{p,q} = \lambda_p \lambda_q \frac{dK_{p,q}}{2 \pi r dr}$ is the bivariate *g*-function.
 
 These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are in terms of species composition.
 
@@ -735,7 +734,7 @@ All the functions introduced above along with resources for computing tests of s
 Figures were produced by the *dbmss* package [@Marcon2014].
 
 We want to test the detection of two major mechanisms responsible for species coexistence.
-Habitat preference implies that the neighborhood of a tree, whose abiotic conditions (soil, microclimate) are assumed to be quite homogeneous because of its small spatial extent, is occupied by similar trees, i.e. whose phylogenetic [@Webb2002] or functional dissimilarity [@Cornwell2006] is small, because their preferences are similar.
+Habitat preference implies that the neighbourhood of a tree, whose abiotic conditions (soil, microclimate) are assumed to be quite homogeneous because of its small spatial extent, is occupied by similar trees, i.e. whose phylogenetic [@Webb2002] or functional dissimilarity [@Cornwell2006] is small, because their preferences are similar.
 Then, the neighbourhood diversity should be smaller than under the species equivalence null hypothesis.
 On the other hand, competition for the same resources limits the similarity of species sharing the same habitat [@MacArthur1967a], resulting in higher diversity.
 These mechanisms may compensate or not be important drivers of the spatial distribution of species.
