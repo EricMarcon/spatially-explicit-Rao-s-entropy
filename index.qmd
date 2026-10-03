@@ -214,7 +214,7 @@ Non-uniform divergences between species allow defining phylogenetic or functiona
 We will note $d_{p,q}$ the measure of the pairwise divergence between species $p$ and $q$.
 $d_{p,q} = d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required.
 Functional diversity applies to species whose divergences is described by a matrix of dissimilarities, generally built from trait values: see the Paracou example in the Application section below.
-Phylogenetic diversity applies to species whose phylogeny is described by a tree (@fig-sim_data) relating them to their ancestors.
+Phylogenetic diversity applies to species whose phylogeny is described by a tree (an example is in @fig-sim_data) relating them to their ancestors.
 The divergences between pairs of species, i.e. the height of their first common ancestor in the tree are named *cophenetic* distances.
 They are Euclidean.
 If all tips of the tree (the species) are at the same level, then the cophenetic distances are *ultrametric*.
@@ -374,7 +374,7 @@ We will rather write $\beta_S(r)$ for consistency with our notation system.
 
 Let $P(r)$ the probability to find two points in two infinitesimal areas $dx$ and $dy$ at distance $r$ from each other.
 $P_p(r)$ is defined the same way for points of species $p$.
-@Shimatani2001 derived $\beta_S(r)$ as follows, from the relation between $P(r)$ and $g(r)$: $P\left( r \right) = \lambda^2 g\left( r \right) dx dy$.
+@Shimatani2001 derived $\beta_S(r)$ as follows, from the relation between $P(r)$ and $g(r)$: $P(r) = \lambda^2 g(r) dx dy$.
 Assuming two points are $r$ apart, one at the centre of the disc and one in the annulus between $r$ and $r + dr$, their conditional probability to belong to different species is:
 
 $$
@@ -392,18 +392,18 @@ The spatially explicit Rao's $\beta$ index of diversity is:
 
 $$\beta_R\left( r \right) 
   = \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac
-    {{\lambda}_p {\lambda}_q {g}_{p,q}\left( r \right) d_{p,q}}
-    {{\lambda}^2 {g}\left( r \right)}}
+    {\lambda_p \lambda_q g_{p,q}\left( r \right) d_{p,q}}
+    {\lambda^2 g\left( r \right)}}
 }$$ {#eq-betaR}
 
 where $g_{p,q} = \lambda_p \lambda_q \frac{dK_{p,q}}{2 \pi r dr}$ is the bivariate g-function.
 
 These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are in terms of species composition.
 
-The classical framework of entropy partitioning [@Jost2007; @Marcon2014a] requires $\beta$ entropy to be the difference between $\gamma$ entropy (that of neighbourhoods of radius $r + dr$) and $\alpha$ entropy (that of neighbourhoods of radius $r$), i.e. $\beta$ entropy needs to be the derivative of $H_D(r)$.
+The framework of entropy partitioning [@Jost2007; @Marcon2014a] requires $\beta$ entropy to be the difference between $\gamma$ entropy (that of neighbourhoods of radius $r + dr$) and $\alpha$ entropy (that of neighbourhoods of radius $r$), i.e. $\beta$ entropy needs to be the derivative of $H_D(r)$.
 Yet, although both the numerator and the denominator of $\beta_R(r)$ are the derivatives of the numerator and the denominator of $H_D(r)$ (see @eq-KR), $\beta_R(r)$ is not the derivative of $H_D(r)$.
 In other words, $\beta_R(r)$ does not comply with the definition of proportional $\beta$ diversity.
-To do that, it should quantify the dissimilarity between the annulii between $r$ and $r + dr$ and the discs of radius $s$, not the infinitesimal areas around their centres.
+To do that, it should quantify the dissimilarity between the annulii between $r$ and $r + dr$ and the discs of radius $r$, not the infinitesimal areas around their centres.
 
 For this reason, we argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity (with the *K~S~*- and *K~R~*-functions), and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
 
