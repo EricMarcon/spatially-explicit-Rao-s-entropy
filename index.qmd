@@ -316,7 +316,8 @@ It is noticeable that $K_S(r)$ has an expectation of 1 for any $r$ under the ran
 
 Using the unbiased estimator of $\hat{K}(r)$, introduced in @eq-Khat, allows correcting for edge effects in sampling windows of any shape.
 
-In line with [@Shimatani2001, eq. 9], we can notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics.
+In line with @Shimatani2001, eq.
+9, we notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics.
 @eq-D_r can be rearranged considering that $\hat{\lambda}^2 \hat{K}(r) = \sum_p\sum_q{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)}$ and $\sum_p \sum_{q \neq p} {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)} = \sum_p \sum_q {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)} - \sum_p{\hat{\lambda}_p^2 \hat{K}_p(r)}$.
 Then it comes from @eq-Ks that:
 
