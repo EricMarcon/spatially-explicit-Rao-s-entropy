@@ -211,13 +211,19 @@ $$\hat{D} = 1 - \sum_{p=1}^S{\frac{n_p \left(n_p - 1 \right)}{n \left(n - 1 \rig
 where $n$ and $S$ are the total numbers of individuals and species in the sample, respectively, and $n_p$ the number of individuals of species $p$.
 
 Non-uniform divergences between species allow defining phylogenetic or functional diversity [@Pielou1975].
+We will note $d_{p,q}$ the measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q} = d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
+Functional diversity applies to species whose divergences is described by a matrix of dissimilarities, generally built from trait values: see the Paracou example in the Application section below.
+Phylogenetic diversity applies to species whose phylogeny is described by a tree (@fig-sim_data) relating them to their ancestors.
+The divergence between a pair of species, i.e. the height of their first common ancestor in the tree, is a distance, named *cophenetic* distance.
+If all tips of the tree (the species) are at the same level, then the cophenetic distances are *ultrametric*.
+There are strong arguments in favour of restricting oneself to ultrametric phylogenies [@Pavoine2005a; @Marcon2014b].
+
 Rao's entropy is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
 An unbiased estimator [@Shimatani2001a] is:
 
 $$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$ {#eq-Rao}
 
-where $d_{p,q}$ is a measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q} = d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
-$H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011].
+$H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011] when $d_{p,q}$ are distances.
 
 Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
 
@@ -797,8 +803,12 @@ Negative departure from null hypothesis is observed over 2 m: the neighbourhood 
 
 ### Limiting similarity
 
-In a second experiment (@fig-KR_Similarity), we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multi-Strauss process with, as between-species interaction matrix, the cophenetic distance derived from the clustered tree above.
-This means that the between-species competition intensity within a neighbouring disc of 5 m varies with their proximity within the phylogenetic tree: closely-related species compete more than distantly-related species, with no interaction between species that are not in the same half of the tree.
+In a second experiment (@fig-KR_Similarity), we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multitype-Strauss process [@Ripley1988].
+This point process is defined by an interaction function between each pair of species up to 5 m: $\phi(r, p, q) = d_{p,q} \leq 1$ if $r$ \< 5 m, $\phi(r, p, q) = 1$ else.
+The probability density of a realisation of the point process is proportional to the product of the interaction function applied to all pairs of points: the patterns drawn from the multitype-Strauss process maximize it.
+Heuristically, spatially close (less than 5 m) pairs of trees reduce the probability of their point pattern compared to more distant pairs if $d_{p,q} <1$.
+
+This means that the between-species competition intensity within a neighbouring disc of 5 m varies with their proximity within the phylogenetic tree: closely-related species compete more than distantly-related species, with no interaction between species that are not in the same half of the tree because $d_{p,q} = 1$ in this case.
 
 @fig-KR_Similarity(b) shows that $K_R(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
 Restricted permutations within a cophenetic distance matrix, i.e. between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses [@Hardy2008a].
