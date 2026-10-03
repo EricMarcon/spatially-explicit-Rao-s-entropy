@@ -211,12 +211,13 @@ $$\hat{D} = 1 - \sum_{p=1}^S{\frac{n_p \left(n_p - 1 \right)}{n \left(n - 1 \rig
 where $n$ and $S$ are the total numbers of individuals and species in the sample, respectively, and $n_p$ the number of individuals of species $p$.
 
 Non-uniform divergences between species allow defining phylogenetic or functional diversity [@Pielou1975].
-We will note $d_{p,q}$ the measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q} = d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
+We will note $d_{p,q}$ the measure of the pairwise divergence between species $p$ and $q$.
+$d_{p,q} = d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required.
 Functional diversity applies to species whose divergences is described by a matrix of dissimilarities, generally built from trait values: see the Paracou example in the Application section below.
 Phylogenetic diversity applies to species whose phylogeny is described by a tree (@fig-sim_data) relating them to their ancestors.
-The divergence between a pair of species, i.e. the height of their first common ancestor in the tree, is a distance, named *cophenetic* distance.
+The divergences between pairs of species, i.e. the height of their first common ancestor in the tree are named *cophenetic* distances.
+They are Euclidean.
 If all tips of the tree (the species) are at the same level, then the cophenetic distances are *ultrametric*.
-There are strong arguments in favour of restricting oneself to ultrametric phylogenies [@Pavoine2005a; @Marcon2014b].
 
 Rao's entropy is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
 An unbiased estimator [@Shimatani2001a] is:
@@ -435,7 +436,7 @@ Such a procedure is cumbersome for highly multivariate patterns and is considere
 ### The species equivalence null hypothesis
 
 More interestingly, $K_R(r)$ provides opportunities for testing a highly relevant ecological hypothesis for diversity studies, based on $d_{p,q}$, which quantifies how species differ one from each other.
-Shuffling between-species distances many times means eliminating their differences and therefore testing a null hypothesis of species equivalence, put forward, for instance, in the neutral theory of biodiversity [@Hubbell2001].
+Shuffling between-species distances many times means eliminating their differences and therefore testing a null hypothesis of species equivalence.
 This null hypothesis can be tested conditionally to the pattern of point locations and to the spatial distribution of the species labels by permuting simultaneously the rows and columns in $d_{p,q}$, which is equivalent, in the case of a cophenetic distance matrix, to permuting the tips of a hierarchical (taxonomic or phylogenetic) tree [@Hardy2008a].
 It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{p,q}$ consists of a uniform between-species distance matrix.
 When focusing on the species equivalence hypothesis, $K_R(r) / K_S(r)$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
@@ -733,6 +734,15 @@ We provide here a few examples to illustrate how the $K_R$-function behaves.
 All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the *ads* package [@Pelissier2015].
 Figures were produced by the *dbmss* package [@Marcon2014].
 
+We want to test the detection of two major mechanisms responsible for species coexistence.
+Habitat preference implies that the neighborhood of a tree, whose abiotic conditions (soil, microclimate) are assumed to be quite homogeneous because of its small spatial extent, is occupied by similar trees, i.e. whose phylogenetic [@Webb2002] or functional dissimilarity [@Cornwell2006] is small, because their preferences are similar.
+Then, the neighbourhood diversity should be smaller than under the species equivalence null hypothesis.
+On the other hand, competition for the same resources limits the similarity of species sharing the same habitat [@MacArthur1967a], resulting in higher diversity.
+These mechanisms may compensate or not be important drivers of the spatial distribution of species.
+Then, stochastic processes of limited species dispersion, put forward in the neutral theory of biodiversity [@Hubbell2001], are enough to explain the observed patterns.
+The species equivalence null model ignores the similarity between species but keeps their spatial structure intact while the random labelling null model ignores both, conserving only the relative abundances of species.
+Species equivalence is more appropriate to test the neutral theory, which implies that species are spatially structured due to dispersal limitation.
+
 ### Habitat preference
 
 In a first experiment (@fig-sim_data), we simulated habitat preferences by generating heterogeneous spatial patterns in a checked 1-ha plot with two habitats: eight species were simulated with a twofold higher intensity in habitat 1, and 8 species with a twofold higher intensity in habitat 2, so that species abundant in one habitat were rare in the other one.
@@ -983,7 +993,7 @@ p_6_traits.df %>%
   select(-(Family:spName)) %>% 
   # Compute distance between rows
   daisy(metric = "gower", type = list(ordered = 4)) %>% 
-  # The square root is euclidean (Gower, 1966)
+  # The square root is Euclidean (Gower, 1966)
   sqrt() %>% 
   # Standardize to 1
   `/`(max(.)) ->
@@ -998,11 +1008,11 @@ For the present application we selected the basic functional traits defining the
 These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterises the importance of the growth response to favourable conditions, while H and Seed characterise the importance of investment in the capacity to respond to disturbance.
 We also included the wood specific gravity (WSG in g.cm^-3^ of dry matter) as a fourth trait specifically accounting for an orthogonal axis [@Baraloto2010a] related to additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
 
-From these data, we built two different between-species distance matrices, a phylogenetic one based on the APG III classification [@Chase2009] and a functional one based on the four traits described above.
-The phylogenetic distance was simply computed from APG III hierarchical tree, considering $d_{p,q} = 1$ if species $p$ and $q$ were from the same genus, $d_{p,q} = 2$ if they were from different genera in the same family and $d_{p,q} = 3$ if they were from different families.
+From these data, we built two different between-species distance matrices, a phylogenetic one and a functional one based on the four traits described above.
+The phylogenetic distance was simply computed considering $d_{p,q} = 1$ if species $p$ and $q$ were from the same genus, $d_{p,q} = 2$ if they were from different genera in the same family and $d_{p,q} = 3$ if they were from different families.
 Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao's quadratic entropy [@Pavoine2005c].
 The functional distance matrix was based on functional trait dissimilarities, taken as Gower distance [@Gower1971].
-Its square-root transformation ensured it was euclidean [@Gower1966], but not ultrametric.
+Its square-root transformation ensured it was Euclidean [@Gower1966], but not ultrametric.
 Both distance matrices were finally rescaled by their maximum in order to keep Rao's entropy within the 0-1 standard range of values for diversity indices.
 
 ### Analysis of species diversity spatial pattern
