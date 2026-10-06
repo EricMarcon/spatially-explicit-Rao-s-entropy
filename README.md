@@ -1,5 +1,3 @@
-![stability-wip](https://img.shields.io/badge/stability-work_in_progress-lightgrey.svg) [![Render and Publish](https://github.com/EricMarcon/spatially-explicit-Rao-s-entropy/actions/workflows/quarto-publish.yml/badge.svg)](https://github.com/EricMarcon/spatially-explicit-Rao-s-entropy/actions/workflows/quarto-publish.yml)
-
 # Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different facets of local biodiversity to examine community assembly
 
 This chapter introduces a multivariate analytical framework integrating spatial point pattern methodologies and Rao's  entropy to quantify species diversity in ecological communities. 
