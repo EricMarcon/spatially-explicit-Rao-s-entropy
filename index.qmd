@@ -84,6 +84,7 @@ corrauthorlabel: Corresponding Author
 
 ```{r}
 #| label: DoNotModify
+#| include: false
 ### Utilities for R. 
 # Do not modify unless you don't use R: then, delete this chunk.
 # Installation of R packages if necessary
@@ -123,6 +124,7 @@ knitr::knit_hooks$set(
 
 ```{r}
 #| label: Options
+#| include: false
 ### Customized R options for this document
 # Delete this chunk if you don't use R
 
