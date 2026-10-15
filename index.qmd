@@ -1,5 +1,5 @@
 ---
-title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different aspects of local biodiversity"
+title: "Unifying spatially-explicit Rao's entropy, spatial concentration, and accumulation curves: the different facets of local biodiversity to examine community assembly"
 # Output formats
 format:
   stylisharticle-pdf:
@@ -16,42 +16,60 @@ format:
 author:
   - name: Eric Marcon
     orcid: 0000-0002-5249-321X
-    affiliations:
-      - name: AgroParisTech
-        id: 1
-        city: Montpellier
-        state: France
-      - name: AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
-        id: 2
-        city: Montpellier
-        state: France
     email: eric.marcon@agroparistech.fr
     attributes:
       corresponding: true
     url: https://ericmarcon.github.io/
+    affiliations:
+      - ref: APT
+      - ref: Amap
   - name: Christopher Baraloto
     orcid: 0000-0001-7322-8581
     affiliations:
-      - name: Florida International University
-        id: 3
-        city: Miami
-        state: Florida
+      - ref: FIU
   - name: Elodie Allié
     orcid: 0000-0001-8807-7982
+    affiliations:
+      - ref: PSN
   - name: Florence Puech
     orcid: 0000-0002-5279-6878
     affiliations:
-      - name: Université Paris-Saclay, INRAE, AgroParisTech, Paris-Saclay Applied Economics
-        id: 4
-        city: Palaiseau
-        state: France
+      - ref: PSAE
   - name: Raphaël Pélissier
     orcid: 0000-0003-4845-5090
     affiliations:
-      - id: 2
+      - ref: Amap
+affiliations:
+  - name: AgroParisTech
+    id: APT
+    city: Montpellier
+    state: France
+  - name: AMAP, CIRAD, CNRS, INRAE, IRD, Univ Montpellier
+    id: Amap
+    number: 2
+    city: Montpellier
+    country: France
+  - name: Florida International University
+    id: FIU
+    city: Miami
+    state: Florida
+  - name: Pôle Sup Nature
+    id: PSN
+    city: Montpellier
+    country: France
+  - name: Université Paris-Saclay, INRAE, AgroParisTech, Paris-Saclay Applied Economics
+    id: PSAE
+    city: Palaiseau
+    country: France
 # Abstract and Keywords
 abstract: |
-  To be written.
+  This chapter introduces a multivariate analytical framework integrating spatial point pattern methodologies and Rao's entropy to quantify species diversity in ecological communities. 
+  Neighbourhood diversity is introduced as a spatialised extension of diversity accumulation curves.
+  Measuring it with Rao's entropy reveals profound links with Ripley's K-function, developped to characterise the spatial structure of point patterns.
+  Rao's neighbourhood entropy can be tested against random labeling and species equivalence null hypotheses to provide insights into ecological processes such as habitat preferences and competitive interactions.
+  The methods are illustrated by applications on simulated datasets and a tropical forest plot in French Guiana.
+  This approach offers a robust means to detect ecological drivers like competition and habitat filtering, enriching our understanding of community assembly while maintaining scalable flexibility across taxonomic, phylogenetic, and functional dimensions.
+
 keywords:
   - Spatially-explicit diversity
   - Rao's entropy
@@ -83,30 +101,33 @@ corrauthorlabel: Corresponding Author
 ---
 
 ```{r}
-#| label: DoNotModify
+#| label: Setup
 #| include: false
-### Utilities for R. 
-# Do not modify unless you don't use R: then, delete this chunk.
-# Installation of R packages if necessary
-install_packages <- function(packages) {
-  invisible(
-    sapply(
-      packages, 
-      FUN = function(package) {
-        if (!package %in% installed.packages()[, 1]) {
-          install.packages(
-            package, 
-            repos = "https://cran.rstudio.com/", 
-            quiet = TRUE
-          )
-        }
-      }
-    )
-  )
-}
-
-# Basic packages
-install_packages(c("knitr", "formatR"))
+# Necessary packages
+packages_required <- c(
+  # R tools
+  "knitr", 
+  "formatR", 
+  # Scientific packages
+  "ade4",
+  "ads",
+  "dbmss",
+  "divent",
+  "ggplotify",
+  "gridExtra",
+  "khroma",
+  "spatstat",
+  "tidyverse"
+)
+# Already installed?
+packages_installed <- vapply(
+  packages_required, 
+  FUN = requireNamespace, 
+  FUN.VALUE = TRUE, 
+  quietly = TRUE
+) 
+# Install missing packages
+install.packages(names(packages_installed)[!packages_installed])
 
 # Chunk font size hook: allows size='small' or any valid Latex font size in chunk options
 def.chunk.hook <- knitr::knit_hooks$get("chunk")
@@ -120,28 +141,6 @@ knitr::knit_hooks$set(
     )
   }
 )
-```
-
-```{r}
-#| label: Options
-#| include: false
-### Customized R options for this document
-# Delete this chunk if you don't use R
-
-# Add necessary packages here
-packages <- c(
-  "ade4",
-  "ads",
-  "dbmss",
-  "divent",
-  "ggplotify",
-  "gridExtra",
-  "khroma",
-  "spatstat",
-  "tidyverse"
-)
-# Install them
-install_packages(packages)
 
 # knitr options (https://yihui.org/knitr/options/)
 knitr::opts_chunk$set(
@@ -175,22 +174,22 @@ set.seed(973)
 
 # Introduction
 
-Local biotic and abiotic interactions are for long recognized as fundamental processes that shape the structure of ecological communities [@Nemetschek2025].
-In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e. intra- and inter-specific) competition/facilitation and habitat preferences [@Dale1999].
-While each single process may either promote or demote species coexistence, the diversity of interactions in space and/or time is a key feature for the maintenance of biological diversity [@Clark2010; @Cadotte2012].
-As a consequence, the ecological literature reveals increasing efforts in integrating approaches from phylogenetics, functional and community ecology [@Mouquet2012], in order to account for the key components of species interactions with their biotic and abiotic environments.
-Towards this goal, a number of novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed [@Pavoine2011].
-Among these methods some are specifically designed to explicitly account for space [e.g. @Pavoine2011a].
-However, those studies generally consider spatially discontinuous community samples, i.e. the $\beta$-diversity component of @Whittaker1960, so that the underlying spatial framework can basically be related to the graph theory [@Dale2002].
+Local biotic and abiotic interactions are recognized as fundamental processes that shape the structure of ecological communities [@Keddy1992; @Nemetschek2025].
+In particular, the spatial pattern of plant communities may result from the combined effects of seed dispersal, inter-individual (i.e. intra- and inter-specific) competition/facilitation, interactions with natural enemies, and habitat preferences [@Dale1999].
+The diversity of these abiotic and biotic interactions in space and/or time is a key feature for community assembly and the maintenance of biological diversity [@Clark2010; @Cadotte2012].
+Consequently, the ecological literature reveals increasing efforts to integrate approaches from phylogenetics, functional and community ecology [@Mouquet2012], to account for the key components of species interactions with their biotic and abiotic environments.
+Several novel analytical methods incorporating measures of between-species phylogenetic relatedness or functional trait dissimilarities as a surrogate for ecological differences have been developed [@Pavoine2011].
+Among these methods, some are specifically designed to explicitly account for space [e.g. @Pavoine2011a].
 
 The interest of considering local diversity rather than at the scale of the whole community or sampling window has emerged in the literature since @Batty1974.
 A review can be found in @Altieri2021, with diverse approaches.
-It is not discussed that the functioning of a community is influenced by its biodiversity, but it is straightforward to consider that each individual is concerned by the diversity of its neighbourhood rather that of the whole community [e.g., @Hubbell2001a showed that tree mortality increased with neighbourhood species richness in a tropical evergreen forest].
+It is not discussed that the functioning of a community is influenced by its constituent biodiversity, but it is straightforward to consider that each individual is concerned by the diversity of its neighbourhood rather that of the whole community [e.g., @Hubbell2001a showed that tree mortality increased with neighbourhood species richness in a tropical evergreen forest].
 When mapped data are concerned, such as for instance those on tropical trees provided by large permanent forest plots [@Losos2004], the well-developed framework of the spatial point pattern analysis [@Ripley1976a; @Ripley1977] offers an efficient means of studying the continuous spatial variation in species diversity [@Condit2000; @Shimatani2001; @Rajala2012].
 A synthesis of the opportunities brought by this approach can be found in @Wiegand2017.
 
-@Shen2013 and @Pelissier2015 concomitantly introduced within the framework of the spatial point pattern analysis a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences.
-If both contributions independently arrived to very similar functions, we believe that to help ecologists to well-understand and to take full advantage of novel approach, further clarifications are needed, especially regarding how it is related to well-known functions of spatial point pattern analysis, namely Ripley's *K*-function [@Ripley1977] and its intertype extension, the *K~12~*-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
+@Shen2013 and @Pelissier2015 concomitantly introduced, within the framework of the spatial point pattern analysis, a multitype correlation function that provides a distance-dependent measure of species diversity accounting for non-uniform species differences.
+Since both contributions independently arrived to very similar approaches, we believe further clarifications are needed to help ecologists to take full advantage of this development.
+In particular, it is important to relate non-uniform differences to well-known functions of spatial point pattern analysis, namely Ripley's *K*-function [@Ripley1977] and its intertype extension, the *K~p,q~*-function [@Lotwick1982] on the one hand, and Rao's quadratic entropy on the other hand [@Rao1982].
 
 The aim of this chapter is thus to introduce the rationale behind the functions of multivariate point pattern analysis that integrate between-species differences in a distance–dependent measure of diversity.
 It can basically be seen as an extension of the work of @Shimatani2001 based on Simpson's entropy to Rao's entropy, one of the most powerful and flexible measure of species diversity [@Pavoine2012].
@@ -213,47 +212,55 @@ $$\hat{D} = 1 - \sum_{p=1}^S{\frac{n_p \left(n_p - 1 \right)}{n \left(n - 1 \rig
 where $n$ and $S$ are the total numbers of individuals and species in the sample, respectively, and $n_p$ the number of individuals of species $p$.
 
 Non-uniform divergences between species allow defining phylogenetic or functional diversity [@Pielou1975].
-Rao's entropy is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
+We will note $d_{p,q}$ the measure of the pairwise divergence between species $p$ and $q$.
+$d_{p,q} = d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required.
+Functional diversity applies to species whose divergences is described by a matrix of dissimilarities, generally built from trait values: see the Paracou example in the Application section below.
+Phylogenetic diversity applies to species whose phylogeny is described by a tree (an example is in @fig-sim_data) relating them to their ancestors.
+The divergences between pairs of species, i.e. the height of their first common ancestor in the tree are named *cophenetic* distances.
+They are Euclidean.
+If all tips of the tree (the species) are at the same level, then the cophenetic distances are *ultrametric*.
 
+Rao's entropy is the expected divergence between individuals of a randomly selected pair in a sample [@Rao1982].
 An unbiased estimator [@Shimatani2001a] is:
 
-$$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$ {#eq-shimatani}
+$$\hat{H}_D = \sum_{p=1}^S\sum_{q=1}^S{\frac{n_p n_q}{n \left(n - 1 \right)}d_{p,q}}$$ {#eq-Rao}
 
-where $d_{p,q}$ is a measure of the pairwise divergence between species $p$ and $q$ (with $d_{p,q}$ = $d_{q,p}$ and $d_{p,p} = 0$, but the triangular inequality $d_{p,q} + d_{q,r} \geq d_{p,r}$ that defines a distance is not required).
-$H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011].
+$H_D$ is a measure of diversity commonly used in ecology, namely because it can be linked to ordination methods [@Pavoine2004; @Pavoine2011] when $d_{p,q}$ are distances.
 
 Taking $d_{p,q} = 1$ for all $p \neq q$ and 0 otherwise, $H_D$ reduces to Simpson's $D$ above.
 
 Diversity is *scale-dependent*: its value increases with the sample size so it needs to be standardized.
 A common practice consists of estimating the asymptotic diversity, i.e. the diversity of a hypothetical community the available data is assumed to be a representative sample of.
-The estimators above are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
+For instance, species asymptotic richness is often estimated with the well-known Chao1 estimator [@Chao1984]
+
+The estimators above (@eq-Simpson and @eq-Rao) are doubly unbiased: in a finite sample, they estimate entropy taking into account sampling without replacement [@Simpson1949], and they estimate asymptotic diversity assuming sampling with replacement in a large community [@Lande1996].
 
 ### Diversity accumulation curves
 
 The Species Accumulation Curve (SAC) describes the expectation of the number of observed species with respect to the sample size [@Gotelli2001], assuming uniform and independent sampling of individuals or, equivalently, that continuous sampling happens in a community where all species are distributed independently according to homogeneous Poisson point patterns.
 It can be derived from the distribution of species abundances of the full sample [@Ugland2003].
-The sample size is a number of individuals that can be converted to a sample area assuming the density of individuals is constant.
+The sample size consists of a number of individuals that can be converted to a sample area assuming the density of individuals is constant.
 SACs allow to define biodiversity *at a given spatial scale*.
-It is an alternative to estimating asymptotic diversity, e.g. with the well-known Chao1 estimator [@Chao1984].
+It is an alternative to estimating asymptotic diversity.
 
 Diversity Accumulation Curves (DACs) extend this approach to all measures of diversity.
 Simpson's entropy accumulation curves were derived by @Chao2014 and extended straightforwardly to Rao's entropy applied to ultrametric distances [@Marcon2014b].
 Entropy is generally converted into Hill numbers [@Jost2006], but this is not necessary here because the value of entropy can be interpreted.
 Yet, DACs are *aspatial* [@Rajala2012], as they are designed to ignore the spatial pattern of the data.
-Spatial structure is generally considered as an empirical issue [@Gotelli2001], difficultly solved by deriving accumulation curves taking into account the spatial pattern of each species [@Picard2004].
+Spatial structure is generally considered as an empirical issue [@Gotelli2001], which can be solved laboriously by deriving accumulation curves that take into account the spatial pattern of each species [@Picard2004].
 
 ### Neighbourhood diversity
 
-Taking into account biodiversity from the perspective of each individual, whose functioning is assumed to be related to it, requires estimating diversity in its neighbourhood, as argued by @Rajala2012.
+Considering biodiversity from the perspective of each individual, whose functioning is assumed to be related to it, requires estimating diversity in its neighbourhood, as argued by @Rajala2012.
 
 Rather than aspatial diversity accumulation curves, neighbourhood diversity curves can be estimated empirically based on a fully-mapped dataset.
-The definition of neighbourhood is restricted here to a disc or radius $r$ around each individual.
-Each of these discs can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of an individual.
-We'll denote Simpson's and Rao's neighbourhood entropy $D(r)$ and $H_D(r)$ respectively.
+The definition of neighbourhood is restricted here to a disc defined by radius $r$ around each individual.
+Each of these discs can be considered as a local community whose entropy (e.g. Simpson's or Rao's entropy) can be estimated and averaged across sampled individuals [@Marcon2014a] to obtain a value of $\alpha$ entropy, that estimates the expected entropy in the neighbourhood of a random individual.
+We'll denote Simpson's and Rao's neighbourhood entropies $D(r)$ and $H_D(r)$ respectively.
 
-Neighbourhood diversity can be computed with the package divent [@Marcon2026] for R [@R].
-The computational burden is heavy for community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in neighbourhoods that do not fit in the sampling window must be extrapolated.
-An alternative approach, based on spatial statistics, allows the fast estimation of neighbourhood Simpson's and Rao's entropy, and reveals profound connections with the point-process theory.
+Neighbourhood diversity can be computed with the *divent* package [@Marcon2026] for R [@R].
+The computational burden is heavy for a community of a few thousand individuals because entropy must be estimated around each individual and for each neighbourhood size, with edge-effect corrections: the diversity partially observed in neighbourhoods that do not fit in the sampling window must be extrapolated.
+An alternative approach, based on spatial statistics, allows the rapid estimation of neighbourhood Simpson's and Rao's entropy, and reveals profound connections with the point-process theory.
 
 ## Distance-dependent entropy based on the point-process theory
 
@@ -262,126 +269,179 @@ An alternative approach, based on spatial statistics, allows the fast estimation
 The framework of spatial point pattern analysis, as introduced by @Ripley1977, relies on the *K*-function, defined so that $\lambda K(r)$ is the expected number of neighbours located within a distance $r$ of an arbitrary point of the pattern with intensity $\lambda$.
 Its classical unbiased estimator for a point pattern located within a finite sampling window is:
 
-$$\hat{K}(r) = 
+$$\hat{K}\left( r \right) = 
   \frac{1}{\hat{\lambda}n} 
   \sum_{i=1}^{n}{\sum_{j=1}^{n}{
-    \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
+    \mathbf{1}\left( \|x_i - x_j\| \leq r \right) c\left(i, j, r \right)
   }}$$ {#eq-Khat}
 
-where $n$ is the number of points of the pattern, $\hat{\lambda}$ is the pattern intensity generally estimated as $n/A$, with $A$ the sampling window area.
+where $n$ is the number of points of the pattern, $\lambda$ is the pattern intensity estimated as $n/A$, with $A$ the sampling window area.
 The indicator function $\mathbf{1}( \|x_i - x_j\| \leq r)$ equals 1 when points $i$ and $j$ are less than $r$ apart, 0 else.
 $c(i, j, r)$ is the correction of edge effects equal to 1 when the circle of radius $r$ fits into the sampling window.
 When it does not, the isotropic correction proposed by @Ripley1977 applies to windows of any shape thanks to appropriate geometrical considerations [@Goreaud1999] to estimate the number of neighbours with no bias.
 
-A common extension of this univariate function is the intertype (or bivariate) *K~12~*-function proposed by @Lotwick1982.
-We will denote it $K_{p,q}$ for clarity.
-Its estimator is:
+The *L*-function [@Besag1977a] modifies the *K*-function so that its expectation is 0 rather than $\pi r^2$ if the point process is homogeneous Poisson (i.e. the points are distributed uniformly and independently): $L(r) = \sqrt{K(r) / \pi} - r$.
 
-$$\hat{K}_{p,q}(r) =
-  \frac{1}{\hat{\lambda_q}n_1}
+A common extension of this univariate function is the intertype (or bivariate) function proposed by @Lotwick1982 for marked point patterns, that we will denote $K_{p,q}$.
+Here, the mark of a point, called its type, is the species of the individual represented by the point.
+
+$$\hat{K}_{p,q}\left( r \right) =
+  \frac{A}{\hat{\lambda_p}\hat{\lambda_q}}
   \sum_{i=1}^{n_p}{\sum_{j=1}^{n_q}{
-    \mathbf{1}( \|x_i - x_j\| \leq r) c\left(i, j,r \right)
-  }}$$ {#eq-K12hat}
+    \mathbf{1}\left( \|x_i - x_j\| \leq r \right) c\left(i, j, r \right)
+  }}$$ {#eq-K_pq}
+
+where $n_p$ and $n_q$ are the number of points of types $p$ and $q$ respectively.
+$\hat{\lambda}_p$ and $\hat{\lambda}_q$ are their intensities.
 
 $K(r)$ is a multiscale function of second-order neighbourhood properties of a point pattern, which allows robust tests of statistical significance against the null hypothesis of a random distribution of the points within the sampling window.
 In contrast, $K_{p,q}(r)$ allows characterizing the spatial interaction between the two types of points, which can be tested against various null hypotheses.
-The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types 1 and 2 are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type 1 points is independent from population of type 2 points [@Goreaud2003].
+The most interesting ones are the random labelling hypothesis, which means that, conditionally to the point locations, types $p$ and $q$ are randomly distributed among points of the pattern, and the population independence hypothesis, meaning that, conditionally to the species-specific spatial patterns, population of type-$p$ points is independent from population of type-$q$ points [@Goreaud2003].
 
 ### A distance-dependent Simpson's entropy
 
 @Shimatani2001 derived an estimator of the neighbourhood Simpson's entropy, $D(r)$, based on Ripley's *K*-function:
 
-$$\hat{D}(r) = 1 - 
-  \sum_{p=1}^S{\frac{\hat{\lambda}_p^2 \hat{K}_p(r)}{\hat{\lambda}^2 \hat{K}(r)}}
-  $$ {#eq-Dr}
+$$\hat{D}\left( r \right) = 1 - \sum_{p=1}^S{\frac
+    {\hat{\lambda}_p^2 \hat{K}_p\left( r \right)}
+    {\hat{\lambda}^2 \hat{K}\left( r \right)}
+  }$$ {#eq-D_r}
 
 where $\hat{K}(r)$ and $\hat{K}_p(r)$ are Ripley's *K*-functions for all points of the pattern (no distinction of species) and for points of species $p$, respectively, with $\hat{\lambda}$ and $\hat{\lambda}_p$ the corresponding intensity estimators.
 
-We can write a version standardized by $\hat{D}(r)$ as:
+We can define $K_S(r)$ as a version of $D(r)$ standardized by $D$, estimated as:
 
-$$\hat{K}_S(r) = \hat{D}(r) / \hat{D} $$ {#eq-Ks}
+$$\hat{K}_S\left( r \right) = \hat{D}\left( r \right) / \hat{D}$$ {#eq-Ks}
 
 $D(r)$ tends to $D$ when $r$ increases so $K_S(r)$ tends to 1.
-It is noticeable that $\hat{K}_S(r)$ has an expectation of 1 for any $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
+It is noticeable that $K_S(r)$ has an expectation of 1 for any $r$ under the random labelling hypothesis, i.e. a random distribution of the species names conditionally to the overall spatial pattern [@Eckel2008].
 
-Using the unbiased estimator of $\hat{K}(r)$, introduced in @eq-Khat, allows correcting for edge effects for sampling windows of any shape.
+Using the unbiased estimator of $\hat{K}(r)$, introduced in @eq-Khat, allows correcting for edge effects in sampling windows of any shape.
 
-We can notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics [@Shimatani2001, eq. 9]:
+In line with @Shimatani2001, eq.
+9, we notice for the following that $\hat{K}_S(r)$ can also be estimated by considering the pairs of heterospecifics.
+@eq-D_r can be rearranged considering that $\hat{\lambda}^2 \hat{K}(r) = \sum_p\sum_q{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)}$ and $\sum_p \sum_{q \neq p} {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)} = \sum_p \sum_q {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)} - \sum_p{\hat{\lambda}_p^2 \hat{K}_p(r)}$.
+Then it comes from @eq-Ks that:
 
 $$\hat{K}_S(r) = \left[
-  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r)}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S
+    {\frac
+      {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}\left( r \right)}
+      {\hat{\lambda}^2 \hat{K}\left( r \right)}}
+  }
   \right] / \hat{D}
-  $$ {#eq-Ks12}
+  $$ {#eq-Ks_pq}
 
 ### A generalization to Rao's entropy
 
 We therefore straightforwardly propose to generalize $K_S(r)$ introduced above to a normalized, distance-dependent Rao's quadratic entropy $K_R(r)$ that integrates Ripley's correction of edge effects estimated by:
 
 $$\begin{aligned}
-\hat{K}_R(r) 
-&= \hat{H}_D(r) / \hat{H}_D \\
+\hat{K}_R\left( r \right) 
+&= \hat{H}_D\left( r \right) / \hat{H}_D \\
 &= \left[
-  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{K}(r)}}}
+  \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{
+  \frac
+    {\hat{\lambda}_p \hat{\lambda}_q \hat{K}_{p,q}\left( r \right) d_{p,q}}
+    {\hat{\lambda}^2 \hat{K}\left( r \right)}}
+  }
   \right] / \hat{H}_D
 \end{aligned}
   $$ {#eq-KR}
 
-This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity in a disc of radius r centered on an arbitrary point of the pattern.
+This function has an expectation of 1 under the random labelling hypothesis and gives the mean proportion of Rao's sample diversity in a disc of radius $r$ centred on an arbitrary point of the pattern.
 $\hat{K}_R(r)$ reduces to $\hat{K}_S(r)$ when $d_{p,q} = 1$ for all species $p \neq q$.
 
 ### Multitype correlation and $\beta$ diversity
 
+@Whittaker1960 introduced the framework of diversity partitioning and defined the concepts of $\alpha$ and $\beta$ diversity we recall here for the clarity of what follows.
+$\alpha$ diversity is the average diversity of continuous areas, such as forest plots or, here, the discs around points that define neighbourhood diversity.
+In contrast, $\beta$ diversity characterises how dissimilar discontinuous areas are from each other, defining differentiation $\beta$ diversity, or from their assemblage, defining proportional $\beta$ diversity [@Jurasinski2009].
+$\gamma$ diversity is in turn the diversity of the assemblage: it can be partitioned into $\alpha$ and proportional $\beta$ diversities [@Pavoine2004; @Jost2007].
+
 Our *K~R~*- and *K~S~*-functions are cumulative functions as is the original *K*-function of @Ripley1977.
-This means that they are estimated for a series of concentric neighbourhood discs of increasing radii.
-Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987; @Wiegand2004], that is the derivative of $K(r)$, giving the probability to encounter neighbouring points in concentric annuli between $r$ and $r - dr$, and relate it to $\beta$ diversity.
+This means that they are estimated for a series of concentric neighbourhood discs of increasing radii: they measure their $\alpha$ diversity with $D(r)$ and $H_D(r)$ and standardize it by $D$ and $H_D$ respectively.
+Some authors however prefer to refer to the framework of the pair-correlation function, $g(r)$ [@Stoyan1987; @Wiegand2004], that is the derivative of $K(r)$, giving the probability to encounter neighbouring points in concentric annuli between $r$ and $r + dr$, and relate it to $\beta$ diversity.
+
+Precisely [@Ripley1977]:
+
+$$
+  g\left( r \right) = \lambda^2 \frac{dK}{2 \pi r dr}
+$$
 
 @Chave2002 defined the $F(r)$ function as the probability for two individuals located $r$ apart to belong to the same species.
 @Shen2013 named $1 - F(r)$ the "spatially explicit Simpson's $\beta$ index of diversity", denoted $\beta(r)$ by @Shimatani2001, that is the probability for two individuals located $r$ apart to belong different species.
 We will rather write $\beta_S(r)$ for consistency with our notation system.
-It can be straightforwardly generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013].
+
+Let $P(r)$ the probability to find two points in two infinitesimal areas $dx$ and $dy$ at distance $r$ from each other.
+$P_p(r)$ is defined the same way for points of species $p$.
+@Shimatani2001 derived $\beta_S(r)$ as follows, from the relation between $P(r)$ and $g(r)$: $P(r) = \lambda^2 g(r) dx dy$.
+Assuming two points are $r$ apart, one at the centre of the disc and one in the annulus between $r$ and $r + dr$, their conditional probability to belong to different species is:
+
+$$
+\begin{aligned}
+  \beta_S(r) 
+  &= 1 - \sum_{p=1}^S{\frac{P_p(r)}{P(r)}} \\
+  &= 1 - \sum_{p=1}^S{\frac
+    {\lambda^2_p g_p\left( r \right)}
+    {\lambda^2 g\left( r \right)}}
+\end{aligned}
+$$
+
+$\beta_S(r)$ can be straightforwardly generalized to $\beta_R(r)$, the average divergence between to individuals taken at distance $r$ [noted $K_d(r)$ by @Shen2013].
 The spatially explicit Rao's $\beta$ index of diversity is:
 
-$$\hat{\beta}_R(r) 
-= \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac{\hat{\lambda}_p \hat{\lambda}_q \hat{g}_{p,q}(r) d_{p,q}}{\hat{\lambda}^2 \hat{g}(r)}}}$$ {#eq-betaR}
+$$\beta_R\left( r \right) 
+  = \sum_{p=1}^S{\sum_{q=1, p \ne q}^S{\frac
+    {\lambda_p \lambda_q g_{p,q}\left( r \right) d_{p,q}}
+    {\lambda^2 g\left( r \right)}}
+}$$ {#eq-betaR}
 
-These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are.
-Yet, although both the numerator and the denominator of $\hat{\beta}_R(r)$ are the derivatives of the numerator and the denominator of $\hat{H}_D(r)$, $\hat{\beta}_R(r)$ is not the derivative of $\hat{H}_D(r)$.
-Consequently, the definition of $\beta_R(r)$ does not comply with the classical framework of entropy partitioning [@Jost2007; @Marcon2014a] that would require $K_R(r+dr)= K_R(r) + g_R(r)$.
+where $g_{p,q} = \lambda_p \lambda_q \frac{dK_{p,q}}{2 \pi r dr}$ is the bivariate *g*-function.
 
-We argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity, for this reason and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
+These measures are actually differentiation $\beta$ diversity measures sensu @Jurasinski2009: they characterize how different spatial units $r$ apart are in terms of species composition.
+
+The framework of entropy partitioning [@Jost2007; @Marcon2014a] requires $\beta$ entropy to be the difference between $\gamma$ entropy (that of neighbourhoods of radius $r + dr$) and $\alpha$ entropy (that of neighbourhoods of radius $r$), i.e. $\beta$ entropy needs to be the derivative of $H_D(r)$.
+Yet, although both the numerator and the denominator of $\beta_R(r)$ are the derivatives of the numerator and the denominator of $H_D(r)$ (see @eq-KR), $\beta_R(r)$ is not the derivative of $H_D(r)$.
+In other words, $\beta_R(r)$ does not comply with the definition of proportional $\beta$ diversity.
+To do that, it should quantify the dissimilarity between the annulii between $r$ and $r + dr$ and the discs of radius $r$, not the infinitesimal areas around their centres.
+
+For this reason, we argue in favour of the cumulative approach, i.e. that of $\alpha$ diversity (with the *K~S~*- and *K~R~*-functions), and also because the effect of neighbourhood diversity on the functioning of individuals is more naturally modelled as cumulative.
+
+We do not provide the estimators of $\beta_S(r)$ and $\beta_R(r)$ here: they can be found in @Shimatani2001 and @Shen2013.
 
 ## Testing ecological models
 
-The $K_R$-function allows computing phylogenetic or functional entropy in the neighbourhood of individuals with respect to distance.
+The *K~R~*-function allows computing phylogenetic or functional entropy in the neighbourhood of individuals with respect to distance.
 Beyond measuring diversity, it also allows inferring ecological processes responsible of the observed patterns by testing them against appropriate null hypotheses.
 
 ### The random labelling null hypothesis
 
 The null hypothesis of random labelling originally proposed by @Shimatani2001 provides a test of departure of $\hat{K}_R(r)$ from a random distribution of the mark labels among points of the pattern.
 It allows testing for an absence of interaction between neighbouring points, conditionally to the overall pattern of point locations, so that the probability to find a pair of identical marks is independent of distance.
-When the function is above 1, the mean diversity within a disc of radius r from an arbitrary point of the pattern is higher than the total sample diversity, and conversely.
+When the function is above 1, the mean diversity within a disc of radius $r$ from an arbitrary point of the pattern is higher than the total sample diversity, and conversely.
 Local confidence limits of the random labelling hypothesis at a given significance level can be built from Monte Carlo rank tests [@Diggle1979].
 This hypothesis basically relies on the assumption that the marks result from a random process that affects individuals a posteriori with regards to the process of point location, so that we have for all $p$ types of marks $K_p(r) = K(r)$ [@Goreaud2003; @Eckel2008] and hence $K_R(r) = 1$.
-This could for instance corresponds to a multitype process resulting from a disease attack in a plant population that would mark the individuals as sick, non-infected or healthy carrier [see also @Eckel2008 for an example in socio-economics].
+This could for instance corresponds to a multitype process resulting from a disease attack in a plant population that would mark the individuals as sick, non-infected or healthy carriers [see also @Eckel2008 for an example in socio-economics].
 In the context of species diversity, the random labelling hypothesis corresponds to the absence of any spatial structure, resulting from a process where the species identities would not interfere.
 
 ### The population independence null hypothesis
 
-A more meaningful hypothesis for species diversity studies is the one of mutually independent populations, postulating that the spatial pattern of each type of mark (or population) is the realization of a specific spatial process (for instance of limited dispersion) and that the location of points of each population is independent from the location of the points of the other populations in the resulting multivariate pattern.
-This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{12}$-function by @Lotwick1982 for which we expect that $K_{p,q}(r) = \pi r^2$ for any marks $p \neq q$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
+A more meaningful hypothesis for species diversity studies is the one of mutually independent populations, postulating that the spatial pattern of each population (i.e., the individuals of the same type) is the realization of a specific spatial process (for instance of limited dispersion) and that the location of points of each population is independent from the location of the points of the other populations in the resulting multivariate pattern.
+This is a generalization of the population independence hypothesis proposed for testing the bivariate $K_{p,q}$-function by @Lotwick1982 for which we expect that $K_{p,q}(r) = \pi r^2$ for any mark $p \neq q$ [@Eckel2008], and hence, here also, $K_R(r) = 1$.
 Note that this hypothesis differs from the random labelling hypothesis, except when all specific spatial patterns result from a stationary Poisson point process [@Diggle1983].
 
-A classical method for testing the mutually independent population hypothesis is to build a Monte Carlo rank test keeping the pattern of each population unchanged, but randomizing their relative positions by a random shifting procedure of each pattern around a torus [@Goreaud2003].
-Such a procedure is cumbersome for highly multivariate patterns and is thus abandoned.
+A classical method for testing the mutually independent population hypothesis is to build a Monte Carlo rank test keeping the pattern of each population unchanged but randomizing their relative positions by a random shifting procedure of each pattern around a torus [@Goreaud2003].
+Such a procedure is cumbersome for highly multivariate patterns and is considered suboptimal for testing diversity patterns.
 
 ### The species equivalence null hypothesis
 
 More interestingly, $K_R(r)$ provides opportunities for testing a highly relevant ecological hypothesis for diversity studies, based on $d_{p,q}$, which quantifies how species differ one from each other.
-Shuffling between-species distances a large number of times means eliminating their differences and therefore testing a null hypothesis of species equivalence, put forward, for instance, in the neutral theory of biodiversity [@Hubbell2001].
+Shuffling between-species distances many times means eliminating their differences and therefore testing a null hypothesis of species equivalence.
 This null hypothesis can be tested conditionally to the pattern of point locations and to the spatial distribution of the species labels by permuting simultaneously the rows and columns in $d_{p,q}$, which is equivalent, in the case of a cophenetic distance matrix, to permuting the tips of a hierarchical (taxonomic or phylogenetic) tree [@Hardy2008a].
-It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{p,q}$ is a uniform between-species distance matrix.
+It is noteworthy that under the null hypothesis of species equivalence, $K_S(r)$ provides a theoretical expectation of $K_R(r)$, i.e. the value expected when $d_{p,q}$ consists of a uniform between-species distance matrix.
 When focusing on the species equivalence hypothesis, $K_R(r) / K_S(r)$, the standardization proposed by @Shen2013, provides a constant expectation of 1 at all distances.
-With reference to these authors and to the usual notation in point pattern analysis, this ratio is appropriately designated as $K_d(r)$.
+With reference to these authors and to the usual notation in point pattern analysis, $K_R(r) / K_S(r)$ is appropriately designated as $K_d(r)$.
 
 # Application
 
@@ -528,15 +588,18 @@ hrand.spp <- spp(
   window = c(0, 0, 100, 100), 
   marks = hrand$marks
 )
-par(fig = c(0, 0.7, 0.5, 1), mar = c(0.5, 0, 0, 0))
+par(
+  fig = c(0, 0.7, 0.5, 1), 
+  mar = c(0.5, 0, 0, 0),
+  cex.main = 1/2
+)
 # Plot the white and grey areas
 plot(
   habit1, 
   col = c("white", "lightgrey"),
-  main = NULL,
+  main = "Random Pattern",
   legend = FALSE,
-  ribbon = FALSE,
-  csize = 1/2
+  ribbon = FALSE
 )
 # Plot the points
 plot(
@@ -549,6 +612,7 @@ plot(
   csize = 1/2,
   add = TRUE
 )
+par(par_old)
 
 # Simulating a heterogeneous pattern of limited dispersion ---
 # with a reversed species frequency distribution in two discrete habitats.
@@ -601,13 +665,18 @@ hmcauchy.spp <- spp(
     )
   )
 )
-par(fig = c(0, 0.7, 0, 0.5), mar = c(0, 0, 0.5, 0), new = TRUE)
+par(
+  fig = c(0, 0.7, 0, 0.5), 
+  mar = c(0, 0, 0.5, 0), 
+  cex.main = 1/2, 
+  new = TRUE
+)
 # Plot the white and grey areas
 plot(
   habit1, 
   col = c("white", "lightgrey"),
-  main = NULL, 
-  legend = FALSE, 
+  main = "Limited dispersion", 
+  legend = FALSE,
   ribbon = FALSE
 )
 # Plot the points
@@ -654,28 +723,37 @@ plot(clust.tree)
 par(par_old)
 ```
 
-Virtual heterogeneous spatial patterns (left) mimicking habitat preferences of 16 species in a checked 1-ha plot with two habitats: species *a* to *h* have a twofold higher habitat preference in grey patches and species *i* to *p* a twofold higher habitat preference in white patches.
-The random pattern (top) is obtained by the superimposition of heterogeneous species-specific Poisson processes.
-The pattern of limited dispersion (bottom) is obtained by the superimposition of species-specific Neyman-Scott processes with a Cauchy kernel (see text for details).
+Virtual heterogeneous spatial patterns (left) mimicking habitat preferences of 16 species in a 1-ha plot with two habitats: species *a* to *h* have a two-fold higher habitat preference in grey patches and species *i* to *p* a two-fold higher habitat preference in white patches.
+The random pattern (top) is obtained by the superposition of heterogeneous species-specific Poisson processes.
+The pattern of limited dispersion (bottom) is obtained by the superposition of species-specific Neyman-Scott processes with a Cauchy kernel (see text for details).
 The hypothetical phylogenetic tree (right) simulates trait clustering: species close in the tree have identical habitat preferences.
 :::
 
 ## Simulated data
 
 We provide here a few examples to illustrate how the $K_R$-function behaves.
-All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the ads package [@Pelissier2015].
-Figures were produced by the dbmss package [@Marcon2014].
+All the functions introduced above along with resources for computing tests of statistical significance based on Monte Carlo simulations have been implemented within the *ads* package [@Pelissier2015].
+Figures were produced by the *dbmss* package [@Marcon2014].
+
+We want to test the detection of two major mechanisms responsible for species coexistence.
+Habitat preference implies that the neighbourhood of a tree, whose abiotic conditions (soil, microclimate) are assumed to be quite homogeneous because of its small spatial extent, is occupied by similar trees, i.e. whose phylogenetic [@Webb2002] or functional dissimilarity [@Cornwell2006] is small, because their preferences are similar.
+Then, the neighbourhood diversity should be smaller than under the species equivalence null hypothesis.
+On the other hand, competition for the same resources limits the similarity of species sharing the same habitat [@MacArthur1967a], resulting in higher diversity.
+These mechanisms may compensate or not be important drivers of the spatial distribution of species.
+Then, stochastic processes of limited species dispersion, put forward in the neutral theory of biodiversity [@Hubbell2001], are enough to explain the observed patterns.
+The species equivalence null model ignores the similarity between species but keeps their spatial structure intact while the random labelling null model ignores both, conserving only the relative abundances of species.
+Species equivalence is more appropriate to test the neutral theory, which implies that species are spatially structured due to dispersal limitation.
 
 ### Habitat preference
 
 In a first experiment (@fig-sim_data), we simulated habitat preferences by generating heterogeneous spatial patterns in a checked 1-ha plot with two habitats: eight species were simulated with a twofold higher intensity in habitat 1, and 8 species with a twofold higher intensity in habitat 2, so that species abundant in one habitat were rare in the other one.
-We independently simulated the species-specific spatial patterns as heterogeneous Poisson or heterogeneous Neyman-Scott processes with a Cauchy dispersal kernel [@Ghorbani2013] mimicking limited dispersion.
-In the latter we fixed the scale parameter of the Cauchy kernel at 1, meaning that only 5% of offsprings were dispersed beyond above 20 m from their parents [@Munoz2013].
+We independently simulated the species-specific spatial patterns as heterogeneous Poisson or heterogeneous Neyman-Scott processes with a Cauchy dispersal kernel [@Ghorbani2013] mimicking dispersal limitation.
+In the latter, we fixed the scale parameter of the Cauchy kernel at 1, meaning that only 5% of offspring were dispersed beyond 20 m from their mother tree [@Munoz2013].
 The 16 species-specific patterns were then assembled into multivariate spatial patterns.
-A hypothetical phylogeny mimicking trait clustering was simulated, where species close in the tree have same habitat preferences [@Hardy2007].
+A hypothetical phylogeny mimicking trait clustering was simulated, where closely-related species have similar habitat preferences [@Hardy2007].
 The cophenetic distances derived from the tree were normalized to 1.
 
-@fig-KR_habitat show that both these patterns exhibit a significant negative departure from the null hypothesis of species equivalence for the same range of $r$ values that recovers the scale of the phylogenetic spatial structure representing the simulated pattern of habitat preferences.
+@fig-KR_habitat shows that both these patterns exhibit a significant negative departure from the null hypothesis of species equivalence for the same range of $r$ values that recovers the scale of the phylogenetic spatial structure representing the simulated pattern of habitat preferences.
 
 ::: {#fig-KR_habitat fig-env="figure*"}
 ```{r}
@@ -729,15 +807,20 @@ grid.arrange(
 )
 ```
 
-Test of the species equivalence hypothesis of the habitat preference-experiment with (a) a completely random point pattern and (b) a clustered one.
+Detection of habitat preference.
+Test of the species equivalence hypothesis in the habitat-preference experiment with (a) a completely random point pattern and (b) a clustered one.
 The $K_R(r)$ curve (solid line is computed with the cophenetic distance matrix derived from the clustered phylogenetic tree and tested against a 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations (grey area; the dotted line represents the average simulated values).
 Negative departure from null hypothesis is observed over 2 m: the neighbourhood phylogenetic diversity is below its expected value due to habitat preference.
 :::
 
-### Limited similarity
+### Limiting similarity
 
-In a second experiment (@fig-KR_Similarity), we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multi-Strauss process with, as between-species interaction matrix, the cophenetic distance derived from the clustered tree above.
-This means that the between-species competition intensity within a neighbouring disc of 5 m varies with their proximity within the phylogenetic tree: species that are close together in the tree compete more that species that are far in the tree, with no interaction between species that are not in the same half of the tree.
+In a second experiment (@fig-KR_Similarity), we simulated a pattern of competitive interaction within a fixed range of 5 m around each individual, using a multitype-Strauss process [@Ripley1988].
+This point process is defined by an interaction function between each pair of species up to 5 m: $\phi(r, p, q) = d_{p,q} \leq 1$ if $r$ \< 5 m, $\phi(r, p, q) = 1$ else.
+The probability density of a realisation of the point process is proportional to the product of the interaction function applied to all pairs of points: the patterns drawn from the multitype-Strauss process maximize it.
+Heuristically, spatially close (less than 5 m) pairs of trees reduce the probability of their point pattern compared to more distant pairs if $d_{p,q} <1$.
+
+This means that the between-species competition intensity within a neighbouring disc of 5 m varies with their proximity within the phylogenetic tree: closely-related species compete more than distantly-related species, with no interaction between species that are not in the same half of the tree because $d_{p,q} = 1$ in this case.
 
 @fig-KR_Similarity(b) shows that $K_R(r)$ departs significantly and positively from the null hypothesis of species equivalence for the same range of distances, confirming the limiting similarity pattern originally simulated.
 Restricted permutations within a cophenetic distance matrix, i.e. between species within clusters or clades in a hierarchical tree, can provide more specific tests of evolutionary hypotheses [@Hardy2008a].
@@ -792,12 +875,14 @@ fig_compet.spp <- ggplotify::as.ggplot(
   ~plot(
     compet.spp, 
     cols = rep("black", nlevels(compet.spp$marks)), 
-    main = NULL, 
+    main = "Limiting similarity", 
     legend = FALSE, 
-    scale = FALSE, 
+    scale = TRUE, 
     chars = levels(compet.spp$marks),
     csize = 1/2
-  )
+  ),
+  # Do not cut the title
+  scale = 0.95
 )
 
 # Computing Kr for the limiting similarity pattern ---
@@ -828,9 +913,10 @@ grid.arrange(
 )
 ```
 
-\(a\) Multitype Strauss point pattern mimicking limited similarity in a 100x100-m window.
+Detection of limiting similarity.
+(a) Multitype Strauss point pattern mimicking limiting similarity in a 100x100-m window.
 The pattern of interaction is obtained using un multi-Strauss inhibition process with a 5-m range and an interaction matrix corresponding to the cophenetic distance matrix derived from the clustered phylogenetic tree.
-The strength of repulsion between each pair of points decreases with their distance in the phylogeny.
+The strength of repulsion between each pair of points decreases with their distance in the phylogeny and vanishes between species that are not in the same half of the tree.
 (b) $K_R(r)$ computed with the cophenetic between-species distance matrix indicates a significant positive departure from the 1% confidence envelop of the species equivalence hypothesis obtained from 1000 Monte Carlo simulations from 3 to 10 m, with a peak at 5 m: because of competition, the neighbourhood diversity is higher than expected.
 :::
 
@@ -908,7 +994,7 @@ p_6_traits.df %>%
   select(-(Family:spName)) %>% 
   # Compute distance between rows
   daisy(metric = "gower", type = list(ordered = 4)) %>% 
-  # The square root is euclidean (Gower, 1966)
+  # The square root is Euclidean (Gower, 1966)
   sqrt() %>% 
   # Standardize to 1
   `/`(max(.)) ->
@@ -916,18 +1002,18 @@ p_6_traits.df %>%
 ```
 
 We used for application a dataset of tropical forest trees in Paracou experimental station, French Guiana [@Gourlet-Fleury2004].
-Paracou was set up in 1984 to study the impact of silvicultural treatments on the forest dynamics based on control and logged-over plots.
-We used here data from a control plot (#6) of 250 x 250 m in which `n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species).
-After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species.
+The Paracou experiment was established in 1984 to study the impact of silvicultural treatments on forest dynamics in a series of large (6.25 ha) control and logged plots.
+We used here data from a control plot (#6) of 250 x 250 m in which `r n_trees` trees with minimum stem diameter at breast height (dbh) of 10 cm were mapped and identified to species level (`r n_species` different species).
+After several scientific programs developed in French Guiana, a database of functional traits is available for the sampled species [@Baraloto2012a].
 For the present application we selected the basic functional traits defining the Leaf-Height-Seed (LHS) scheme of plant strategies [@Westoby1998], i.e. the specific leaf area (SLA in cm^2^.g^-1^ of dry matter), the expected tree height at maturity (H in m) and, as a proxy for seed mass, a seed size ordered-codification (Seed), from 1 (very small seeds) to 5 (very big seeds).
 These traits are acknowledged to illustrate the major trade-offs in plant fitness between resource capture and allocation: SLA characterises the importance of the growth response to favourable conditions, while H and Seed characterise the importance of investment in the capacity to respond to disturbance.
-We also included the wood specific gravity (WSG in g.cm^-3^ of dry matter) as a fourth trait specifically accounting for additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
+We also included the wood specific gravity (WSG in g.cm^-3^ of dry matter) as a fourth trait specifically accounting for an orthogonal axis [@Baraloto2010a] related to additional important functions in trees, such as water transport, structural support, resource storage, defence, etc. [@Chave2009].
 
-From these data, we built two different between-species distance matrices, a phylogenetic one based on the APG III classification [@Chase2009] and a functional one based on the four traits described above.
-The phylogenetic distance was simply computed from APG III hierarchical tree, considering $d_{p,q} = 1$ if species $p$ and $q$ were from the same genus, $d_{p,q} = 2$ if they were from different genera in the same family and $d_{p,q} = 3$ if they were from different families.
+From these data, we built two different between-species distance matrices, a phylogenetic one and a functional one based on the four traits described above.
+The phylogenetic distance was simply computed considering $d_{p,q} = 1$ if species $p$ and $q$ were from the same genus, $d_{p,q} = 2$ if they were from different genera in the same family and $d_{p,q} = 3$ if they were from different families.
 Such a cophenetic distance matrix has ultrametric properties ensuring desirable maximization properties to Rao's quadratic entropy [@Pavoine2005c].
 The functional distance matrix was based on functional trait dissimilarities, taken as Gower distance [@Gower1971].
-Its square-root transformation ensured it was euclidean [@Gower1966], but not ultrametric.
+Its square-root transformation ensured it was Euclidean [@Gower1966], but not ultrametric.
 Both distance matrices were finally rescaled by their maximum in order to keep Rao's entropy within the 0-1 standard range of values for diversity indices.
 
 ### Analysis of species diversity spatial pattern
@@ -953,11 +1039,11 @@ k.p_6 %>%
   ylab(expression(L(r)))
 ```
 
-Spatial pattern of Paracou plot 6.
+Spatial pattern of trees in a 6.25 ha forest plot in French Guiana (Paracou plot 6).
 Significant (departure from the 1% confidence envelop of complete spatial randomness obtained from 1000 Monte Carlo simulations) repulsion between trees is detected up to 12 m.
 :::
 
-The *L*-function, i.e. the linearised univariate version of Ripley *K*-function, shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m @fig-Paracou_K).
+The *L*-function shows a significant departure towards regularity of the unmarked spatial pattern (i.e. regardless of species labels) up to 12 m (@fig-Paracou_K).
 
 ::: {#fig-Paracou_KR fig-env="figure*"}
 ```{r}
@@ -1019,37 +1105,38 @@ grid.arrange(
 ```
 
 *K~R~*-function applied to Paracou plot 6 considering the phylogenetic (left) and functional (right) distances between species, with respect to the random-labelling (top) and the species-equivalence (bottom) null hypotheses.
-The phylogenetic and the functional patterns are very similar.
+The phylogenetic and functional patterns are very similar.
 Under the random-labelling null hypothesis, a very significant lack of diversity is observed up to 50 m (a and b).
-Under species-equivalence null hypothesis, non-significant positive departure of both curves (c) and (d) at short distances, combined with the observed spatial dispersion of the trees, suggest limited similarity when the intraspecific spatial patterns are preserved.
+Under the species-equivalence null hypothesis, non-significant positive departure of both curves (c) and (d) at short distances, combined with the observed spatial dispersion of the trees, suggest limited similarity when the intraspecific spatial patterns are preserved.
 :::
 
 $K_R(r)$ computed with both phylogenetic and functional between-species distance matrix show very similar patterns (@fig-Paracou_KR).
 Converging results were expected because the traits retained are generally considered as phylogenetically conserved [e.g. @Baraloto2012a].
 
-The random-labelling null hypothesis compares the neighbourhood diversity of that of a plot where the trees are located at the same place but have their species shuffled.
+The random-labelling null hypothesis compares the neighbourhood diversity to that of a plot where the trees are located at the same place but have their species shuffled.
 @fig-Paracou_KR(a) and (b) show that significantly lower-than-expected diversity occurs up to around 50 m.
 Habitat preference may be confused with the mere effect of intraspecific aggregation with this null hypothesis.
 
-The species-equivalence null hypothesis preserves the species individual spatial distributions.
-Compared to it, @fig-Paracou_KR(c) and (d) show higher-than-expected diversity at short range.
-The departure from the 1%-confidence envelope of the phylogenetic entropy is not sharp: the curves are confused with the edges of the envelopes.
+The species-equivalence null hypothesis preserves the species individual spatial distributions, accounting for intraspecific aggregation.
+@fig-Paracou_KR(c) and (d) illustrate that under this model we observe higher-than-expected diversity at short distances.
+The departure from the 1%-confidence envelope of the phylogenetic entropy is not sharp: the curves overlap with the edges of the envelopes.
 
-Short-range spatial regularity in tree stands is generally interpreted as resulting from self-thinning due to intense local competition [e.g. @Kenkel1988].
+Short-range spatial regularity in tree stands is generally interpreted to result from self-thinning due to intense local competition [e.g. @Kenkel1988].
 It therefore seems that the sharing of resources between locally competing neighbours enhanced niche differentiation and thus species diversity.
-In other words, combining the spatial pattern of diversity (@fig-Paracou_KR) and the spatial pattern of the trees (@fig-Paracou_K) reveals that limiting similarity in the trees' neighbourhood is its driver at short distance.
+In other words, combining the spatial pattern of diversity (@fig-Paracou_KR) and the spatial pattern of the trees (@fig-Paracou_K) reveals that limiting similarity in the trees' neighbourhood drives assembly at small spatial scales.
 Even though their global point pattern shows regularity at this scale, most tree species are individually aggregated in Paracou [@Collinet1997], and more generally in tropical forests [@Condit2000].
-Controlling for their spatial structure with the species-equivalence null hypothesis allows disentangling the processes that drive the spatial distribution of species.
+Controlling for their spatial structure with the species-equivalence null hypothesis allows for the disentangling of processes that drive the spatial distribution of species.
 
 # Conclusion
 
 The function of multitype point pattern analysis $K_R(r)$ introduced here is a normalised version of Rao's entropy measured in the neighbourhood of individuals.
 
 It relies on two well-known analytical frameworks: the spatial point pattern analysis popularized by @Ripley1977 through his *K*-function, and the quadratic entropy introduced by @Rao1982 as a diversity coefficient accounting for non-uniform between-species distances.
-It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and *K~12~*-functions.
+It follows that a spatially continuous and unbiased measure of species diversity can be envisioned as a simple wrapper of classical functions of point pattern analysis, namely the *K*- and *K~p,q~*-functions.
 Introducing a non-uniform between-species distance matrix in the quantification of species diversity also provides opportunities to consider different and potentially complementary metrics, based on either taxonomic, phylogenetic or functional differences between species.
-This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype *K~12~*-functions (@eq-KR).
+We note that orthogonal functional axes can also be considered independently using this approach, allowing the potential comparison of assembly processes due to habitat filtering, competition, or interactions with natural enemies.
+This approach is allowed only by Rao's entropy, thanks to its mathematical properties: the average distance between individuals relies on the number of pairs of heterospecific individuals, which is straightforwardly linked to the average number of heterospecific individuals summarized by the intertype *K~p,q~*-functions (@eq-KR).
 Other measures of neighbourhood diversity address more aspects of biodiversity but loose link with the point process theory.
 
 Observed spatial diversity patterns can be tested against the highly meaningful ecological hypothesis of species equivalence emphasized by the neutral theory of biodiversity [@Hubbell2001] with the $K_R(r)$ function.
-This new tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.
+This tool provides a powerful and robust tool to detect significant trait clustering or divergence expected to arise in ecological communities under the driving forces of habitat preferences or local competitive interactions.
