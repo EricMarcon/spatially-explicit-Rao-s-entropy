@@ -7,4 +7,4 @@ Rao's neighbourhood entropy can be tested against random labeling and species eq
 The methods are illustrated by applications on simulated datasets and a tropical forest plot in French Guiana.
 This approach offers a robust means to detect ecological drivers like competition and habitat filtering, enriching our understanding of community assembly while maintaining scalable flexibility across taxonomic, phylogenetic, and functional dimensions.
 
-Preprint: [read](https://ericmarcon.github.io/spatially-explicit-Rao-s-entropy/) or [download](https://ericmarcon.github.io/spatially-explicit-Rao-s-entropy/index.pdf).
+Postprint: [read](https://ericmarcon.github.io/spatially-explicit-Rao-s-entropy/) or [download](https://ericmarcon.github.io/spatially-explicit-Rao-s-entropy/index.pdf).
